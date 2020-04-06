@@ -6,3 +6,6 @@ def index(req):
 
 def register_clinic_admin(req):
     return render(req, 'superadmin/register.html')
+
+def login_pacijent(req):
+    return render(req, 'login.html')
