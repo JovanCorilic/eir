@@ -2,11 +2,31 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Eir - Login</title>    
+        <title>Eir - Logovanje</title>    
     </head>
-    <body>
-        Email: <input type="text"> <br>
-        Lozinka: <input type="password"> <br>
-        <button type="submit">Uloguj se</button>
-    </body>
+<body>
+    <form action="/pacijent/glavnaStranica" onsubmit="return logovanje()">
+        E-mail: <input type="text" id="email" name="mail"><br>
+        Lozinka: <input type="password" id="sifra" name="lozinka"> <br><br>
+        <input type="submit" value="Uloguj se"> 
+    </form>
+
+    <script>
+        function logovanje() {
+        var at = document.getElementById("email").value.indexOf("@");
+        var loz = document.getElementById("sifra").value;
+        submitOK = "true";
+
+        if (at == -1) {
+            alert("Nije validan email!");
+            submitOK = "false";
+        }
+
+        if (submitOK == "false") {
+            return false;
+        }
+        }
+    </script>
+
+</body>
 </html>

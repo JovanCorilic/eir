@@ -9,3 +9,6 @@ def register_clinic_admin(req):
 
 def login_pacijent(req):
     return render(req, 'login.html')
+
+def glavna_stranica_pacijent(req):
+    return render(req, 'pacijent/glavnaStranica.html')
