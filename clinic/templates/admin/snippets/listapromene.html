@@ -1,0 +1,7 @@
+{% extends 'admin/lista.html' %}
+{% block object-tools %}
+    <form id="posalji" method="post">
+        {% csrf_token %}
+    </form>
+    {{ block.super }}
+{% endblock object-tools %}
