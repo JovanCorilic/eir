@@ -8,7 +8,7 @@ admin.site.site_header = "Klinika"
 class SnippetAdmin(admin.ModelAdmin):
     list_display = ('title', 'created')
     list_filter = ('created',)
-    change_list_template = 'admin/snippets/listapromene.html'
+    change_list_template = 'admin/snippets/snippets_chnage_list.html'
 
 
 admin.site.register(Snippet, SnippetAdmin)
