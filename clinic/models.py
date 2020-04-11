@@ -24,3 +24,5 @@ class Pacijent(models.Model):
     broja_telefona= models.CharField(max_length=500)
     jedinstveni_broj_osiguranika= models.CharField(max_length=500)
 
+    def __str__(self):
+        return self.email_adresa

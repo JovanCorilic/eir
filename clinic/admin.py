@@ -10,7 +10,9 @@ class SnippetAdmin(admin.ModelAdmin):
     change_list_template = 'admin/snippets/snippets_chnage_list.html'
 
 class PacijentAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("email_adresa", "ime", "prezime", "adresa_prebivalista", "grad")
+    list_filter = ("ime", "prezime")
+    search_fields = ("ime", "prezime")
 
 admin.site.register(Snippet, SnippetAdmin)
 admin.site.register(Pacijent, PacijentAdmin)
