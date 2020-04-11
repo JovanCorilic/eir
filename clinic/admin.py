@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from .models import Snippet
+from .models import Snippet, Pacijent
 
 admin.site.site_header = "Klinika"
 
@@ -12,4 +12,5 @@ class SnippetAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Snippet, SnippetAdmin)
+admin.site.register(Pacijent)
 admin.site.unregister(Group)
