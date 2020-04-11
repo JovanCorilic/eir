@@ -35,4 +35,4 @@ python manage.py runserver
 # Autori
 - Bogdan Čiplić (SW 79/2017)
 - Jovan Ćorilić (SW 48/2017)
-- Mladen Samardžić (SW 37/2017)
+- Mladen Samardžić (SW 37/2017) - Napustio
