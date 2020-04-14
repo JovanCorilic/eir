@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Test', '0001_initial'),
+        ('Model Podataka', '0001_initial'),
     ]
 
     operations = [

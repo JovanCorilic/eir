@@ -10,7 +10,7 @@ class SnippetAdmin(admin.ModelAdmin):
     change_list_template = 'admin/snippets/snippets_chnage_list.html'
 
 class PacijentAdmin(admin.ModelAdmin):
-    list_display = ("email_adresa", "ime", "prezime", "adresa_prebivalista", "grad")
+    list_display = ("email_adresa","lozinka", "ime", "prezime", "adresa_prebivalista", "grad", "drzava", "broja_telefona", "jedinstveni_broj_osiguranika")
     list_filter = ("ime", "prezime")
     search_fields = ("ime", "prezime")
 

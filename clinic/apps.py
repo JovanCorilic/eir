@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class ClinicConfig(AppConfig):
-    label = 'Test'
+    label = 'Model Podataka'
     name = 'clinic'
