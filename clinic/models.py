@@ -23,6 +23,15 @@ class Pacijent(models.Model):
     drzava= models.CharField(max_length=500)
     broja_telefona= models.CharField(max_length=500)
     jedinstveni_broj_osiguranika= models.CharField(max_length=500)
+    sifra_bolesti= models.CharField(max_length=500)
+    datum= models.DateTimeField(auto_now_add=True)
+    diagnoza= models.CharField(max_length=500)
+    lekovi= models.CharField(max_length=500)
+    dioptrija= models.CharField(max_length=500)
+    alergije_na_lek= models.CharField(max_length=500)
+    visina= models.CharField(max_length=500)
+    tezina= models.CharField(max_length=500)
+    krvna_grupa= models.CharField(max_length=500)
 
     def __str__(self):
         return self.email_adresa
