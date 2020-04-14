@@ -7,7 +7,7 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Model Podataka', '0002_pacijent'),
+        ('Model_Podataka', '0002_pacijent'),
     ]
 
     operations = [
