@@ -13,6 +13,7 @@ class Snippet(models.Model):
     def body_preview(self):
         return self.body[:50]
 
+
 class Pacijent(models.Model):
     email_adresa= models.CharField(max_length=500)
     lozinka= models.CharField(max_length=500)
@@ -35,3 +36,37 @@ class Pacijent(models.Model):
 
     def __str__(self):
         return self.email_adresa
+
+
+class Lekar(models.Model):
+    email_adresa = models.TextField(max_length=500)
+    lozinka = models.TextField(max_length=500)
+    ime = models.TextField(max_length=500)
+    prezime = models.TextField(max_length=500)
+    broja_telefona = models.TextField(max_length=500)
+    jedinstveni_broj_osiguranika = models.TextField(max_length=500)
+    datum = models.DateTimeField(auto_now_add=True)
+    radno_mesto = models.TextField(max_length=500)
+    pozicija = models.TextField(max_length=500)
+
+    def __str__(self):
+        return self.email_adresa
+
+
+class Sala(models.Model):
+    broj = models.TextField(max_length=500)
+    naziv = models.TextField(max_length=500)
+    id_klinike_kojoj_pripada = models.TextField(max_length=500)
+    opis = models.TextField(max_length=500)
+
+    def __str__(self):
+        return self.broj + "-" + self.id_klinike_kojoj_pripada
+
+
+class Klinika(models.Model):
+    naziv = models.TextField(max_length=500)
+    adresa = models.TextField(max_length=500)
+    opis = models.TextField(max_length=500)
+
+    def __str__(self):
+        return self.adresa

@@ -17,3 +17,15 @@ def login_pacijent(req):
 
 def glavna_stranica_pacijent(req):
     return render(req, 'pacijent/glavnaStranica.html')
+
+
+def izmeni_lekara(req):
+    return render(req, 'lekar/izmeniInformacijeLekara.html')
+
+
+def izmeni_kliniku(req):
+    return render(req, 'klinika/izmeniInformacijeKlinike.html')
+
+
+def izmeni_salu(req):
+    return render(req, 'sala/izmeniInformacijeSale.html')

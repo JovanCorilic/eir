@@ -29,7 +29,13 @@
 					<th align="right">Prezime </th>
 					<th><input type="text" name="prezime" id="prezime" value="{{ko.prezime}}"></th>
 					<th align="left"><label id="lprezime" style="color: red;"></label></th>
+
+				<tr>
+					<th align="right">Broj Telefona </th>
+					<th><input type="text" name="prezime" id="brojtelefona" value="{{ko.prezime}}"></th>
+					<th align="left"><label id="lbrojtelefona" style="color: red;"></label></th>
 				</tr>
+
 				<tr>
 					<th align="right">Email </th>
 					<th><input type="text" name="email" id="email" value="{{ko.email}}"></th>
@@ -99,6 +105,14 @@
 				}
 				else{
 					document.getElementById('lprezime').innerHTML = '';
+				}
+
+				if(document.getElementById("brojtelefona").value == ""){
+					popunjeno = false
+					document.getElementById('lbrojtelefona').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else{
+					document.getElementById('lbrojtelefona').innerHTML = '';
 				}
 
 				if(!popunjeno) {alert("Morate da pravilno popunite sva polja")}
