@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+
+	<head>
+		<title>{{ko.ime}} {{ko.prezime}}</title>
+        <meta charset="utf-8">
+	</head>
+	<body>
+		<div class="unos">
+			<h1>{{ko.ime}} {{ko.prezime}}</h1><br />
+
+			<form method="POST" action="ObrisiLekara" onSubmit="return proveri();"><input type="submit" class="sub" value="Obriši" ></form>
+
+		</div>
+		<form method="POST" action="IzmeniLekara" onSubmit="return proveri();" >
+            <table>
+                <tr>
+					<th align="right">Korisničko Ime </th>
+					<th><input type="text" name="korisnickoime" id="korisnickoime" value="{{ko.ime}}"></th>
+					<th align="left"><label id="lkorisnickoime" style="color: red;"></label></th>
+				</tr>
+				<tr>
+					<th align="right">Ime </th>
+					<th><input type="text" name="ime" id="ime" value="{{ko.ime}}"></th>
+					<th align="left"><label id="lime" style="color: red;"></label></th>
+				</tr>
+				<tr>
+					<th align="right">Prezime </th>
+					<th><input type="text" name="prezime" id="prezime" value="{{ko.prezime}}"></th>
+					<th align="left"><label id="lprezime" style="color: red;"></label></th>
+				</tr>
+				<tr>
+					<th align="right">Email </th>
+					<th><input type="text" name="email" id="email" value="{{ko.email}}"></th>
+					<th align="left"><label id="lemail" style="color: red;"></label></th>
+				</tr>
+				<tr>
+					<th align="right">Password </th>
+					<th><input type="text" name="password" id="password" value="{{ko.password}}"></th>
+					<th align="left"><label id="lpassword" style="color: red;"></label></th>
+				</tr>
+                <tr>
+                    <th></th>
+                    <th align="left"><input type="submit" class="sub" value="Sacuvaj Promene"></th>
+					<th align="left"><label style="color: red;">
+                    <!-- povratna poruka -->
+					</label></th>
+                </tr>
+			</table>
+		</form>
+		<script>
+			function proveri() {
+				var popunjeno = true;
+
+				if(document.getElementById("email").value == ""){
+					popunjeno = false
+					document.getElementById('lemail').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else if(document.getElementById("email").value.includes("@") == false || document.getElementById("email").value.includes(".") == false){
+					popunjeno = false
+					document.getElementById('lemail').innerHTML = 'Email koji ste uneli je pogrešan!';
+				}
+				else{
+					document.getElementById('lemail').innerHTML = '';
+				}
+
+				if(document.getElementById("password").value == ""){
+					popunjeno = false
+					document.getElementById('lpassword').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else if(document.getElementById("password").value.length < 8){
+					popunjeno = false
+					document.getElementById('lpassword').innerHTML = 'Lozinka mora da sadrži minimalno 8 karaktera!';
+				}
+				else{
+					document.getElementById('lpassword').innerHTML = '';
+				}
+
+				if(document.getElementById("korisnickoime").value == ""){
+					popunjeno = false
+					document.getElementById('lkorisnickoime').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else{
+					document.getElementById('lkorisnickoime').innerHTML = '';
+				}
+
+				if(document.getElementById("ime").value == ""){
+					popunjeno = false
+					document.getElementById('lime').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else{
+					document.getElementById('lime').innerHTML = '';
+				}
+
+				if(document.getElementById("prezime").value == ""){
+					popunjeno = false
+					document.getElementById('lprezime').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else{
+					document.getElementById('lprezime').innerHTML = '';
+				}
+
+				if(!popunjeno) {alert("Morate da pravilno popunite sva polja")}
+				return popunjeno;
+			}
+		</script>
+	</body>
+</html>
