@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, UserManager
 
 
 class Snippet(models.Model):
@@ -15,24 +16,26 @@ class Snippet(models.Model):
 
 
 class Pacijent(models.Model):
-    email_adresa= models.CharField(max_length=500)
-    lozinka= models.CharField(max_length=500)
-    ime= models.CharField(max_length=500)
-    prezime= models.CharField(max_length=500)
-    adresa_prebivalista= models.CharField(max_length=500)
-    grad= models.CharField(max_length=500)
-    drzava= models.CharField(max_length=500)
-    broja_telefona= models.CharField(max_length=500)
-    jedinstveni_broj_osiguranika= models.CharField(max_length=500)
-    sifra_bolesti= models.CharField(max_length=500)
-    datum= models.DateTimeField(auto_now_add=True)
-    diagnoza= models.CharField(max_length=500)
-    lekovi= models.CharField(max_length=500)
-    dioptrija= models.CharField(max_length=500)
-    alergije_na_lek= models.CharField(max_length=500)
-    visina= models.CharField(max_length=500)
-    tezina= models.CharField(max_length=500)
-    krvna_grupa= models.CharField(max_length=500)
+    email_adresa = models.CharField(max_length=500, primary_key=True)
+    lozinka = models.CharField(max_length=500)
+    ime = models.CharField(max_length=500)
+    prezime = models.CharField(max_length=500)
+    adresa_prebivalista = models.CharField(max_length=500)
+    grad = models.CharField(max_length=500)
+    drzava = models.CharField(max_length=500)
+    broja_telefona = models.CharField(max_length=500)
+    jedinstveni_broj_osiguranika = models.CharField(max_length=500)
+    sifra_bolesti = models.CharField(max_length=500, default=None)
+    datum = models.DateTimeField(max_length=500, default=None)
+    diagnoza = models.CharField(max_length=500, default=None)
+    lekovi = models.CharField(max_length=500, default=None)
+    dioptrija = models.CharField(max_length=500, default=None)
+    alergije_na_lek = models.CharField(max_length=500, default=None)
+    visina = models.FloatField(max_length=500, default=None)
+    tezina = models.FloatField(max_length=500, default=None)
+    krvna_grupa = models.CharField(max_length=3, default=None)
+
+    objects = UserManager()
 
     def __str__(self):
         return self.email_adresa
