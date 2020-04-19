@@ -11,17 +11,19 @@
         {% endif %}
         Hej! Ovo je hip i moderna veb aplikacija...<br />
         <br>
-        <a href="korisnik/register">Registruj se</a>
-        <a href="korisnik/login">Uloguj se se</a>
-        <br>
+        {% if ime == None %}
+        <a href="korisnik/register">Registruj se</a><br />
+        <a href="korisnik/login">Uloguj se</a>
+        <br />
+        {% endif %}
         <form action="/superadmin/register">
-            <input type="submit" value="Registruj administratora klinike" />
+            <input type="submit" disabled="true" value="Registruj administratora klinike" />
         </form><br>
         <form action="/pacijent/registracija">
-            <input type="submit" value="Registracija za pacijenta" />
+            <input type="submit" disabled="true" value="Registracija za pacijenta" />
         </form><br>
         <form action="login">
-            <input type="submit" value="Login" />
+            <input type="submit" disabled="true" value="Login" />
         </form>
         <!--<a href="/superadmin/register">Registruj administratora klinike</a>-->
     </body>

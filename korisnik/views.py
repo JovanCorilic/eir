@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import auth
 from clinic.models import Pacijent
@@ -52,7 +53,7 @@ def login(request):
                 "ime": Pacijent.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime,#p,
                 "email": email_adresa,
             }
-            print(Pacijent.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime)
+            response = redirect('/')
             return render(request, 'index.html', sadrzaj)
         else:
             messages.info(request, "Pogrešno korisničko ime ili lozinka")
