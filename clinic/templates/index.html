@@ -5,9 +5,14 @@
         <title>Eir</title>
     </head>
     <body>
-        Hej! Ovo je hip i moderna veb aplikacija...<br>
+        {% if ime != None %}
+            <h1>Ulogovani ste kao {{ime}}</h1>
+            <br /><br />
+        {% endif %}
+        Hej! Ovo je hip i moderna veb aplikacija...<br />
         <br>
         <a href="korisnik/register">Registruj se</a>
+        <a href="korisnik/login">Uloguj se se</a>
         <br>
         <form action="/superadmin/register">
             <input type="submit" value="Registruj administratora klinike" />

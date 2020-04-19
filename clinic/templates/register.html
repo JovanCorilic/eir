@@ -12,52 +12,52 @@
 				<table>
 					<tr>
 						<th align="right">E-mail </th>
-						<th><input type="text" name="email" id="email"></th>
+						<th><input type="text" name="email" id="email" placeholder="E-maild"></th>
 						<th align="left"><label id="lemail" style="color: red;"></label></th>
 					</tr>
 					<tr>
 						<th align="right">Lozinka </th>
-						<th><input type="text" name="password" id="password"></th>
+						<th><input type="text" name="password" id="password" placeholder="Lozinka"></th>
 						<th align="left"><label id="lpassword" style="color: red;"></label></th>
 					</tr>
                     <tr>
 						<th align="right">Ponovite Lozinku </th>
-						<th><input type="text" name="password2" id="password2"></th>
+						<th><input type="text" name="password2" id="password2" placeholder="Ponovite Lozinku"></th>
 						<th align="left"><label id="lpassword2" style="color: red;"></label></th>
 					</tr>
 					<tr>
 						<th align="right">Ime </th>
-						<th><input type="text" name="ime" id="ime"></th>
+						<th><input type="text" name="ime" id="ime" placeholder="Ime"></th>
 						<th align="left"><label id="lime" style="color: red;"></label></th>
 					</tr>
 					<tr>
 						<th align="right">Prezime </th>
-						<th><input type="text" name="prezime" id="prezime"></th>
+						<th><input type="text" name="prezime" id="prezime" placeholder="Prezime"></th>
 						<th align="left"><label id="lprezime" style="color: red;"></label></th>
 					</tr>
                     <tr>
 						<th align="right">Adresa </th>
-						<th><input type="text" name="adresa" id="adresa"></th>
+						<th><input type="text" name="adresa" id="adresa" placeholder="Adresa"></th>
 						<th align="left"><label id="ladresa" style="color: red;"></label></th>
 					</tr>
                     <tr>
 						<th align="right">Grad </th>
-						<th><input type="text" name="grad" id="grad"></th>
+						<th><input type="text" name="grad" id="grad" placeholder="Grad"></th>
 						<th align="left"><label id="lgrad" style="color: red;"></label></th>
 					</tr>
                     <tr>
-						<th align="right">Drzava </th>
-						<th><input type="text" name="drzava" id="drzava"></th>
+						<th align="right">Država </th>
+						<th><input type="text" name="drzava" id="drzava" placeholder="Država"></th>
 						<th align="left"><label id="ldrzava" style="color: red;"></label></th>
 					</tr>
                     <tr>
-						<th align="right">Broja telefona </th>
-						<th><input type="text" name="btelefona" id="btelefona"></th>
+						<th align="right">Broja Telefona </th>
+						<th><input type="text" name="btelefona" id="btelefona" placeholder="Broj Telefona"></th>
 						<th align="left"><label id="lbtelefona" style="color: red;"></label></th>
 					</tr>
                     <tr>
 						<th align="right">Jedinstveni broj osiguranika </th>
-						<th><input type="text" name="jmbgnt" id="jmbgnt"></th>
+						<th><input type="text" name="jmbgnt" id="jmbgnt"  placeholder="Jedinstveni broj osiguranika"></th>
 						<th align="left"><label id="ljmbgnt" style="color: red;"></label></th>
 					</tr>
 					<tr>
@@ -65,7 +65,7 @@
 						<th align="left"><input type="submit" class="sub" value="Dodaj"></th>
 						<th align="left"><label style="color: red;">
                             {% for message in messages %}
-                            {{ messages }}
+                            {{ messages }}<br />
                             {% endfor %}
 						</label></th>
 					</tr>

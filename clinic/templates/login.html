@@ -5,28 +5,61 @@
         <title>Eir - Logovanje</title>    
     </head>
 <body>
-    <form action="/pacijent/glavnaStranica" onsubmit="return logovanje()">
-        E-mail: <input type="text" id="email" name="mail"><br>
-        Lozinka: <input type="password" id="sifra" name="lozinka"> <br><br>
-        <input type="submit" value="Uloguj se"> 
+    <form method="POST" action="login" onSubmit="return proveri();">
+        {% csrf_token %}
+        <div class="unos">
+            <table>
+                <tr>
+                    <th align="right">E-mail </th>
+				    <th><input type="text" name="email" id="email" placeholder="E-mail"></th>
+					<th align="left"><label id="lemail" style="color: red;"></label></th>
+				</tr>
+				<tr>
+				<th align="right">Password </th>
+					<th><input type="password" name="password" id="password" placeholder="Lozinka"></th>
+					<th align="left"><label id="lpassword" style="color: red;"></label></th>
+				</tr>
+				<tr>
+				<th></th>
+					<th align="left"><input type="submit" class="sub" value="Uloguj se"></th>
+					<th align="left"><label style="color: red;">
+					{% for message in messages %}
+                        {{ messages }}<br />
+                    {% endfor %}
+					</label></th>
+				</tr>
+            </table>
+        </div>
     </form>
 
     <script>
-        function logovanje() {
-        var at = document.getElementById("email").value.indexOf("@");
-        var loz = document.getElementById("sifra").value;
-        submitOK = "true";
+			function proveri() {
+				var popunjeno = true;
 
-        if (at == -1) {
-            alert("Nije validan email!");
-            submitOK = "false";
-        }
+				if(document.getElementById("email").value == ""){
+					popunjeno = false
+					document.getElementById('lemail').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else if(document.getElementById("email").value.includes("@") == false || document.getElementById("email").value.includes(".") == false){
+					popunjeno = false
+					document.getElementById('lemail').innerHTML = 'Email koji ste uneli je pogresan!';
+				}
+				else{
+					document.getElementById('lemail').innerHTML = '';
+				}
 
-        if (submitOK == "false") {
-            return false;
-        }
-        }
-    </script>
+				if(document.getElementById("password").value == ""){
+					popunjeno = false
+					document.getElementById('lpassword').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else{
+					document.getElementById('lpassword').innerHTML = '';
+				}
+
+				if(!popunjeno) {alert("Morate da pravilno popunite sva polja")}
+				return popunjeno;
+			}
+		</script>
 
 </body>
 </html>
