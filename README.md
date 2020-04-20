@@ -22,10 +22,18 @@ ili pak na svojoj Windows mašini:
 ```powershell
 venv\Scripts\activate.ps1
 ```
+Ako vam ne daje da pokrenete script onda u powershell kao admin:
+```
+set-executionpolicy remotesigned
+```
 Sa aktiviranim virtualnim okruženjem konačno možemo da instaliramo potrebne pakete
 (ovde instaliramo Django!):
 ```sh
 pip install -r requirements.txt
+```
+I za bazu PostgresSQL mora:
+```
+pip install psycopg2
 ```
 Aplikacija se onda može pokrenuti jednim jednostavnim
 ```sh
