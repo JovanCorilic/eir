@@ -38,8 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'clinic.apps.ClinicConfig',
-
+    'korisnik.apps.KorisnikConfig',
 ]
+
+# AUTH_USER_MODEL = 'clinic.Pacijent'
+# AUTHENTICATION_BACKENDS = ['clinic.models.Pacijent']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -100,7 +103,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/

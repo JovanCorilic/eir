@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Registracija Admina</title>
+		<link rel="stylesheet" href="css/stil.css">
+	</head>
+	<body>
+		<form method="POST" action="registerAdmina" onSubmit="return proveri();">
+            {% csrf_token %}
+		<div class="unos">
+				<table>
+					<tr>
+						<th align="right">E-mail </th>
+						<th><input type="text" name="email" id="email" placeholder="E-maild"></th>
+						<th align="left"><label id="lemail" style="color: red;"></label></th>
+					</tr>
+					<tr>
+						<th align="right">Ime </th>
+						<th><input type="text" name="ime" id="ime" placeholder="Ime"></th>
+						<th align="left"><label id="lime" style="color: red;"></label></th>
+					</tr>
+					<tr>
+						<th align="right">Prezime </th>
+						<th><input type="text" name="prezime" id="prezime" placeholder="Prezime"></th>
+						<th align="left"><label id="lprezime" style="color: red;"></label></th>
+					</tr>
+                    <tr>
+						<th align="right">Broja Telefona </th>
+						<th><input type="text" name="btelefona" id="btelefona" placeholder="Broj Telefona"></th>
+						<th align="left"><label id="lbtelefona" style="color: red;"></label></th>
+					</tr>
+                    <tr>
+						<th align="right">Jedinstveni broj osiguranika </th>
+						<th><input type="text" name="jmbgnt" id="jmbgnt"  placeholder="Jedinstveni broj osiguranika"></th>
+						<th align="left"><label id="ljmbgnt" style="color: red;"></label></th>
+					</tr>
+                    <tr>
+						<th align="right">Klinika u kojoj radi </th>
+						<th><input type="text" name="nazivklinike" id="nazivklinike" disabled placeholder="Jos uvek nije u potpunoj funkciji"></th>
+						<th align="left"><label id="lnazivklinike" style="color: red;"></label></th>
+					</tr>
+					<tr>
+						<th></th>
+						<th align="left"><input type="submit" class="sub" value="Dodaj"></th>
+						<th align="left"><label style="color: red;">
+                            {% if messages|length > 0 %}
+                            	Email adresa je već zauzeta
+                            {% endif %}
+						</label></th>
+					</tr>
+				</table>
+			</div>
+		</form>
+		<script>
+			function proveri() {
+				var popunjeno = true;
+
+				if(document.getElementById("email").value == ""){
+					popunjeno = false
+					document.getElementById('lemail').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else if(document.getElementById("email").value.includes("@") == false || document.getElementById("email").value.includes(".") == false){
+					popunjeno = false
+					document.getElementById('lemail').innerHTML = 'Email koji ste uneli je pogresan!';
+				}
+				else{
+					document.getElementById('lemail').innerHTML = '';
+				}
+
+				if(document.getElementById("prezime").value == ""){
+					popunjeno = false
+					document.getElementById('lprezime').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else{
+					document.getElementById('lprezime').innerHTML = '';
+				}
+
+				if(document.getElementById("adresa").value == ""){
+					popunjeno = false
+					document.getElementById('ladresa').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else{
+					document.getElementById('ladresa').innerHTML = '';
+				}
+
+				if(document.getElementById("grad").value == ""){
+					popunjeno = false
+					document.getElementById('lgrad').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else{
+					document.getElementById('lgrad').innerHTML = '';
+				}
+
+                if(document.getElementById("drzava").value == ""){
+					popunjeno = false
+					document.getElementById('ldrzava').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else{
+					document.getElementById('ldrzava').innerHTML = '';
+				}
+
+                if(document.getElementById("btelefona").value == ""){
+					popunjeno = false
+					document.getElementById('lbtelefona').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else{
+					document.getElementById('lbtelefona').innerHTML = '';
+				}
+
+				if(document.getElementById("jmbgnt").value == ""){
+					popunjeno = false
+					document.getElementById('ljmbgnt').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else{
+					document.getElementById('ljmbgnt').innerHTML = '';
+				}
+
+				if(!popunjeno) {alert("Morate da pravilno popunite sva polja")}
+				return popunjeno;
+			}
+		</script>
+	</body>
+</html>
