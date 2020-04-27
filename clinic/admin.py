@@ -19,7 +19,7 @@ class PacijentAdmin(admin.ModelAdmin):
 
 class LekarAdmin(admin.ModelAdmin):
     list_display = ("email_adresa","lozinka", "ime", "prezime", "broja_telefona", "jedinstveni_broj_osiguranika", "radno_mesto", "pozicija")
-    list_filter = ("ime", "prezime", "pozicija", "radno_mesto")
+    list_filter = ("ime", "prezime", "pozicija", "radno_mesto","email_adresa","lozinka")
     search_fields = ("ime", "prezime", "pozicija", "radno_mesto")
 
 
@@ -36,7 +36,7 @@ class KlinikaAdmin(admin.ModelAdmin):
 
 class AdminAdmin(admin.ModelAdmin):
     list_display = ("email_adresa","lozinka", "ime", "prezime", "broja_telefona", "jedinstveni_broj_osiguranika", "datum", "naziv_klinike")
-    list_filter = ("ime", "prezime")
+    list_filter = ("ime", "prezime","email_adresa","lozinka")
     search_fields = ("ime", "prezime")
 
 admin.site.register(Snippet, SnippetAdmin)
