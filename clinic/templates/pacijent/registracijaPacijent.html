@@ -5,10 +5,11 @@
         <title>Eir - Registracija pacijent</title>    
     </head>
 <body>
-    <form action="glavnaStranica" onsubmit="return logovanje()">
-        E-mail: <input type="text" id="email" name="mail" ><br>
-        Lozinka: <input type="password" id="sifra" name="lozinka"> <br>
-        Ponovi lozinku: <input type="password" id="sifra2" name="lozinka"> <br>
+    <form method="POST" action="registracijaPacijent" onsubmit="return logovanje()">
+        {% csrf_token %}
+        E-mail: <input type="text" id="email" name="email" ><br>
+        Lozinka: <input type="password" id="sifra" name="sifra"> <br>
+        Ponovi lozinku: <input type="password" id="sifra2" name="sifra2"> <br>
         Ime: <input type="text" id="ime" name="ime"><br>
         Prezime: <input type="text" id="prezime" name="prezime"><br>
         Adresa prebivalista: <input type="text" id="adresa" name="adresa"><br>
@@ -39,6 +40,29 @@
 
         if (submitOK == "false") {
             return false;
+        }
+
+        if(document.getElementById("ime")==""){
+            alert("Ime je prazno!");
+            submitOK = "false";
+        }else if(document.getElementById("prezime")==""){
+            alert("Prezime je prazno!");
+            submitOK = "false";
+        }else if(document.getElementById("adresa")==""){
+            alert("adresa je prazno!");
+            submitOK = "false";
+        }else if(document.getElementById("grad")==""){
+            alert("grad je prazno!");
+            submitOK = "false";
+        }else if(document.getElementById("drzava")==""){
+            alert("drzava je prazno!");
+            submitOK = "false";
+        }else if(document.getElementById("broj")==""){
+            alert("broj je prazno!");
+            submitOK = "false";
+        }else if(document.getElementById("jedinstveni")==""){
+            alert("jedinstveni je prazno!");
+            submitOK = "false";
         }
         }
     </script>

@@ -26,14 +26,14 @@ class Pacijent(models.Model):
     broja_telefona = models.CharField(max_length=500, default=None)
     jedinstveni_broj_osiguranika = models.CharField(max_length=500, default=None)
     sifra_bolesti = models.CharField(max_length=500, default=None)
-    datum = models.DateTimeField(max_length=500, default=None)
+    datum = models.CharField(max_length=500, default=None)
     diagnoza = models.CharField(max_length=500, default=None)
     lekovi = models.CharField(max_length=500, default=None)
     dioptrija = models.CharField(max_length=500, default=None)
     alergije_na_lek = models.CharField(max_length=500, default=None)
-    visina = models.FloatField(max_length=500, default=None)
-    tezina = models.FloatField(max_length=500, default=None)
-    krvna_grupa = models.CharField(max_length=3, default=None)
+    visina = models.CharField(max_length=500, default=None)
+    tezina = models.CharField(max_length=500, default=None)
+    krvna_grupa = models.CharField(max_length=500, default=None)
 
     objects = UserManager()
 
