@@ -5,7 +5,7 @@
         <title>Eir - Logovanje</title>    
     </head>
 <body>
-    <form method="POST" action="login" onSubmit="return proveri();">
+    <form method="POST" action="loginKorisnik" onSubmit="return proveri();">
         {% csrf_token %}
         <div class="unos">
             <table>
@@ -23,9 +23,9 @@
 				<th></th>
 					<th align="left"><input type="submit" class="sub" value="Uloguj se"></th>
 					<th align="left"><label style="color: red;">
-					{% for message in messages %}
-                        {{ messages }}<br />
-                    {% endfor %}
+					{% if messages|length == 1 %}
+                        Pogrešno korisničko ime ili lozinka
+                    {% endif %}
 					</label></th>
 				</tr>
             </table>

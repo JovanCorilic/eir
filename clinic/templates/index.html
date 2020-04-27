@@ -5,26 +5,91 @@
         <title>Eir</title>
     </head>
     <body>
-        {% if ime != None %}
-            <h1>Ulogovani ste kao {{ime}}</h1>
-            <br /><br />
+        {% if ime != None and "[NPL]" in ime %}
+            <h2>Uspešno ste se ulogovali kao {{uloga}}</h2><br />
+            <h2>Molimo vas da promenite svoju lozinku</h2>
+            <form method="POST" action="promeniLozinku" onSubmit="return proverii();">
+            {% csrf_token %}
+                <table>
+                    <tr>
+						<th align="right">Email </th>
+						<th><input name="email" id="email" disabled value="{{email}}"></th>
+					</tr>
+                    <tr>
+						<th align="right">Lozinka </th>
+						<th><input type="password" name="password" id="password" placeholder="Lozinka"></th>
+						<th align="left"><label id="lpassword" style="color: red;"></label></th>
+					</tr>
+                    <tr>
+						<th align="right">Ponovite Lozinku </th>
+						<th><input type="password" name="password2" id="password2" placeholder="Ponovite Lozinku"></th>
+						<th align="left"><label id="lpassword2" style="color: red;"></label></th>
+					</tr>
+                    <tr>
+                        <th></th>
+                        <th align="left"><input type="submit" value="Potvrdi" /></th>
+                        <th></th>
+                    </tr>
+                </table>
+            </form>
+        {% else %}
+            {% if ime != None %}
+                <h1>Ulogovani ste kao {{ime}}</h1>
+                <br /><br />
+            {% endif %}
+            Hej! Ovo je hip i moderna veb aplikacija...<br />
+            <br>
+            {% if ime == None %}
+            <a href="registerKorisnik">Registruj se</a><br />
+            <a href="registerLekara">Registruj Lekara</a><br />
+        <a href="registerAdmina">Registruj Admina</a><br />
+            <a href="login">Uloguj se</a><br />
+            <br />
+            {% endif %}
+            <form action="/superadmin/register">
+                <input type="submit" value="Registruj administratora klinike" />
+            </form><br>
+            <form action="/pacijent/registracija">
+                <input type="submit" value="Registracija za pacijenta" />
+            </form><br>
+            <form action="login">
+                <input type="submit" value="Login" />
+            </form>
         {% endif %}
-        Hej! Ovo je hip i moderna veb aplikacija...<br />
-        <br>
-        {% if ime == None %}
-        <a href="korisnik/register">Registruj se</a><br />
-        <a href="korisnik/login">Uloguj se</a>
-        <br />
-        {% endif %}
-        <form action="/superadmin/register">
-            <input type="submit" disabled="true" value="Registruj administratora klinike" />
-        </form><br>
-        <form action="/pacijent/registracija">
-            <input type="submit" disabled="true" value="Registracija za pacijenta" />
-        </form><br>
-        <form action="login">
-            <input type="submit" disabled="true" value="Login" />
-        </form>
         <!--<a href="/superadmin/register">Registruj administratora klinike</a>-->
     </body>
+    <script>
+            function proverii() {
+                var popunjeno = true;
+                if(document.getElementById("password").value == ""){
+                        popunjeno = false
+                        document.getElementById('lpassword').innerHTML = 'Ovo polje je obavezno!';
+                    }
+                else if(document.getElementById("password").value.length < 8){
+                        popunjeno = false
+                        document.getElementById('lpassword').innerHTML = 'Lozinka mora da sadrzi minimalno 8 karaktera!';
+                    }
+                else{
+                        document.getElementById('lpassword').innerHTML = '';
+                    }
+
+                if(document.getElementById("password2").value == ""){
+                        popunjeno = false
+                        document.getElementById('lpassword2').innerHTML = 'Ovo polje je obavezno!';
+                    }
+                else if(document.getElementById("password2").value != document.getElementById("password").value){
+                        popunjeno = false
+                        document.getElementById('lpassword2').innerHTML = 'Lozinke se ne poklapaju';
+                    }
+                else{
+                        document.getElementById('lpassword2').innerHTML = '';
+                    }
+
+                if(!popunjeno) {alert("Morate da pravilno popunite sva polja")}
+                else{
+                    document.getElementById("email").disabled = false;
+                }
+				return popunjeno;
+			}
+    </script>
 </html>
