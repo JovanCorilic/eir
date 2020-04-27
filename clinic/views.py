@@ -108,7 +108,7 @@ def registerAdmina(request):
 def registracijaPacijent(request):
     if request.method == 'POST':
         email_adresa = request.POST['email']
-        lozinka = 'password'
+        lozinka = request.POST['sifra']
         ime = request.POST['ime']
         prezime = request.POST['prezime']
         adresa_prebivalista = request.POST['adresa']
