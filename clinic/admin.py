@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from .models import Snippet, Pacijent
+from .models import Snippet, Pacijent,Lekar,Sala,Klinika,Admin
 
 admin.site.site_header = "Klinika"
 
@@ -18,7 +18,7 @@ class PacijentAdmin(admin.ModelAdmin):
 
 
 class LekarAdmin(admin.ModelAdmin):
-    list_display = ("email_adresa","lozinka", "ime", "prezime", "broja_telefona", "jedinstveni_broj_osiguranika", "jedinstveni_broj_osiguranika", "radno_mesto", "pozicija")
+    list_display = ("email_adresa","lozinka", "ime", "prezime", "broja_telefona", "jedinstveni_broj_osiguranika", "radno_mesto", "pozicija")
     list_filter = ("ime", "prezime", "pozicija", "radno_mesto")
     search_fields = ("ime", "prezime", "pozicija", "radno_mesto")
 
@@ -31,10 +31,18 @@ class SalaAdmin(admin.ModelAdmin):
 
 class KlinikaAdmin(admin.ModelAdmin):
     list_display = ("naziv", "adresa", "opis")
-    list_filter = ("naziv")
+    list_filter = ("naziv",)
     search_fields = ("ime", "adresa", "opis")
 
+class AdminAdmin(admin.ModelAdmin):
+    list_display = ("email_adresa","lozinka", "ime", "prezime", "broja_telefona", "jedinstveni_broj_osiguranika", "datum", "naziv_klinike")
+    list_filter = ("ime", "prezime")
+    search_fields = ("ime", "prezime")
 
 admin.site.register(Snippet, SnippetAdmin)
 admin.site.register(Pacijent, PacijentAdmin)
+admin.site.register(Lekar,LekarAdmin)
+admin.site.register(Sala,SalaAdmin)
+admin.site.register(Klinika,KlinikaAdmin)
+admin.site.register(Admin,AdminAdmin)
 admin.site.unregister(Group)
