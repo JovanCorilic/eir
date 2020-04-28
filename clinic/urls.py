@@ -20,4 +20,6 @@ urlpatterns = [
     path('registerAdmina', views.registerAdmina, name='registerAdmina'),
     path('promeniLozinku', views.promeniLozinku, name='promeniLozinku'),
     path('IzlogujSe', views.IzlogujSe, name='IzlogujSe'),
+    path('Omeni', views.Omeni, name='Omeni'),
+    path('IzmeniKorisnika', views.IzmeniKorisnika, name='IzmeniKorisnika'),
 ]

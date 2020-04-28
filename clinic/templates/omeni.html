@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+	<head>
+		<title>{{ime}} {{prezime}}</title>
+		<link rel="stylesheet" href="css/stil.css">
+	</head>
+	<body>
+		<div class="unos" style="margin-left:70px">
+			<h1>{{ime}} {{prezime}}</h1>
+			<form method="POST" action="ObrisiKorisnika" onSubmit="return proveri();">{% csrf_token %}<input type="submit" class="sub" value="Obrisi" ></form>
+		</div>
+		<form method="POST" action="IzmeniKorisnika" onSubmit="return proveri();" >{% csrf_token %}
+			<div class="unos2">
+				<table>
+					<tr>
+						<th align="right">Ime </th>
+						<th><input type="text" name="ime" id="ime" value="{{ime}}"></th>
+						<th></th>
+					</tr>
+					<tr>
+						<th align="right">Prezime </th>
+						<th><input type="text" name="prezime" id="prezime" value="{{prezime}}"></th>
+						<th></th>
+					</tr>
+					<tr>
+						<th align="right">Email </th>
+						<th><input type="text" name="email" id="email" disabled value="{{email}}"></th>
+						<th align="left"><label id="lemail" style="color: red;"></label></th>
+					</tr>
+					<tr>
+						<th align="right">Password </th><!-- Zar moze da vidi njegovu lozinku????? -->
+						<th><input type="text" name="password" id="password" value="{{lozinka}}"></th>
+						<th align="left"><label id="lpassword" style="color: red;"></label></th>
+					</tr>
+
+					<tr>
+						<th align="right">Ponovite Password </th>
+						<th><input type="text" name="password2" id="password2" value="{{lozinka}}"></th>
+						<th align="left"><label id="lpassword2" style="color: red;"></label></th>
+					</tr>
+
+					<tr>
+						<th align="right">Broja Telefona </th>
+                        <th><input type="text" name="broja_telefona" id="broja_telefona" value="{{broja_telefona}}"></th>
+						<th align="left"><label id="lbroja_telefona" style="color: red;"></label></th>
+					</tr>
+					<tr>
+						<th align="right">Jedinstveni Broj Osiguranika </th>
+						<th><input type="text" name="jedinstveni_broj_osiguranika" id="jedinstveni_broj_osiguranika" value="{{jedinstveni_broj_osiguranika}}"></th>
+						<th align="left"><label id="ljedinstveni_broj_osiguranika" style="color: red;"></label></th>
+					</tr>
+                    <tr>
+						<th align="right">Datum Registracije </th>
+						<th><input type="text" name="datum" id="datum" disabled value="{{datum}}"></th>
+						<th align="left"><label id="ldatum" style="color: red;"></label></th>
+					</tr>
+                    <tr>
+						<th align="right">Radno Mesto </th>
+						<th><input type="text" name="radno_mesto" id="radno_mesto" disabled value="{{radno_mesto}}"></th>
+						<th align="left"><label id="lradno_mesto" style="color: red;"></label></th>
+					</tr>
+                    <tr>
+						<th align="right">Pozicija </th>
+						<th><input type="text" name="pozicija" id="pozicija" disabled value="{{pozicija}}"></th>
+						<th align="left"><label id="lpozicija" style="color: red;"></label></th>
+					</tr>
+					<tr>
+						<th></th>
+						<th align="left"><input type="submit" class="sub" value="Sacuvaj Promene"></th>
+						<th align="left"><label style="color: red;">
+							{% if messages|length == 1 %}
+                                Email adresa je zauzeta
+                            {% endif %}
+						</label></th>
+					</tr>
+				</table>
+			</div>
+		</form>
+		<script>
+			function proveri() {
+				var popunjeno = true;
+
+
+				if(document.getElementById("email").value.includes("@") == false || document.getElementById("email").value.includes(".") == false){
+					popunjeno = false
+					document.getElementById('lemail').innerHTML = 'Email koji ste uneli je pogresan!';
+				}
+				else{
+					document.getElementById('lemail').innerHTML = '';
+				}
+
+				if(document.getElementById("password").value == ""){
+					popunjeno = false
+					document.getElementById('lpassword').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else if(document.getElementById("password").value.length < 8){
+					popunjeno = false
+					document.getElementById('lpassword').innerHTML = 'Lozinka mora da sadrzi minimalno 8 karaktera!';
+				}
+				else{
+					document.getElementById('lpassword').innerHTML = '';
+				}
+				if(document.getElementById("password").value != document.getElementById("password2").value){
+					popunjeno = false
+					document.getElementById('lpassword2').innerHTML = 'Lozinke se ne poklapaju';
+				}
+				else{
+					document.getElementById('lpassword2').innerHTML = '';
+				}
+				if(!popunjeno) {alert("Morate da pravilno popunite sva polja")}
+				return popunjeno;
+			}
+		</script>
+	</body>
+<style>
+        input[type=text], input[type=number]:not(.avs), input[type=password], select{
+          width: 100%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          font-weight: bold;
+        }
+        .sub {
+          background-color: #4CAF50;
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          cursor: pointer;
+          font-weight: bold;
+        }
+    </style>
+</html>

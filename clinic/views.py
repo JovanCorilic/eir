@@ -214,3 +214,123 @@ def promeniLozinku(request):
             return redirect('index')
     else:
         return redirect('index')
+
+def Omeni(request):
+    if request.method == 'POST':
+        email_adresa = ""
+        uloga = ""
+
+        if 'email' in request.session:
+            email_adresa = request.session['email']
+        if 'uloga' in request.session:
+            uloga = request.session['uloga']
+
+        if uloga == 'PACIJENT':
+            lozinka = Pacijent.objects.filter(email_adresa=email_adresa)[0].lozinka
+            ime = Pacijent.objects.filter(email_adresa=email_adresa)[0].ime
+            prezime = Pacijent.objects.filter(email_adresa=email_adresa)[0].prezime
+            broja_telefona = Pacijent.objects.filter(email_adresa=email_adresa)[0].broja_telefona
+            jedinstveni_broj_osiguranika = Pacijent.objects.filter(email_adresa=email_adresa)[0].jedinstveni_broj_osiguranika
+            datum = Pacijent.objects.filter(email_adresa=email_adresa)[0].datum
+            radno_mesto = Pacijent.objects.filter(email_adresa=email_adresa)[0].radno_mesto
+            pozicija = Pacijent.objects.filter(email_adresa=email_adresa)[0].pozicija
+
+            request.session['koga'] = email_adresa
+
+            return render(request, 'omeni.html', {'email': email_adresa, 'uloga': uloga, 'ime': ime, 'prezime': prezime,
+                                              'lozinka':lozinka, 'broja_telefona':broja_telefona,
+                                              'jedinstveni_broj_osiguranika':jedinstveni_broj_osiguranika,
+                                              'datum':datum, 'radno_mesto':radno_mesto, 'pozicija':pozicija})
+        elif uloga == 'LEKAR':
+            lozinka = Lekar.objects.filter(email_adresa=email_adresa)[0].lozinka
+            ime = Lekar.objects.filter(email_adresa=email_adresa)[0].ime
+            prezime = Lekar.objects.filter(email_adresa=email_adresa)[0].prezime
+            broja_telefona = Lekar.objects.filter(email_adresa=email_adresa)[0].broja_telefona
+            jedinstveni_broj_osiguranika = Lekar.objects.filter(email_adresa=email_adresa)[0].jedinstveni_broj_osiguranika
+            datum = Lekar.objects.filter(email_adresa=email_adresa)[0].datum
+            radno_mesto = Lekar.objects.filter(email_adresa=email_adresa)[0].radno_mesto
+            pozicija = Lekar.objects.filter(email_adresa=email_adresa)[0].pozicija
+
+            request.session['koga'] = email_adresa
+
+            return render(request, 'omeni.html', {'email': email_adresa, 'uloga': uloga, 'ime': ime, 'prezime': prezime,
+                                              'lozinka':lozinka, 'broja_telefona':broja_telefona,
+                                              'jedinstveni_broj_osiguranika':jedinstveni_broj_osiguranika,
+                                              'datum':datum, 'radno_mesto':radno_mesto, 'pozicija':pozicija})
+        elif uloga == 'ADMIN':
+            lozinka = Admin.objects.filter(email_adresa=email_adresa)[0].lozinka
+            ime = Admin.objects.filter(email_adresa=email_adresa)[0].ime
+            prezime = Admin.objects.filter(email_adresa=email_adresa)[0].prezime
+            broja_telefona = Admin.objects.filter(email_adresa=email_adresa)[0].broja_telefona
+            jedinstveni_broj_osiguranika = Admin.objects.filter(email_adresa=email_adresa)[0].jedinstveni_broj_osiguranika
+            datum = Admin.objects.filter(email_adresa=email_adresa)[0].datum
+            radno_mesto = Admin.objects.filter(email_adresa=email_adresa)[0].radno_mesto
+            pozicija = Admin.objects.filter(email_adresa=email_adresa)[0].pozicija
+
+            request.session['koga'] = email_adresa
+
+            return render(request, 'omeni.html', {'email': email_adresa, 'uloga': uloga, 'ime': ime, 'prezime': prezime,
+                                                  'lozinka': lozinka, 'broja_telefona': broja_telefona,
+                                                  'jedinstveni_broj_osiguranika': jedinstveni_broj_osiguranika,
+                                                  'datum': datum, 'radno_mesto': radno_mesto, 'pozicija': pozicija})
+        else:
+            return redirect('index')
+
+def IzmeniKorisnika(request):
+    if request.method == 'POST':
+        #email_adresa = request.POST['email'] #ne jos
+        lozinka = request.POST['password']
+        ime = request.POST['ime']
+        prezime = request.POST['prezime']
+        broja_telefona = request.POST['broja_telefona']
+        jedinstveni_broj_osiguranika = request.POST['jedinstveni_broj_osiguranika']
+
+        if Lekar.objects.filter(email_adresa=request.session['email']).exists():
+            lekar = Lekar.objects.filter(email_adresa=request.session['email'])[0]
+            lekar.ime = ime
+            lekar.lozinka = lozinka
+            lekar.prezime = prezime
+            lekar.broja_telefona = broja_telefona
+            lekar.jedinstveni_broj_osiguranika = jedinstveni_broj_osiguranika
+
+            lekar.save()
+
+            # request.session['email'] = email_adresa
+            request.session['ime'] = ime
+            request.session['prezime'] = prezime
+
+            return redirect('index')
+
+        elif Admin.objects.filter(email_adresa=request.session['email']).exists():
+            admin = Admin.objects.filter(email_adresa=request.session['email'])[0]
+            admin.ime = ime
+            admin.lozinka = lozinka
+            admin.prezime = prezime
+            admin.broja_telefona = broja_telefona
+            admin.jedinstveni_broj_osiguranika = jedinstveni_broj_osiguranika
+
+            admin.save()
+
+            # request.session['email'] = email_adresa
+            request.session['ime'] = ime
+            request.session['prezime'] = prezime
+
+            return redirect('index')
+
+        elif Pacijent.objects.filter(email_adresa=request.session['email']).exists():
+            pacijent = Pacijent.objects.filter(email_adresa=request.session['email'])[0]
+            pacijent.ime = ime
+            pacijent.lozinka = lozinka
+            pacijent.prezime = prezime
+            pacijent.broja_telefona = broja_telefona
+            pacijent.jedinstveni_broj_osiguranika = jedinstveni_broj_osiguranika
+
+            pacijent.save()
+
+            # request.session['email'] = email_adresa
+            request.session['ime'] = ime
+            request.session['prezime'] = prezime
+
+            return redirect('index')
+    else:
+        return redirect('index')
