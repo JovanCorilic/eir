@@ -200,13 +200,8 @@ def promeniLozinku(request):
 
             lekar.save()
 
-            sadrzaj = {
-                "ime": Lekar.objects.filter(email_adresa=email_adresa)[0].ime,
-                "email": Lekar.objects.filter(email_adresa=email_adresa)[0].email_adresa,
-                "uloga": "LEKAR"
-            }
-            response = redirect('/')
-            return render(request, 'index.html', sadrzaj)
+            request.session['ime'] = Lekar.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime
+            return redirect('index')
 
         elif Admin.objects.filter(email_adresa=email_adresa).exists():
             admin = Admin.objects.filter(email_adresa=email_adresa)[0]
@@ -215,25 +210,7 @@ def promeniLozinku(request):
 
             admin.save()
 
-            sadrzaj = {
-                "ime": Admin.objects.filter(email_adresa=email_adresa)[0].ime,
-                "email": Admin.objects.filter(email_adresa=email_adresa)[0].email_adresa,
-                "uloga": "LEKAR"
-            }
-            response = redirect('/')
-            return render(request, 'index.html', sadrzaj)
-        sadrzaj = {
-            "ime": Lekar.objects.filter(email_adresa=request.POST['email'])[0].ime,
-            "email": Lekar.objects.filter(email_adresa=request.POST['email'])[0].email_adresa,
-            "uloga": "LEKAR"
-        }
-        response = redirect('/')
-        return render(request, 'index.html', sadrzaj)
+            request.session['ime'] = Admin.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime
+            return redirect('index')
     else:
-        sadrzaj = {
-            "ime": Lekar.objects.filter(email_adresa=request.POST['email'])[0].ime,
-            "email": Lekar.objects.filter(email_adresa=request.POST['email'])[0].email_adresa,
-            "uloga": "LEKAR"
-        }
-        response = redirect('/')
-        return render(request, 'index.html', sadrzaj)
+        return redirect('index')
