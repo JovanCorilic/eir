@@ -59,33 +59,52 @@ def loginKorisnik(request):
         print("Tacni username i password za ADMIN? -> " + str(Admin.objects.filter(email_adresa=email_adresa, lozinka=lozinka).exists()))
         if Pacijent.objects.filter(email_adresa=email_adresa, lozinka=lozinka).exists():
             print("Ulogovan kao " + Pacijent.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime)
-            sadrzaj = {
-                "ime": Pacijent.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime,
-                "email": email_adresa,
-                "uloga": "PACIJENT"
-            }
-            response = redirect('/')
-            return render(request, 'index.html', sadrzaj)
+            #sadrzaj = {
+            #    "ime": Pacijent.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime,
+            #    "email": email_adresa,
+            #    "uloga": "PACIJENT"
+            #}
+
+            request.session['ime'] = Pacijent.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime
+            request.session['email'] = email_adresa
+            request.session['uloga'] = "PACIJENT"
+            request.session['prezime'] = Lekar.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].prezime
+            request.session['ulogovan'] = 'true'
+            #response = redirect('/')
+            #return render(request, 'index.html', sadrzaj)
+            return redirect('index')
         elif Lekar.objects.filter(email_adresa=email_adresa, lozinka=lozinka).exists():
             print("Ulogovan kao " + Lekar.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime)
-            sadrzaj = {
-                "ime": Lekar.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime,
-                "email": email_adresa,
-                "uloga": "LEKAR"
-            }
-            response = redirect('/')
+            #sadrzaj = {
+            #    "ime": Lekar.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime,
+            #    "email": email_adresa,
+            #    "uloga": "LEKAR"
+            #}
+            #response = redirect('/')
+            #request.session['email'] = email_adresa
+            #return render(request, 'index.html', sadrzaj)
+            request.session['ime'] = Lekar.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime
             request.session['email'] = email_adresa
-            return render(request, 'index.html', sadrzaj)
+            request.session['uloga'] = "LEKAR"
+            request.session['prezime'] = Lekar.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].prezime
+            request.session['ulogovan'] = 'true'
+            return redirect('index')
         elif Admin.objects.filter(email_adresa=email_adresa, lozinka=lozinka).exists():
             print("Ulogovan kao " + Admin.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime)
-            sadrzaj = {
-                "ime": Admin.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime,
-                "email": email_adresa,
-                "uloga": "ADMIN"
-            }
-            response = redirect('/')
+            #sadrzaj = {
+            #    "ime": Admin.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime,
+            #    "email": email_adresa,
+            #    "uloga": "ADMIN"
+            #}
+            #response = redirect('/')
+            #request.session['email'] = email_adresa
+            #return render(request, 'index.html', sadrzaj)
+            request.session['ime'] = Admin.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime
             request.session['email'] = email_adresa
-            return render(request, 'index.html', sadrzaj)
+            request.session['uloga'] = "ADMIN"
+            request.session['prezime'] = Lekar.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].prezime
+            request.session['ulogovan'] = 'true'
+            return redirect('index')
         else:
             messages.info(request, "Pogrešno korisničko ime ili lozinka")
             return redirect('loginKorisnik')

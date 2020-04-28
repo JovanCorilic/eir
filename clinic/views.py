@@ -8,8 +8,30 @@ from clinic.models import Lekar
 
 
 def index(req):
-    return render(req, 'index.html')
+    ime=""#ako ne postoji
+    email = ""
+    uloga = ""
+    prezime = ""
+    if 'ime' in req.session:
+        ime = req.session['ime']
+    if 'email' in req.session:
+        email = req.session['email']
+    if 'uloga' in req.session:
+        uloga = req.session['uloga']
+    if 'prezime' in req.session:
+        prezime = req.session['prezime']
 
+    return render(req, 'index.html', {'ime':ime, 'email':email, 'uloga':uloga, 'prezime':prezime})
+
+def IzlogujSe(request):
+    ime = ""  # ako ne postoji
+    email = ""
+    uloga = ""
+    request.session['ime'] = ''
+    request.session['email'] = ''
+    request.session['uloga'] = 'NEULOGOVAN'
+    del request.session['ulogovan']
+    return render(request, 'index.html', {'ime': ime, 'email': email, 'uloga': uloga})
 
 def register_clinic_admin(req):
     return render(req, 'superadmin/register.html')
@@ -147,7 +169,7 @@ def loginPacijent(request):
         print("1")
         if Pacijent.objects.filter(email_adresa=email_adresa).exists() :
             print("2")
-            if(Pacijent.objects.filter(lozinka = sifra).exists()):
+            if Pacijent.objects.filter(lozinka = sifra).exists():
                 print("3")
                 return redirect('glavnaStranicaPacijent')
             else:

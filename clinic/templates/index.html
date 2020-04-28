@@ -5,7 +5,7 @@
         <title>Eir</title>
     </head>
     <body>
-        {% if ime != None and "[NPL]" in ime %}
+        {% if ime != "" and "[NPL]" in ime %}<!--------------------------------------- FORMA ZA MENJANJE LOZINKE POSLE PRVOG LOGOVANJA------------------------------------->
             <h2>Uspešno ste se ulogovali kao {{uloga}}</h2><br />
             <h2>Molimo vas da promenite svoju lozinku</h2>
             <form method="POST" action="promeniLozinku" onSubmit="return proverii();">
@@ -33,29 +33,73 @@
                 </table>
             </form>
         {% else %}
-            {% if ime != None %}
+            {% if uloga != "" and uloga != "NEULOGOVAN" %}
+                {% if uloga == 'PACIJENT' %}<!--------------------------------------- POCETNA STRANA PACIJENTA ------------------------------------->
+                    <ul>
+                        <li><form method="POST" action="index" >{% csrf_token %}<input type="submit" value="Pocetna Strana"></form></li>
+                        <li><form method="POST" action="IzlogujSe" >{% csrf_token %}<input type="submit" class="meni" value="Izloguj se" ></form></li>
+
+                        <li class="desno"><form method="POST" action="Omeni" >{% csrf_token %}<input type="submit" class="meni" value="{{ime}} {{prezime}}" ></form></li>
+                    </ul>
+
                 <h1>Ulogovani ste kao {{ime}}</h1>
+
                 <br /><br />
-            {% endif %}
-            Hej! Ovo je hip i moderna veb aplikacija...<br />
-            <br>
-            {% if ime == None %}
+                {% elif uloga == 'LEKAR' %}<!--------------------------------------- POCETNA STRANA LEKARA ------------------------------------->
+                    <ul>
+                        <li><form method="POST" action="index" >{% csrf_token %}<input type="submit" value="Pocetna Strana"></form></li>
+                        <li><form method="POST" action="IzlogujSe" >{% csrf_token %}<input type="submit" class="meni" value="Izloguj se" ></form></li>
+
+                        <li class="desno"><form method="POST" action="Omeni" >{% csrf_token %}<input type="submit" class="meni" value="{{ime}} {{prezime}}" ></form></li>
+                    </ul>
+
+                <h1>Ulogovani ste kao {{ime}}</h1>
+
+                <br /><br />
+
+                {% elif uloga == 'ADMIN' %}<!------------------------------------------POCETNA ZA ADMINA--------------------------------------->
+                    <ul>
+                        <li><form method="POST" action="index" >{% csrf_token %}<input type="submit" value="Pocetna Strana"></form></li>
+                        <li><form method="POST" action="IzlogujSe" >{% csrf_token %}<input type="submit" class="meni" value="Izloguj se" ></form></li>
+
+                        <li class="desno"><form method="POST" action="Omeni" >{% csrf_token %}<input type="submit" class="meni" value="{{ime}} {{prezime}}" ></form></li>
+                    </ul>
+
+                <h1>Ulogovani ste kao {{ime}}</h1>
+
+                <br /><br />
+                {% endif %}
+            {% else %}<!-----------------------POCETNA ZA NEULOGOVANE KORISNIKE-------------------------->
+            <ul>
+                        <li><form method="POST" action="index" >{% csrf_token %}<input type="submit" value="Pocetna Strana"></form></li>
+                        <li><form method="POST" action="login" >{% csrf_token %}<input type="submit" class="meni" value="Uloguj se" ></form></li>
+            </ul>
             <a href="registerKorisnik">Registruj se</a><br />
             <a href="registerLekara">Registruj Lekara</a><br />
-        <a href="registerAdmina">Registruj Admina</a><br />
+            <a href="registerAdmina">Registruj Admina</a><br />
             <a href="login">Uloguj se</a><br />
             <br />
-            {% endif %}
-            <form action="/superadmin/register">
-                <input type="submit" value="Registruj administratora klinike" />
-            </form><br>
-            <form action="/pacijent/registracijaPacijent">
-                <input type="submit" value="Registracija za pacijenta" />
-            </form><br>
-            <form action="/pacijent/loginPacijent">
-                <input type="submit" value="Login za Pacijenta" />
-            </form>
-        {% endif %}
+
+            {% endif %}<!--------------------------------------------------------- FOOTER ZA SVE-------------------------------------------->
+            <style>
+            .footer {
+               position: fixed;
+               left: 0;
+               bottom: 0;
+               width: 100%;
+               text-align: center;
+               background-color:silver;
+            }
+            </style>
+            </head>
+
+
+            <br />Hej! Ovo je hip i moderna veb aplikacija...<br />
+
+            <div class="footer">
+              <p>© Copyright 2020 Tim 20</p>
+            </div>
+        {% endif %}<!---------------------------------------------------------------KRAJ WEB STRANICE---------------------------------------->
         <!--<a href="/superadmin/register">Registruj administratora klinike</a>-->
     </body>
     <script>
@@ -92,4 +136,74 @@
 				return popunjeno;
 			}
     </script>
+    <style>
+        html, body {
+            margin:0;
+            margin-top: 30px
+        }
+        li input {
+          background-color: #4CAF50;
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
+          margin: 0px;
+          border: 0;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          font-weight: bold;
+        }
+        input[type=submit]:hover {
+          background-color: #111;
+        }
+
+        input[type=submit]:hover:not(.meni) {
+          background-color: #01b601;
+        }
+
+        .meni {
+          background-color: #393939;
+        }
+        .desno{
+            float: right;
+        }
+        input[type=submit]:hover {
+          background-color: #111;
+        }
+
+        input[type=submit]:hover:not(.meni) {
+          background-color: #01b601;
+        }
+        ul {
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          background-color: #333;
+          position: fixed;
+          top: 0;
+          width: 100%;
+        }
+
+        li {
+          float: left;
+        }
+
+        li a {
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+          background-color: #111;
+        }
+
+        .active {
+          background-color: #4CAF50;
+        }
+    </style>
 </html>

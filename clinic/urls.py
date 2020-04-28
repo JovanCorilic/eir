@@ -5,6 +5,7 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('index', views.index, name='index'),
     path('', views.index),
     path('superadmin/register', views.register_clinic_admin),
     path('login', views.login_pacijent),
@@ -17,5 +18,6 @@ urlpatterns = [
     path('registerLekara', views.registerLekara, name='registerLekara'),
     path('registerLekar', views.registerLekara, name='registerLekar'),# vraca error ako obrisem
     path('registerAdmina', views.registerAdmina, name='registerAdmina'),
-    path('promeniLozinku', views.promeniLozinku, name='promeniLozinku')
+    path('promeniLozinku', views.promeniLozinku, name='promeniLozinku'),
+    path('IzlogujSe', views.IzlogujSe, name='IzlogujSe'),
 ]
