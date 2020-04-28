@@ -225,23 +225,7 @@ def Omeni(request):
         if 'uloga' in request.session:
             uloga = request.session['uloga']
 
-        if uloga == 'PACIJENT':
-            lozinka = Pacijent.objects.filter(email_adresa=email_adresa)[0].lozinka
-            ime = Pacijent.objects.filter(email_adresa=email_adresa)[0].ime
-            prezime = Pacijent.objects.filter(email_adresa=email_adresa)[0].prezime
-            broja_telefona = Pacijent.objects.filter(email_adresa=email_adresa)[0].broja_telefona
-            jedinstveni_broj_osiguranika = Pacijent.objects.filter(email_adresa=email_adresa)[0].jedinstveni_broj_osiguranika
-            datum = Pacijent.objects.filter(email_adresa=email_adresa)[0].datum
-            radno_mesto = Pacijent.objects.filter(email_adresa=email_adresa)[0].radno_mesto
-            pozicija = Pacijent.objects.filter(email_adresa=email_adresa)[0].pozicija
-
-            request.session['koga'] = email_adresa
-
-            return render(request, 'omeni.html', {'email': email_adresa, 'uloga': uloga, 'ime': ime, 'prezime': prezime,
-                                              'lozinka':lozinka, 'broja_telefona':broja_telefona,
-                                              'jedinstveni_broj_osiguranika':jedinstveni_broj_osiguranika,
-                                              'datum':datum, 'radno_mesto':radno_mesto, 'pozicija':pozicija})
-        elif uloga == 'LEKAR':
+        if uloga == 'LEKAR':
             lozinka = Lekar.objects.filter(email_adresa=email_adresa)[0].lozinka
             ime = Lekar.objects.filter(email_adresa=email_adresa)[0].ime
             prezime = Lekar.objects.filter(email_adresa=email_adresa)[0].prezime
@@ -317,20 +301,6 @@ def IzmeniKorisnika(request):
 
             return redirect('index')
 
-        elif Pacijent.objects.filter(email_adresa=request.session['email']).exists():
-            pacijent = Pacijent.objects.filter(email_adresa=request.session['email'])[0]
-            pacijent.ime = ime
-            pacijent.lozinka = lozinka
-            pacijent.prezime = prezime
-            pacijent.broja_telefona = broja_telefona
-            pacijent.jedinstveni_broj_osiguranika = jedinstveni_broj_osiguranika
-
-            pacijent.save()
-
-            # request.session['email'] = email_adresa
-            request.session['ime'] = ime
-            request.session['prezime'] = prezime
-
-            return redirect('index')
+        return redirect('index')
     else:
         return redirect('index')
