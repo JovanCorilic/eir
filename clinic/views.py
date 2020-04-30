@@ -140,7 +140,7 @@ def registerAdmina(request):
         niz = []
         for k in Klinika.objects.all():
             niz.extend([k.naziv])
-        return render(request, 'registerAdmina.html')
+        return render(request, 'registerAdmina.html', {'niz': niz})
 
 
 def registracijaPacijent(request):
