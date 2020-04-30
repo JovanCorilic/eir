@@ -37,7 +37,13 @@
 					</tr>
                     <tr>
 						<th align="right">Klinika u kojoj radi </th>
-						<th><input type="text" name="nazivklinike" id="nazivklinike" disabled placeholder="Jos uvek nije u potpunoj funkciji"></th>
+						<th>
+						<select name="radnomesto" id="radnomesto">
+						    {% for ss in niz%}
+						  <option value="{{ss}}">{{ss}}</option>
+						    {%endfor%}
+						</select>
+						</th>
 						<th align="left"><label id="lnazivklinike" style="color: red;"></label></th>
 					</tr>
 					<tr>
