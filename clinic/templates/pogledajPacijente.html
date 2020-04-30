@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pacijenti</title>
+</head>
+<body onload="tt()">
+    <div class="unos">
+		<h2>Pacijenti</h2>
+		Pretraga <input class="avs" id="pretraga" onchange="tt()"><br />
+		<table border="1" class="table" id="tabb">
+		    <tr class="tr">
+		        <th class="th">Ime</th>
+		        <th class="th">Prezime</th>
+		        <th class="th">Adresa Prebivališta</th>
+                <th class="th">Država</th>
+		        <th class="th">Grad</th>
+		        <th class="th">Broja Telefona</th>
+                <th class="th">Jedinstveni Broj Osiguranika</th>
+                <th class="th"></th>
+		    </tr>
+		    {% for pacijent in pacijenti %}
+		    <tr>
+		        <td class="td">
+		            {{ pacijent.ime }}
+		        </td>
+		        <td class="td">
+		            {{ pacijent.prezime }}
+		        </td>
+		        <td class="td">
+		            {{ pacijent.adresa_prebivalista }}
+		        </td>
+		        <td class="td">
+		        	{{ pacijent.drzava }}
+		        </td>
+		        <td class="td">
+		        	{{ pacijent.grad }}
+		        </td>
+		        <td class="td">
+		        	{{ pacijent.broja_telefona }}
+		        </td>
+                <td class="td">
+		        	{{ pacijent.jedinstveni_broj_osiguranika }}
+		        </td>
+
+		        <td class="td">
+		        <form method="POST" action="PogledajPacijenta" >{% csrf_token %}<input name="{{pacijent.ime}}" type="submit" class="tabdugme" value="Pogledaj" ></form>
+		        </td>
+		    </tr>
+		    {% endfor %}
+
+		</table>
+		<form method="POST" action="NaDodajVM" ><input type="submit" class="sub" value="Dodaj Virtualnu Masinu" ></form>
+	</div>
+</body>
+    <script>
+		function tt() {
+			var table, tr, i, txtValue;
+			var uneto = document.getElementById("pretraga").value;
+
+			var unos = false;
+
+			if(uneto == ""){
+				unos = true;
+			}
+
+			table = document.getElementById("tabb");
+			tr = table.getElementsByTagName("tr");
+
+			for (i = 0; i < tr.length; i++) {
+
+		    	var td1 = tr[i].getElementsByTagName("td")[0];
+		    	var td2 = tr[i].getElementsByTagName("td")[1];
+		    	var td3 = tr[i].getElementsByTagName("td")[2];
+		    	var td4 = tr[i].getElementsByTagName("td")[3];
+		    	var td5 = tr[i].getElementsByTagName("td")[4];
+		    	var td6 = tr[i].getElementsByTagName("td")[5];
+		    	var td7 = tr[i].getElementsByTagName("td")[6];
+
+		    	if (td1 || td2 || td3 || td4 || td5 || td6 || td7) {
+		      		txtValue1 = td1.textContent || td1.innerText;
+		      		txtValue2 = td2.textContent || td2.innerText;
+		      		txtValue3 = td3.textContent || td3.innerText;
+		      		txtValue4 = td4.textContent || td4.innerText;
+		      		txtValue5 = td5.textContent || td5.innerText;
+		      		txtValue6 = td6.textContent || td6.innerText;
+		      		txtValue7 = td7.textContent || td7.innerText;
+
+		      		txtValue1 = txtValue1 == undefined ? '' : txtValue1.trim();
+		      		txtValue2 = txtValue2 == undefined ? '' : txtValue2.trim();
+		      		txtValue3 = txtValue3 == undefined ? '' : txtValue3.trim();
+		      		txtValue4 = txtValue4 == undefined ? '' : txtValue4.trim();
+		      		txtValue5 = txtValue5 == undefined ? '' : txtValue5.trim();
+		      		txtValue6 = txtValue6 == undefined ? '' : txtValue6.trim();
+		      		txtValue7 = txtValue7 == undefined ? '' : txtValue7.trim();
+
+		      		var sadrzi = txtValue1.includes(uneto) || txtValue2.includes(uneto) || txtValue3.includes(uneto) || txtValue4.includes(uneto) || txtValue5.includes(uneto) || txtValue6.includes(uneto) || txtValue7.includes(uneto);
+
+		      		if (sadrzi || unos) {
+		        		tr[i].style.display = "";
+		      		}
+		      		else {
+		        		tr[i].style.display = "none";
+		      		}
+		    	}
+		  	}
+		}
+	</script>
+</html>

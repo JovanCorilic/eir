@@ -55,6 +55,7 @@ class Lekar(models.Model):
     def __str__(self):
         return self.email_adresa
 
+
 class Admin(models.Model):
     email_adresa = models.TextField(max_length=500, default=None)
     lozinka = models.TextField(max_length=500, default=None)
@@ -69,6 +70,7 @@ class Admin(models.Model):
 
     def __str__(self):
         return self.email_adresa
+
 
 class Sala(models.Model):
     broj = models.TextField(max_length=500, default=None)

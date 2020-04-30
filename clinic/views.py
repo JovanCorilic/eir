@@ -8,7 +8,7 @@ from clinic.models import Lekar
 
 
 def index(req):
-    ime=""#ako ne postoji
+    ime = ""  # ako ne postoji
     email = ""
     uloga = ""
     prezime = ""
@@ -21,7 +21,8 @@ def index(req):
     if 'prezime' in req.session:
         prezime = req.session['prezime']
 
-    return render(req, 'index.html', {'ime':ime, 'email':email, 'uloga':uloga, 'prezime':prezime})
+    return render(req, 'index.html', {'ime': ime, 'email': email, 'uloga': uloga, 'prezime': prezime})
+
 
 def IzlogujSe(request):
     ime = ""  # ako ne postoji
@@ -33,22 +34,20 @@ def IzlogujSe(request):
     del request.session['ulogovan']
     return render(request, 'index.html', {'ime': ime, 'email': email, 'uloga': uloga})
 
+
 def register_clinic_admin(req):
     return render(req, 'superadmin/register.html')
 
 
-#def registracija_pacijent(req):
- #   return render(req, 'pacijent/registracija.html')
+# def registracija_pacijent(req):
+#   return render(req, 'pacijent/registracija.html')
 
-#def login_pacijent2(req):
- #   return  render(req, 'pacijent/login.html')
+# def login_pacijent2(req):
+#   return  render(req, 'pacijent/login.html')
 
 
 def login_pacijent(req):
     return render(req, 'login.html')
-
-
-
 
 
 def izmeni_lekara(req):
@@ -61,6 +60,7 @@ def izmeni_kliniku(req):
 
 def izmeni_salu(req):
     return render(req, 'sala/izmeniInformacijeSale.html')
+
 
 ######################################################################################
 
@@ -76,7 +76,8 @@ def registerLekara(request):
         radno_mesto = "Nije implementirano"
         pozicija = request.POST['pozicija']
 
-        if Admin.objects.filter(email_adresa=email_adresa).exists() or Pacijent.objects.filter(email_adresa=email_adresa).exists() or Lekar.objects.filter(email_adresa=email_adresa).exists():
+        if Admin.objects.filter(email_adresa=email_adresa).exists() or Pacijent.objects.filter(
+                email_adresa=email_adresa).exists() or Lekar.objects.filter(email_adresa=email_adresa).exists():
             print("Email adresa je vec zauzeta")
             messages.info(request, "Email adresa je vec zauzeta")
             return redirect('registerLekara')
@@ -89,7 +90,10 @@ def registerLekara(request):
 
         ime = "[NPL]" + ime
 
-        lekar = Lekar.objects.create(email_adresa=email_adresa, lozinka=lozinka, ime=ime, prezime=prezime, broja_telefona=broja_telefona, jedinstveni_broj_osiguranika=jedinstveni_broj_osiguranika, datum=date.today(), radno_mesto=radno_mesto, pozicija=pozicija)
+        lekar = Lekar.objects.create(email_adresa=email_adresa, lozinka=lozinka, ime=ime, prezime=prezime,
+                                     broja_telefona=broja_telefona,
+                                     jedinstveni_broj_osiguranika=jedinstveni_broj_osiguranika, datum=date.today(),
+                                     radno_mesto=radno_mesto, pozicija=pozicija)
         lekar.save()
         print("napravljen lekar " + ime)
         return redirect('loginKorisnik')
@@ -107,7 +111,8 @@ def registerAdmina(request):
         jedinstveni_broj_osiguranika = request.POST['jmbgnt']
         naziv_klinike = "Nije implementirano"
 
-        if Admin.objects.filter(email_adresa=email_adresa).exists() or Pacijent.objects.filter(email_adresa=email_adresa).exists() or Lekar.objects.filter(email_adresa=email_adresa).exists():
+        if Admin.objects.filter(email_adresa=email_adresa).exists() or Pacijent.objects.filter(
+                email_adresa=email_adresa).exists() or Lekar.objects.filter(email_adresa=email_adresa).exists():
             print("Email adresa je vec zauzeta")
             messages.info(request, "Email adresa je vec zauzeta")
             return redirect('registerLekara')
@@ -120,12 +125,16 @@ def registerAdmina(request):
 
         ime = "[NPL]" + ime
 
-        admin = Admin.objects.create(email_adresa=email_adresa, lozinka=lozinka, ime=ime, prezime=prezime, broja_telefona=broja_telefona, jedinstveni_broj_osiguranika=jedinstveni_broj_osiguranika, datum=date.today(), naziv_klinike=naziv_klinike)
+        admin = Admin.objects.create(email_adresa=email_adresa, lozinka=lozinka, ime=ime, prezime=prezime,
+                                     broja_telefona=broja_telefona,
+                                     jedinstveni_broj_osiguranika=jedinstveni_broj_osiguranika, datum=date.today(),
+                                     naziv_klinike=naziv_klinike)
         admin.save()
         print("napravljen lekar " + ime)
         return redirect('loginKorisnik')
     else:
         return render(request, 'registerAdmina.html')
+
 
 def registracijaPacijent(request):
     if request.method == 'POST':
@@ -141,35 +150,37 @@ def registracijaPacijent(request):
 
         if Admin.objects.filter(email_adresa=email_adresa).exists() or Pacijent.objects.filter(
                 email_adresa=email_adresa).exists() or Lekar.objects.filter(email_adresa=email_adresa).exists():
-            #print("Email adresa je vec zauzeta")
+            # print("Email adresa je vec zauzeta")
             messages.info(request, "Email adresa je vec zauzeta")
             return redirect('registracijaPacijent')
 
         elif "[" in ime or "]" in ime or "[NPL]" in ime:
-            #print("ime ne sme da sadrzi [NPL]")
+            # print("ime ne sme da sadrzi [NPL]")
             messages.info(request, "ime ne sme da sadrzi karaktere [ ili ]")
             return redirect('registracijaPacijent')
 
         pacijent = Pacijent.objects.create(email_adresa=email_adresa, lozinka=lozinka, ime=ime, prezime=prezime,
-                                     broja_telefona=broja_telefona,
-                                     jedinstveni_broj_osiguranika=jedinstveni_broj_osiguranika,
-                                     adresa_prebivalista = adresa_prebivalista, grad = grad, drzava = drzava,
-                                           sifra_bolesti = "aaa",datum = "date.today()", diagnoza = "aaaa",lekovi= "aaaa",dioptrija= "aaaa",alergije_na_lek= "aaaa",
-                                           visina= "aaaa",tezina= "aaaa",krvna_grupa= "aaaa")
+                                           broja_telefona=broja_telefona,
+                                           jedinstveni_broj_osiguranika=jedinstveni_broj_osiguranika,
+                                           adresa_prebivalista=adresa_prebivalista, grad=grad, drzava=drzava,
+                                           sifra_bolesti="aaa", datum="date.today()", diagnoza="aaaa", lekovi="aaaa",
+                                           dioptrija="aaaa", alergije_na_lek="aaaa",
+                                           visina="aaaa", tezina="aaaa", krvna_grupa="aaaa")
         pacijent.save()
-        #print("napravljen pacijent " + ime)
+        # print("napravljen pacijent " + ime)
         return redirect('loginPacijent')
     else:
         return render(request, 'pacijent/registracijaPacijent.html')
+
 
 def loginPacijent(request):
     if request.method == 'POST':
         email_adresa = request.POST['email']
         sifra = request.POST['sifra']
         print("1")
-        if Pacijent.objects.filter(email_adresa=email_adresa).exists() :
+        if Pacijent.objects.filter(email_adresa=email_adresa).exists():
             print("2")
-            if Pacijent.objects.filter(lozinka = sifra).exists():
+            if Pacijent.objects.filter(lozinka=sifra).exists():
                 print("3")
                 return redirect('glavnaStranicaPacijent')
             else:
@@ -183,11 +194,13 @@ def loginPacijent(request):
     else:
         return render(request, 'pacijent/loginPacijent.html')
 
+
 def glavnaStranicaPacijent(req):
     if req.method == 'POST':
         return render(req, 'pacijent/glavnaStranicaPacijent.html')
     else:
         return render(req, 'pacijent/glavnaStranicaPacijent.html')
+
 
 def promeniLozinku(request):
     if request.method == 'POST':
@@ -215,6 +228,7 @@ def promeniLozinku(request):
     else:
         return redirect('index')
 
+
 def Omeni(request):
     if request.method == 'POST':
         email_adresa = ""
@@ -230,7 +244,8 @@ def Omeni(request):
             ime = Lekar.objects.filter(email_adresa=email_adresa)[0].ime
             prezime = Lekar.objects.filter(email_adresa=email_adresa)[0].prezime
             broja_telefona = Lekar.objects.filter(email_adresa=email_adresa)[0].broja_telefona
-            jedinstveni_broj_osiguranika = Lekar.objects.filter(email_adresa=email_adresa)[0].jedinstveni_broj_osiguranika
+            jedinstveni_broj_osiguranika = Lekar.objects.filter(email_adresa=email_adresa)[
+                0].jedinstveni_broj_osiguranika
             datum = Lekar.objects.filter(email_adresa=email_adresa)[0].datum
             radno_mesto = Lekar.objects.filter(email_adresa=email_adresa)[0].radno_mesto
             pozicija = Lekar.objects.filter(email_adresa=email_adresa)[0].pozicija
@@ -238,15 +253,16 @@ def Omeni(request):
             request.session['koga'] = email_adresa
 
             return render(request, 'omeni.html', {'email': email_adresa, 'uloga': uloga, 'ime': ime, 'prezime': prezime,
-                                              'lozinka':lozinka, 'broja_telefona':broja_telefona,
-                                              'jedinstveni_broj_osiguranika':jedinstveni_broj_osiguranika,
-                                              'datum':datum, 'radno_mesto':radno_mesto, 'pozicija':pozicija})
+                                                  'lozinka': lozinka, 'broja_telefona': broja_telefona,
+                                                  'jedinstveni_broj_osiguranika': jedinstveni_broj_osiguranika,
+                                                  'datum': datum, 'radno_mesto': radno_mesto, 'pozicija': pozicija})
         elif uloga == 'ADMIN':
             lozinka = Admin.objects.filter(email_adresa=email_adresa)[0].lozinka
             ime = Admin.objects.filter(email_adresa=email_adresa)[0].ime
             prezime = Admin.objects.filter(email_adresa=email_adresa)[0].prezime
             broja_telefona = Admin.objects.filter(email_adresa=email_adresa)[0].broja_telefona
-            jedinstveni_broj_osiguranika = Admin.objects.filter(email_adresa=email_adresa)[0].jedinstveni_broj_osiguranika
+            jedinstveni_broj_osiguranika = Admin.objects.filter(email_adresa=email_adresa)[
+                0].jedinstveni_broj_osiguranika
             datum = Admin.objects.filter(email_adresa=email_adresa)[0].datum
             radno_mesto = Admin.objects.filter(email_adresa=email_adresa)[0].radno_mesto
             pozicija = Admin.objects.filter(email_adresa=email_adresa)[0].pozicija
@@ -260,9 +276,10 @@ def Omeni(request):
         else:
             return redirect('index')
 
+
 def IzmeniKorisnika(request):
     if request.method == 'POST':
-        #email_adresa = request.POST['email'] #ne jos
+        # email_adresa = request.POST['email'] #ne jos
         lozinka = request.POST['password']
         ime = request.POST['ime']
         prezime = request.POST['prezime']
@@ -304,3 +321,15 @@ def IzmeniKorisnika(request):
         return redirect('index')
     else:
         return redirect('index')
+
+
+def pogledajPacijente(request):
+    pacijenti = Pacijent.objects.all()
+    return render(request, 'pogledajPacijente.html', {'pacijenti': pacijenti})
+
+def PogledajPacijenta(request):
+    odabrani = None
+    for pacijent in Pacijent.objects.all():
+        if request.POST[pacijent.ime] is not None:
+            odabrani = pacijent
+    return render(request, 'pogledajPacijenta.html', {'pacijent': odabrani})

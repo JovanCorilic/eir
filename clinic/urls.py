@@ -22,4 +22,6 @@ urlpatterns = [
     path('IzlogujSe', views.IzlogujSe, name='IzlogujSe'),
     path('Omeni', views.Omeni, name='Omeni'),
     path('IzmeniKorisnika', views.IzmeniKorisnika, name='IzmeniKorisnika'),
+    path('pogledajPacijente', views.pogledajPacijente, name='pogledajPacijente'),
+    path('PogledajPacijenta', views.PogledajPacijenta, name='PogledajPacijenta'),
 ]
