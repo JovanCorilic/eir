@@ -97,7 +97,7 @@ def registerLekara(request):
                                      radno_mesto=radno_mesto, pozicija=pozicija)
         lekar.save()
         print("napravljen lekar " + ime)
-        return redirect('loginKorisnik')
+        return redirect('index')
     else:
         return render(request, 'registerLekara.html')
 
@@ -448,3 +448,50 @@ def IzmeniKliniku(request):
     else:
         return redirect('index')
 
+
+def pogledajLekare(request):
+    kk = Lekar.objects.all()
+    return render(request, 'pogledajLekare.html', {'lekari': kk})
+
+
+def PogledajLekara(request):
+    odabrani = None
+    for kli in Lekar.objects.all():
+        try:
+            if request.POST[kli.ime] is not None:
+                odabrani = kli
+        except:
+            pass
+    if odabrani is not None:
+        return render(request, 'pogledajLekara.html', {'lekar': odabrani})
+
+
+def IzmeniLekara(request):
+    if request.method == 'POST':
+        ime = request.POST['ime']
+        prezime = request.POST['prezime']
+        broja_telefona = request.POST['broja_telefona']
+
+        if Lekar.objects.filter(ime=request.POST['koga']).exists():
+            if request.session['ime'] == ime:
+                request.session['ime'] = ime
+                request.session['prezime'] = prezime
+
+            k = Lekar.objects.filter(ime=request.POST['koga'])[0]
+            k.ime = ime
+            k.prezime = prezime
+            k.broja_telefona = broja_telefona
+
+            k.save()
+            return redirect('index')
+        return redirect('index')
+    else:
+        return redirect('index')
+
+
+def ObrisiLekara(request):
+    try:
+        Lekar.objects.filter(ime=request.POST['koga']).delete()
+        return redirect('index')
+    except:
+        return redirect('index')

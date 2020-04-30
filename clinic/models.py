@@ -52,6 +52,8 @@ class Lekar(models.Model):
     radno_mesto = models.TextField(max_length=500, default=None)
     pozicija = models.TextField(max_length=500, default=None)
 
+    objects = UserManager()
+
     def __str__(self):
         return self.email_adresa
 

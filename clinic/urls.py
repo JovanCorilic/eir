@@ -32,4 +32,8 @@ urlpatterns = [
     path('pogledajKlinike', views.pogledajKlinike, name='pogledajKlinike'),
     path('pogledajKliniku', views.pogledajKliniku, name='pogledajKliniku'),
     path('IzmeniKliniku', views.IzmeniKliniku, name='IzmeniKliniku'),
+    path('pogledajLekare', views.pogledajLekare, name='pogledajLekare'),
+    path('PogledajLekara', views.PogledajLekara, name='PogledajLekara'),
+    path('IzmeniLekara', views.IzmeniLekara, name='IzmeniLekara'),
+    path('ObrisiLekara', views.ObrisiLekara, name='ObrisiLekara'),
 ]
