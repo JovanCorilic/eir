@@ -74,7 +74,7 @@ def registerLekara(request):
         prezime = request.POST['prezime']
         broja_telefona = request.POST['btelefona']
         jedinstveni_broj_osiguranika = request.POST['jmbgnt']
-        radno_mesto = "Nije implementirano"
+        radno_mesto = request.POST['radnomesto']
         pozicija = request.POST['pozicija']
 
         if Admin.objects.filter(email_adresa=email_adresa).exists() or Pacijent.objects.filter(
@@ -99,7 +99,10 @@ def registerLekara(request):
         print("napravljen lekar " + ime)
         return redirect('index')
     else:
-        return render(request, 'registerLekara.html')
+        niz = []
+        for k in Klinika.objects.all():
+            niz.extend([k.naziv])
+        return render(request, 'registerLekara.html', {'niz': niz})
 
 
 def registerAdmina(request):
@@ -110,7 +113,7 @@ def registerAdmina(request):
         prezime = request.POST['prezime']
         broja_telefona = request.POST['btelefona']
         jedinstveni_broj_osiguranika = request.POST['jmbgnt']
-        naziv_klinike = "Nije implementirano"
+        naziv_klinike = request.POST['radnomesto']
 
         if Admin.objects.filter(email_adresa=email_adresa).exists() or Pacijent.objects.filter(
                 email_adresa=email_adresa).exists() or Lekar.objects.filter(email_adresa=email_adresa).exists():
@@ -134,6 +137,9 @@ def registerAdmina(request):
         print("napravljen lekar " + ime)
         return redirect('loginKorisnik')
     else:
+        niz = []
+        for k in Klinika.objects.all():
+            niz.extend([k.naziv])
         return render(request, 'registerAdmina.html')
 
 
