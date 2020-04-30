@@ -37,7 +37,13 @@
 					</tr>
                     <tr>
 						<th align="right">Radno Mesto </th>
-						<th><input type="text" name="radnomesto" id="radnomesto" disabled placeholder="Jos uvek nije u potpunoj funkciji"></th>
+						<th>
+						<select name="radnomesto" id="radnomesto">
+						    {% for ss in niz%}
+						  <option value="{{ss}}">{{ss}}</option>
+						    {%endfor%}
+						</select>
+						</th>
 						<th align="left"><label id="lradnomesto" style="color: red;"></label></th>
 					</tr>
                     <tr>
