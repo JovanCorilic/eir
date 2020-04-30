@@ -89,5 +89,7 @@ class Klinika(models.Model):
     adresa = models.TextField(max_length=500, default=None)
     opis = models.TextField(max_length=500, default=None)
 
+    objects = UserManager()
+
     def __str__(self):
         return self.adresa

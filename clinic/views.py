@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import auth
-from clinic.models import Pacijent, Admin
+from clinic.models import Pacijent, Admin, Klinika
 from django.contrib import messages
 from datetime import date
 from clinic.models import Lekar
@@ -338,8 +338,13 @@ def PogledajPacijenta(request):
 
 
 def pogledajSale(request):
+    uloga = ""
+    prezime = ""
+    if 'uloga' in request.session:
+        uloga = request.session['uloga']
+
     sale = Sala.objects.all()
-    return render(request, 'pogledajSale.html', {'sale': sale})
+    return render(request, 'pogledajSale.html', {'sale': sale, 'uloga': uloga})
 
 
 def pogledajSalu(request):
@@ -369,3 +374,35 @@ def IzmeniSalu(request):
         return redirect('index')
     else:
         return redirect('index')
+
+
+def ObrisiSalu(request):
+    try:
+        Sala.objects.filter(naziv=request.POST['koga']).delete()
+        return redirect('index')
+    except:
+        return redirect('index')
+
+
+def DodajSalu(request):
+    if request.method == 'POST':
+        broj = request.POST['broj']
+        naziv = request.POST['naziv']
+        idd = request.POST['id']
+        opis = request.POST['opis']
+
+        if Sala.objects.filter(broj=broj).exists() or Sala.objects.filter(naziv=naziv).exists() or not \
+                Klinika.objects.filter(naziv=idd).exists():
+            messages.info(request, "_")
+            return redirect('DodajSalu')
+        while True:
+            try:
+                sala = Sala.objects.create(broj=broj, naziv=naziv, id_klinike_kojoj_pripada=idd, opis=opis)
+                sala.save()
+                storage = messages.get_messages(request)
+                storage.used = True
+                return redirect('index')
+            except:
+                pass
+    else:
+        return render(request, 'dodajSalu.html')

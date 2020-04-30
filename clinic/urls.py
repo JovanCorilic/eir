@@ -27,4 +27,6 @@ urlpatterns = [
     path('pogledajSale', views.pogledajSale, name='pogledajSale'),
     path('pogledajSalu', views.pogledajSalu, name='pogledajSalu'),
     path('IzmeniSalu', views.IzmeniSalu, name='IzmeniSalu'),
+    path('ObrisiSalu', views.ObrisiSalu, name='ObrisiSalu'),
+    path('DodajSalu', views.DodajSalu, name='DodajSalu'),
 ]

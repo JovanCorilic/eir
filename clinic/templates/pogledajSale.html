@@ -14,7 +14,9 @@
 		        <th class="th">Naziv</th>
 		        <th class="th">Id Klinike Kojoj Pripada</th>
                 <th class="th">Opis</th>
+				{% if uloga == 'ADMIN' %}
                 <th class="th"></th>
+				{% endif %}
 		    </tr>
 		    {% for sala in sale %}
 		    <tr>
@@ -30,10 +32,11 @@
 		        <td class="td">
 		        	{{ sala.opis }}
 		        </td>
-
+				{% if uloga == 'ADMIN' %}
 		        <td class="td">
-		        <form method="POST" action="pogledajSalu" >{% csrf_token %}<input name="{{sala.naziv}}" type="submit" class="tabdugme" value="Pogledaj" ></form>
+		        	<form method="POST" action="pogledajSalu" >{% csrf_token %}<input name="{{sala.naziv}}" type="submit" class="tabdugme" value="Pogledaj" ></form>
 		        </td>
+				{% endif %}
 		    </tr>
 		    {% endfor %}
 

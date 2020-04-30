@@ -8,6 +8,7 @@
 	<body>
 		<div class="unos" style="margin-left:70px">
 			<h1>{{sala.broj}} {{sala.naziv}}</h1>
+			<form method="POST" action="ObrisiSalu">{% csrf_token %}<input type="hidden" name="koga" value="{{ sala.naziv }}"><input type="submit" name="{{ sala.naziv }}" class="sub" value="Obrisi" ></form>
 		</div>
 		<form method="POST" action="IzmeniSalu" >{% csrf_token %}
 			<div class="unos2">
