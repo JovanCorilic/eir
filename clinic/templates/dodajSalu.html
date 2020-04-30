@@ -21,7 +21,13 @@
 					</tr>
 					<tr>
 						<th align="right">Naziv Klinike Kojoj Pripada </th>
-						<th><input type="text" name="id" id="id" placeholder="Naziv Klinike"></th>
+						<th>
+                        <select name="id" id="id">
+                            {% for ss in niz%}
+                          <option value="{{ss}}">{{ss}}</option>
+                            {%endfor%}
+                        </select>
+                        </th>
 						<th align="left"><label id="lid" style="color: red;"></label></th>
 					</tr>
                     <tr>

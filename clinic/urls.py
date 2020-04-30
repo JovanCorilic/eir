@@ -29,4 +29,7 @@ urlpatterns = [
     path('IzmeniSalu', views.IzmeniSalu, name='IzmeniSalu'),
     path('ObrisiSalu', views.ObrisiSalu, name='ObrisiSalu'),
     path('DodajSalu', views.DodajSalu, name='DodajSalu'),
+    path('pogledajKlinike', views.pogledajKlinike, name='pogledajKlinike'),
+    path('pogledajKliniku', views.pogledajKliniku, name='pogledajKliniku'),
+    path('IzmeniKliniku', views.IzmeniKliniku, name='IzmeniKliniku'),
 ]

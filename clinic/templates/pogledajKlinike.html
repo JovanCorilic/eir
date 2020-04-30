@@ -2,39 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sale</title>
+    <title>Klinike</title>
 </head>
 <body onload="tt()">
     <div class="unos">
-		<h2>Sale</h2>
+		<h2>Klinike</h2>
 		Pretraga <input class="avs" id="pretraga" onchange="tt()"><br />
 		<table border="1" class="table" id="tabb">
 		    <tr class="tr">
-		        <th class="th">Broj</th>
 		        <th class="th">Naziv</th>
-		        <th class="th">Id Klinike Kojoj Pripada</th>
+		        <th class="th">Adresa</th>
                 <th class="th">Opis</th>
 				{% if uloga == 'ADMIN' %}
                 <th class="th"></th>
 				{% endif %}
 		    </tr>
-		    {% for sala in sale %}
+		    {% for klinika in klinike %}
 		    <tr>
 		        <td class="td">
-		            {{ sala.broj }}
+		            {{ klinika.naziv }}
 		        </td>
 		        <td class="td">
-		            {{ sala.naziv }}
+		            {{ klinika.adresa }}
 		        </td>
 		        <td class="td">
-		            {{ sala.id_klinike_kojoj_pripada }}
-		        </td>
-		        <td class="td">
-		        	{{ sala.opis }}
+		        	{{ klinika.opis }}
 		        </td>
 				{% if uloga == 'ADMIN' %}
 		        <td class="td">
-		        	<form method="POST" action="pogledajSalu" >{% csrf_token %}<input name="{{sala.naziv}}" type="submit" class="tabdugme" value="Pogledaj" ></form>
+		        	<form method="POST" action="pogledajKliniku" >{% csrf_token %}<input name="{{klinika.naziv}}" type="submit" class="tabdugme" value="Pogledaj" ></form>
 		        </td>
 				{% endif %}
 		    </tr>
@@ -62,22 +58,19 @@
 		    	var td1 = tr[i].getElementsByTagName("td")[0];
 		    	var td2 = tr[i].getElementsByTagName("td")[1];
 		    	var td3 = tr[i].getElementsByTagName("td")[2];
-		    	var td4 = tr[i].getElementsByTagName("td")[3];
 
 
 		    	if (td1 || td2 || td3 || td4) {
 		      		txtValue1 = td1.textContent || td1.innerText;
 		      		txtValue2 = td2.textContent || td2.innerText;
 		      		txtValue3 = td3.textContent || td3.innerText;
-		      		txtValue4 = td4.textContent || td4.innerText;
 
 
 		      		txtValue1 = txtValue1 == undefined ? '' : txtValue1.trim();
 		      		txtValue2 = txtValue2 == undefined ? '' : txtValue2.trim();
 		      		txtValue3 = txtValue3 == undefined ? '' : txtValue3.trim();
-		      		txtValue4 = txtValue4 == undefined ? '' : txtValue4.trim();
 
-		      		var sadrzi = txtValue1.includes(uneto) || txtValue2.includes(uneto) || txtValue3.includes(uneto) || txtValue4.includes(uneto);
+		      		var sadrzi = txtValue1.includes(uneto) || txtValue2.includes(uneto) || txtValue3.includes(uneto);
 
 		      		if (sadrzi || unos) {
 		        		tr[i].style.display = "";

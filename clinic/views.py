@@ -405,4 +405,46 @@ def DodajSalu(request):
             except:
                 pass
     else:
-        return render(request, 'dodajSalu.html')
+        niz = []
+        for k in Klinika.objects.all():
+            niz.extend([k.naziv])
+        return render(request, 'dodajSalu.html', {'niz': niz})
+
+
+def pogledajKlinike(request):
+    uloga = ""
+    if 'uloga' in request.session:
+        uloga = request.session['uloga']
+
+    kk = Klinika.objects.all()
+    return render(request, 'pogledajKlinike.html', {'klinike': kk, 'uloga': uloga})
+
+
+def pogledajKliniku(request):
+    odabrani = None
+    for kli in Klinika.objects.all():
+        try:
+            if request.POST[kli.naziv] is not None:
+                odabrani = kli
+        except:
+            pass
+    if odabrani is not None:
+        return render(request, 'pogledajKliniku.html', {'klinika': odabrani})
+
+
+def IzmeniKliniku(request):
+    if request.method == 'POST':
+        naziv = request.POST['naziv']
+        opis = request.POST['opis']
+
+        if Klinika.objects.filter(naziv=naziv).exists():
+            k = Klinika.objects.filter(naziv=naziv)[0]
+            k.opis = opis
+
+            k.save()
+
+            return redirect('index')
+        return redirect('index')
+    else:
+        return redirect('index')
+
