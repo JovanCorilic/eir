@@ -78,6 +78,8 @@ class Sala(models.Model):
     id_klinike_kojoj_pripada = models.TextField(max_length=500, default=None)
     opis = models.TextField(max_length=500, default=None)
 
+    objects = UserManager()
+
     def __str__(self):
         return self.broj + "-" + self.id_klinike_kojoj_pripada
 

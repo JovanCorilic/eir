@@ -24,4 +24,7 @@ urlpatterns = [
     path('IzmeniKorisnika', views.IzmeniKorisnika, name='IzmeniKorisnika'),
     path('pogledajPacijente', views.pogledajPacijente, name='pogledajPacijente'),
     path('PogledajPacijenta', views.PogledajPacijenta, name='PogledajPacijenta'),
+    path('pogledajSale', views.pogledajSale, name='pogledajSale'),
+    path('pogledajSalu', views.pogledajSalu, name='pogledajSalu'),
+    path('IzmeniSalu', views.IzmeniSalu, name='IzmeniSalu'),
 ]

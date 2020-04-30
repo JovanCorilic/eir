@@ -5,6 +5,7 @@ from clinic.models import Pacijent, Admin
 from django.contrib import messages
 from datetime import date
 from clinic.models import Lekar
+from clinic.models import Sala
 
 
 def index(req):
@@ -327,9 +328,44 @@ def pogledajPacijente(request):
     pacijenti = Pacijent.objects.all()
     return render(request, 'pogledajPacijente.html', {'pacijenti': pacijenti})
 
+
 def PogledajPacijenta(request):
     odabrani = None
     for pacijent in Pacijent.objects.all():
         if request.POST[pacijent.ime] is not None:
             odabrani = pacijent
     return render(request, 'pogledajPacijenta.html', {'pacijent': odabrani})
+
+
+def pogledajSale(request):
+    sale = Sala.objects.all()
+    return render(request, 'pogledajSale.html', {'sale': sale})
+
+
+def pogledajSalu(request):
+    odabrani = None
+    for salaa in Sala.objects.all():
+        try:
+            if request.POST[salaa.naziv] is not None:
+                odabrani = salaa
+        except:
+            pass
+    if odabrani is not None:
+        return render(request, 'pogledajSalu.html', {'sala': odabrani})
+
+
+def IzmeniSalu(request):
+    if request.method == 'POST':
+        naziv = request.POST['naziv']
+        opis = request.POST['opis']
+
+        if Sala.objects.filter(naziv=naziv).exists():
+            sala = Sala.objects.filter(naziv=naziv)[0]
+            sala.opis = opis
+
+            sala.save()
+
+            return redirect('index')
+        return redirect('index')
+    else:
+        return redirect('index')

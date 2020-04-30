@@ -102,7 +102,7 @@ def loginKorisnik(request):
             request.session['ime'] = Admin.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime
             request.session['email'] = email_adresa
             request.session['uloga'] = "ADMIN"
-            request.session['prezime'] = Lekar.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].prezime
+            request.session['prezime'] = Admin.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].prezime
             request.session['ulogovan'] = 'true'
             return redirect('index')
         else:

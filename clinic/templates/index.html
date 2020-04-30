@@ -41,28 +41,25 @@
                         <li><form method="POST" action="index" >{% csrf_token %}<input type="submit" value="Pocetna Strana"></form></li>
                         <li><form method="POST" action="IzlogujSe" >{% csrf_token %}<input type="submit" class="meni" value="Izloguj se" ></form></li>
 
-                        <form method="POST" action="pogledajPacijente" >{% csrf_token %}<input type="submit" value="Pregledaj Sve Pacijente"></form>
-
                         <li class="desno"><form method="POST" action="Omeni" >{% csrf_token %}<input type="submit" class="meni" value="{{ime}} {{prezime}}" ></form></li>
                     </ul>
 
                 <h1>Ulogovani ste kao {{ime}}</h1>
-
                 <br /><br />
-
+                <form method="POST" action="pogledajPacijente" >{% csrf_token %}<input type="submit" value="Pregledaj Sve Pacijente"></form>
                 {% elif uloga == 'ADMIN' %}<!------------------------------------------POCETNA ZA ADMINA--------------------------------------->
                     <ul>
                         <li><form method="POST" action="index" >{% csrf_token %}<input type="submit" value="Pocetna Strana"></form></li>
                         <li><form method="POST" action="IzlogujSe" >{% csrf_token %}<input type="submit" class="meni" value="Izloguj se" ></form></li>
 
-                        <form method="POST" action="pogledajPacijente" >{% csrf_token %}<input type="submit" value="Pregledaj Sve Pacijente"></form>
-
                         <li class="desno"><form method="POST" action="Omeni" >{% csrf_token %}<input type="submit" class="meni" value="{{ime}} {{prezime}}" ></form></li>
                     </ul>
 
                 <h1>Ulogovani ste kao {{ime}}</h1>
-
                 <br /><br />
+                <form method="POST" action="pogledajPacijente" >{% csrf_token %}<input type="submit" value="Pregledaj Sve Pacijente"></form>
+                <form method="POST" action="pogledajSale" >{% csrf_token %}<input type="submit" value="Pregledaj Sve Sale"></form>
+
                 {% endif %}
             {% else %}<!-----------------------POCETNA ZA NEULOGOVANE KORISNIKE-------------------------->
             <ul>
