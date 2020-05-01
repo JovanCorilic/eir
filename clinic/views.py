@@ -554,10 +554,12 @@ def glavnaStranicaPacijent(request):
 def licniPodaciPacijent(request):
     if request.method == 'POST':
         request.session['lokacija'] = 1
+
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'email': request.session['email'], 'ime': request.session['ime'], 'prezime': request.session['prezime'], 'lokacija': request.session['lokacija'],
                        'lozinka' : request.session['lozinka'], 'adresa' : request.session['adresa_prebivalista'], 'grad': request.session['grad'], 'drzava': request.session['drzava'],
                        'broj': request.session['broja_telefona'], 'jedinstven': request.session['jedinstveni_broj_osiguranika']})
+
     else:
         request.session['lokacija'] = 1
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
