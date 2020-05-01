@@ -2,14 +2,110 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Eir - Glavna Stranica Pacijent</title>    
+        <title>Eir Pacijent</title>
     </head>
     <body>
-        <h1 id="test"></h1>
-        <script>
-        let params = new URLSearchParams(location.search);
-        let mejl = params.get('mail') 
-        document.getElementById("test").innerHTML ="Dobordolsi pacijent " + mejl
-        </script>
+
+                <!--------------------------------------- POCETNA STRANA PACIJENTA ------------------------------------->
+                    <ul>
+                        <li><form method="POST" action="glavnaStranicaPacijent" >{% csrf_token %}<input type="submit" value="Pocetna Strana"></form></li>
+                        <li><form method="POST" action="IzlogujSe" >{% csrf_token %}<input type="submit" class="meni" value="Izloguj se" ></form></li>
+                    </ul>
+
+                <h1>Ulogovani ste kao {{email}}</h1>
+                <br /><br />
+
+
+           <!--------------------------------------------------------- FOOTER ZA SVE-------------------------------------------->
+            <style>
+            .footer {
+               position: fixed;
+               left: 0;
+               bottom: 0;
+               width: 100%;
+               text-align: center;
+               background-color:silver;
+            }
+            </style>
+            </head>
+
+
+
+
+            <div class="footer">
+              <p>© Copyright 2020 Tim 20</p>
+            </div>
+        <!---------------------------------------------------------------KRAJ WEB STRANICE---------------------------------------->
+        <!--<a href="/superadmin/register">Registruj administratora klinike</a>-->
     </body>
+    <style>
+        html, body {
+            margin:0;
+            margin-top: 30px
+        }
+        li input {
+          background-color: #4CAF50;
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
+          margin: 0px;
+          border: 0;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          font-weight: bold;
+        }
+        input[type=submit]:hover  {
+          background-color: #111;
+        }
+
+        input[type=submit]:hover:not(.meni) {
+          background-color: #01b601;
+        }
+
+        .meni {
+          background-color: #393939;
+        }
+        .desno{
+            float: right;
+        }
+        input[type=submit]:hover {
+          background-color: #111;
+        }
+
+        input[type=submit]:hover:not(.meni) {
+          background-color: #01b601;
+        }
+        ul {
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          background-color: #333;
+          position: fixed;
+          top: 0;
+          width: 100%;
+        }
+
+        li {
+          float: left;
+        }
+
+        li a {
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+          background-color: #111;
+        }
+
+        .active {
+          background-color: #4CAF50;
+        }
+    </style>
 </html>
