@@ -1,3 +1,4 @@
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import auth
@@ -484,8 +485,32 @@ def loginPacijent(request):
             if Pacijent.objects.filter(lozinka=sifra).exists():
                 print("3")
                 request.session['email'] = email_adresa
-                request.session['sifra'] = sifra
-                return render(request, 'pacijent/glavnaStranicaPacijent.html', {'email': request.session['email']})
+                temp = Pacijent.objects.filter(email_adresa = email_adresa).values()
+                print (temp.get('ime'))
+                request.session['lozinka'] = sifra
+                ime = temp.get("ime")
+                request.session['ime'] = ime
+
+
+                """email_adresa
+                lozinka
+                ime
+                prezime
+                adresa_prebivalista
+                grad
+                drzava
+                broja_telefona
+                jedinstveni_broj_osiguranika
+                sifra_bolesti
+                datum
+                diagnoza
+                lekovi
+                dioptrija
+                alergije_na_lek
+                visina
+                tezina
+                krvna_grupa"""
+                return render(request, 'pacijent/glavnaStranicaPacijent.html', {'email': request.session['email'], 'ime': request.session['ime']})
             else:
                 print("4")
                 messages.info(request, "Sifra nije dobra!")
@@ -505,3 +530,7 @@ def glavnaStranicaPacijent(request):
         return render(request, 'pacijent/glavnaStranicaPacijent.html', {'email': request.session['email']})
     else:
         return render(request, 'pacijent/glavnaStranicaPacijent.html', {'email': request.session['email']})
+
+def licniPodaciPacijent(request):
+    if request.method == 'POST':
+        pass

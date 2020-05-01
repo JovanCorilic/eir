@@ -6,37 +6,38 @@
     </head>
     <body>
 
-                <!--------------------------------------- POCETNA STRANA PACIJENTA ------------------------------------->
-                    <ul>
-                        <li><form method="POST" action="glavnaStranicaPacijent" >{% csrf_token %}<input type="submit" value="Pocetna Strana"></form></li>
-                        <li><form method="POST" action="IzlogujSe" >{% csrf_token %}<input type="submit" class="meni" value="Izloguj se" ></form></li>
-                    </ul>
+    <!--------------------------------------- POCETNA STRANA PACIJENTA ------------------------------------->
+      <ul>
+          <li><form method="POST" action="glavnaStranicaPacijent" >{% csrf_token %}<input type="submit" value="Pocetna Strana"></form></li>
+          <li><form method="POST" action="glavnaStranicaPacijent" >{% csrf_token %}<input type="submit" value="Pocetna Strana"></form></li>
+          <li><form method="POST" action="IzlogujSe" >{% csrf_token %}<input type="submit" class="meni" value="Izloguj se" ></form></li>
+      </ul>
+      
 
-                <h1>Ulogovani ste kao {{email}}</h1>
-                <br /><br />
-
-
-           <!--------------------------------------------------------- FOOTER ZA SVE-------------------------------------------->
-            <style>
-            .footer {
-               position: fixed;
-               left: 0;
-               bottom: 0;
-               width: 100%;
-               text-align: center;
-               background-color:silver;
-            }
-            </style>
-            </head>
+        <h1>Ulogovani ste kao {{email}} i ime:  {{ime}}</h1>
+        <br /><br />
 
 
 
 
-            <div class="footer">
-              <p>© Copyright 2020 Tim 20</p>
-            </div>
-        <!---------------------------------------------------------------KRAJ WEB STRANICE---------------------------------------->
-        <!--<a href="/superadmin/register">Registruj administratora klinike</a>-->
+      <!--------------------------------------------------------- FOOTER ZA SVE-------------------------------------------->
+        <style>
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background-color:silver;
+        }
+        </style>
+        </head>
+
+        <div class="footer">
+          <p>© Copyright 2020 Tim 20</p>
+        </div>
+      <!---------------------------------------------------------------KRAJ WEB STRANICE---------------------------------------->
+        
     </body>
     <style>
         html, body {
