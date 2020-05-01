@@ -505,6 +505,7 @@ def loginPacijent(request):
                 request.session['visina'] = recnik.get('visina')
                 request.session['tezina'] = recnik.get('tezina')
                 request.session['krvna_grupa'] = recnik.get('krvna_grupa')
+                request.session['lokacija'] = 0
 
                 """email_adresa
                 lozinka
@@ -524,7 +525,8 @@ def loginPacijent(request):
                 visina
                 tezina
                 krvna_grupa"""
-                return render(request, 'pacijent/glavnaStranicaPacijent.html', {'email': request.session['email'], 'ime': request.session['ime'], 'prezime': request.session['prezime']})
+                return render(request, 'pacijent/glavnaStranicaPacijent.html', {'email': request.session['email'], 'ime': request.session['ime'], 'prezime': request.session['prezime'],
+                                                                                'lokacija': request.session['lokacija']})
             else:
                 print("4")
                 messages.info(request, "Sifra nije dobra!")
@@ -541,10 +543,27 @@ def loginPacijent(request):
 
 def glavnaStranicaPacijent(request):
     if request.method == 'POST':
-        return render(request, 'pacijent/glavnaStranicaPacijent.html', {'email': request.session['email'], 'ime': request.session['ime'], 'prezime': request.session['prezime']})
+        request.session['lokacija'] = 0
+        return render(request, 'pacijent/glavnaStranicaPacijent.html', {'email': request.session['email'], 'ime': request.session['ime'], 'prezime': request.session['prezime'],
+                                                                        'lokacija': request.session['lokacija']})
     else:
-        return render(request, 'pacijent/glavnaStranicaPacijent.html', {'email': request.session['email'], 'ime': request.session['ime'], 'prezime': request.session['prezime']})
+        request.session['lokacija'] = 0
+        return render(request, 'pacijent/glavnaStranicaPacijent.html', {'email': request.session['email'], 'ime': request.session['ime'], 'prezime': request.session['prezime'],
+                                                                        'lokacija': request.session['lokacija']})
 
 def licniPodaciPacijent(request):
     if request.method == 'POST':
-        pass
+        request.session['lokacija'] = 1
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'email': request.session['email'], 'ime': request.session['ime'], 'prezime': request.session['prezime'], 'lokacija': request.session['lokacija'],
+                       'lozinka' : request.session['lozinka'], 'adresa' : request.session['adresa_prebivalista'], 'grad': request.session['grad'], 'drzava': request.session['drzava'],
+                       'broj': request.session['broja_telefona'], 'jedinstven': request.session['jedinstveni_broj_osiguranika']})
+    else:
+        request.session['lokacija'] = 1
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'email': request.session['email'], 'ime': request.session['ime'],
+                       'prezime': request.session['prezime'], 'lokacija': request.session['lokacija'],
+                       'lozinka': request.session['lozinka'], 'adresa': request.session['adresa_prebivalista'],
+                       'grad': request.session['grad'], 'drzava': request.session['drzava'],
+                       'broj': request.session['broja_telefona'],
+                       'jedinstven': request.session['jedinstveni_broj_osiguranika']})
