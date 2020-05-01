@@ -12,6 +12,7 @@ urlpatterns = [
     path('pacijent/registracijaPacijent', views.registracijaPacijent,  name='registracijaPacijent'),
     path('pacijent/loginPacijent', views.loginPacijent, name = 'loginPacijent'),
     path('pacijent/glavnaStranicaPacijent', views.glavnaStranicaPacijent, name = 'glavnaStranicaPacijent'),
+    path('pacijent/licniPodaciPacijent', views.licniPodaciPacijent, name = 'licniPodaciPacijent'),
     path('lekar/izmeni', views.izmeni_lekara),
     path('sala/izmeni', views.izmeni_salu),
     path('klinika/izmeni', views.izmeni_kliniku),

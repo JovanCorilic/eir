@@ -2,14 +2,225 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Eir - Glavna Stranica Pacijent</title>    
+        <title>Eir Pacijent</title>
+        
     </head>
     <body>
-        <h1 id="test"></h1>
-        <script>
-        let params = new URLSearchParams(location.search);
-        let mejl = params.get('mail') 
-        document.getElementById("test").innerHTML ="Dobordolsi pacijent " + mejl
-        </script>
+
+    <!--------------------------------------- POCETNA STRANA PACIJENTA ------------------------------------->
+      <ul>
+          <li><form method="POST" action="glavnaStranicaPacijent" >{% csrf_token %}<input type="submit" value="Pocetna Strana"></form></li>
+          <li><form method="POST" action="licniPodaciPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Informacije of vama"></form></li>
+          <li><form method="POST" action="IzlogujSe" >{% csrf_token %}<input type="submit" class="meni" value="Izloguj se" ></form></li>
+      </ul>
+      
+      {% if lokacija == 0 %}
+        <h1>Ulogovani ste kao {{ime}} {{prezime}} a vas e-mail je: {{email}}</h1>
+        <br /><br />
+      {% elif lokacija == 1 %}
+      <table class="greenTable" align="center">
+          <thead>
+          <tr>
+          <th>Atribut</th>
+          <th>Sadrzaj</th>
+          </tr>
+          </thead>
+          <tfoot>
+          <tr>
+          <td colspan="2">
+          <div class="links"><a class="active" href="#"><form method="POST" action="licniPodaciPacijent" >{% csrf_token %}<input type="submit" value="Promenite Informacije o Vama"></form></a></div>
+          </td>
+          </tr>
+          </tfoot>
+          <tbody>
+          <tr>
+          <td>E-Mail</td>
+          <td>{{email}}</td>
+          </tr>
+          <tr>
+          <td>Lozinka</td>
+          <td>{{lozinka}}</td>
+          </tr>
+          <tr>
+          <td>Ime</td>
+          <td>{{ime}}</td>
+          </tr>
+          <tr>
+          <td>Prezime</td>
+          <td>{{prezime}}</td>
+          </tr>
+          <tr>
+            <td>Adresa prebivališta</td>
+            <td>{{adresa}}</td>
+          </tr>
+          <tr>
+            <td>Grad</td>
+            <td>{{grad}}</td>
+          </tr>
+          <tr>
+            <td>Drzava</td>
+            <td>{{drzava}}</td>
+          </tr>
+          <tr>
+            <td>Broj telefona</td>
+            <td>{{broj}}</td>
+          </tr>
+          <tr>
+            <td>Jedinstveni broj osiguranika</td>
+            <td>{{jedinstven}}</td>
+          </tr>
+          </tbody>
+        </table>
+
+      {% endif %}
+
+      <!--------------------------------------------------------- FOOTER ZA SVE-------------------------------------------->
+        <style>
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background-color:silver;
+        }
+        </style>
+        </head>
+
+        <div class="footer">
+          <p>© Copyright 2020 Tim 20</p>
+        </div>
+      <!---------------------------------------------------------------KRAJ WEB STRANICE---------------------------------------->
+        
     </body>
+
+    <style>
+      table.greenTable {
+        font-family: 'Times New Roman', Times, serif;
+        border: 6px solid rgb(0, 0, 0);
+        background-color: #D4EED1;
+        width: 30%;
+      
+        text-align: center;
+      }
+      table.greenTable td, table.greenTable th {
+        border: 1px solid rgb(0, 0, 0);
+        padding: 3px 2px;
+      }
+      table.greenTable tbody td {
+        font-size: 18px;
+      }
+      table.greenTable thead {
+        background: #24943A;
+        background: -moz-linear-gradient(top, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+        background: -webkit-linear-gradient(top, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+        background: linear-gradient(to bottom, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+        border-bottom: 0px solid #444444;
+      }
+      table.greenTable thead th {
+        font-size: 19px;
+        font-weight: bold;
+        color: #F0F0F0;
+        text-align: left;
+        border-left: 2px solid rgb(0, 0, 0);
+      }
+      table.greenTable thead th:first-child {
+        border-left: none;
+      }
+
+      table.greenTable tfoot {
+        font-size: 13px;
+        font-weight: bold;
+        color: #F0F0F0;
+        background: rgb(0, 0, 0);
+        background: -moz-linear-gradient(top, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+        background: -webkit-linear-gradient(top, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+        background: linear-gradient(to bottom, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+        border-top: 1px solid rgb(0, 0, 0);
+      }
+      table.greenTable tfoot td {
+        font-size: 13px;
+      }
+      table.greenTable tfoot .links {
+        text-align: right;
+      }
+      table.greenTable tfoot .links a{
+        display: inline-block;
+        background: #FFFFFF;
+        color: rgb(0, 0, 0);
+        padding: 2px 8px;
+        border-radius: 5px;
+      }
+    </style>
+
+    <style>
+        html, body {
+            margin:0;
+            margin-top: 30px
+        }
+        li input {
+          background-color: #4CAF50;
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
+          margin: 0px;
+          border: 0;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          font-weight: bold;
+        }
+        input[type=submit]:hover  {
+          background-color: #111;
+        }
+
+        input[type=submit]:hover:not(.meni) {
+          background-color: #01b601;
+        }
+
+        .meni {
+          background-color: #393939;
+        }
+        .desno{
+            float: right;
+        }
+        input[type=submit]:hover {
+          background-color: #111;
+        }
+
+        input[type=submit]:hover:not(.meni) {
+          background-color: #01b601;
+        }
+        ul {
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          background-color: #333;
+          position: fixed;
+          top: 0;
+          width: 100%;
+        }
+
+        li {
+          float: left;
+        }
+
+        li a {
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+          background-color: #111;
+        }
+
+        .active {
+          background-color: #4CAF50;
+        }
+    </style>
 </html>
