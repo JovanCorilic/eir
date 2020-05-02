@@ -17,61 +17,102 @@
       {% if lokacija == 0 %}
         <h1>Ulogovani ste kao {{ime}} {{prezime}} a vas e-mail je: {{email}}</h1>
         <br /><br />
-      {% elif lokacija == 1 %}
+      {% elif lokacija == 1 or lokacija == 1.5 %}
       <table class="greenTable" align="center">
           <thead>
           <tr>
           <th>Atribut</th>
+          {% if lokacija == 1.5 %}
+            <th>Staro</th>
+            <th>Novo</th>
+          {% else %}
           <th>Sadrzaj</th>
+          {% endif %}
           </tr>
           </thead>
           <tfoot>
           <tr>
-          <td colspan="2">
-          <div class="links"><a class="active" href="#"><form method="POST" action="licniPodaciPacijent" >{% csrf_token %}<input type="submit" value="Promenite Informacije o Vama"></form></a></div>
-          </td>
+            {% if lokacija == 1.5 %}
+            <td colspan="3">
+            <div class="links"><form method="POST" action="promenaLicniPodaciPacijent" >{% csrf_token %}<input type="submit" value="Potvrdite promenu"></div>
+            </td>
+            {% else %}
+            <td colspan="2">
+            <div class="links"><form method="POST" action="promenaLicniPodaciPacijent" >{% csrf_token %}<input type="submit" value="Promenite Informacije o Vama"></form></div>
+            </td>
+            {% endif %}
           </tr>
           </tfoot>
           <tbody>
           <tr>
           <td>E-Mail</td>
           <td>{{email}}</td>
+          {% if lokacija == 1.5 %}
+          <td></td>
+          {% endif %}
           </tr>
           <tr>
           <td>Lozinka</td>
           <td>{{lozinka}}</td>
+          {% if lokacija == 1.5 %}
+          <td><input type="text" id="lozinka2" name="lozinka2" ></td>
+          {% endif %}
           </tr>
           <tr>
           <td>Ime</td>
           <td>{{ime}}</td>
+          {% if lokacija == 1.5 %}
+          <td><input type="text" id="ime2" name="ime2" ></td>
+          {% endif %}
           </tr>
           <tr>
           <td>Prezime</td>
           <td>{{prezime}}</td>
+          {% if lokacija == 1.5 %}
+          <td><input type="text" id="prezime2" name="prezime2" ></td>
+          {% endif %}
           </tr>
           <tr>
             <td>Adresa prebivališta</td>
             <td>{{adresa}}</td>
+            {% if lokacija == 1.5 %}
+            <td><input type="text" id="adresa2" name="adresa2" ></td>
+            {% endif %}
           </tr>
           <tr>
             <td>Grad</td>
             <td>{{grad}}</td>
+            {% if lokacija == 1.5 %}
+            <td><input type="text" id="grad2" name="grad2" ></td>
+            {% endif %}
           </tr>
           <tr>
             <td>Drzava</td>
             <td>{{drzava}}</td>
+            {% if lokacija == 1.5 %}
+            <td><input type="text" id="drzava2" name="drzava2" ></td>
+            {% endif %}
           </tr>
           <tr>
             <td>Broj telefona</td>
             <td>{{broj}}</td>
+            {% if lokacija == 1.5 %}
+            <td><input type="text" id="broj2" name="broj2" ></td>
+          </form>
+            {% endif %}
           </tr>
           <tr>
             <td>Jedinstveni broj osiguranika</td>
             <td>{{jedinstven}}</td>
+            {% if lokacija == 1.5 %}
+            <td></td>
+            {% endif %}
           </tr>
           </tbody>
         </table>
-
+      {% if lokacija == 1.5 %}
+        <h2 align = "center">Ostaviti prazno ako nećete da se promeni!</h2>
+      {% endif %}
       {% endif %}
 
       <!--------------------------------------------------------- FOOTER ZA SVE-------------------------------------------->

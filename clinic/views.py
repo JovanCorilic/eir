@@ -569,3 +569,64 @@ def licniPodaciPacijent(request):
                        'grad': request.session['grad'], 'drzava': request.session['drzava'],
                        'broj': request.session['broja_telefona'],
                        'jedinstven': request.session['jedinstveni_broj_osiguranika']})
+#email_adresa = request.POST['email']
+def promenaLicniPodaciPacijent(request):
+    if request.method == 'POST':
+        if(request.session['lokacija'] == 1):
+            request.session['lokacija'] = 1.5
+            return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                          {'email': request.session['email'], 'ime': request.session['ime'],
+                           'prezime': request.session['prezime'], 'lokacija': request.session['lokacija'],
+                           'lozinka': request.session['lozinka'], 'adresa': request.session['adresa_prebivalista'],
+                           'grad': request.session['grad'], 'drzava': request.session['drzava'],
+                           'broj': request.session['broja_telefona'],
+                           'jedinstven': request.session['jedinstveni_broj_osiguranika']})
+        else:
+            request.session['lokacija'] = 1
+            pacijent = Pacijent.objects.get(email_adresa = request.session['email'])
+            if(request.POST.get('ime2', "")!=""):
+                ime = request.POST['ime2']
+                request.session['ime'] = ime
+                pacijent.ime = ime
+            if (request.POST.get('prezime2', "") != ""):
+                prezime = request.POST['prezime2']
+                request.session['prezime'] = prezime
+                pacijent.prezime = prezime
+            if (request.POST.get('lozinka2', "") != ""):
+                lozinka = request.POST['lozinka2']
+                request.session['lozinka'] = lozinka
+                pacijent.lozinka = lozinka
+            if (request.POST.get('adresa2', "") != ""):
+                adresa_prebivalista = request.POST['adresa2']
+                request.session['adresa_prebivalista'] = adresa_prebivalista
+                pacijent.adresa_prebivalista = adresa_prebivalista
+            if (request.POST.get('grad2', "") != ""):
+                grad = request.POST['grad2']
+                request.session['grad'] = grad
+                pacijent.grad = grad
+            if (request.POST.get('drzava2', "") != ""):
+                drzava = request.POST['drzava2']
+                request.session['drzava'] = drzava
+                pacijent.drzava = drzava
+            if (request.POST.get('broj2', "") != ""):
+                broja_telefona = request.POST['broj2']
+                request.session['broja_telefona'] = broja_telefona
+                pacijent.broja_telefona = broja_telefona
+            #request.POST.get('ime2', "")
+            pacijent.save()
+            return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                          {'email': request.session['email'], 'ime': request.session['ime'],
+                           'prezime': request.session['prezime'], 'lokacija': request.session['lokacija'],
+                           'lozinka': request.session['lozinka'], 'adresa': request.session['adresa_prebivalista'],
+                           'grad': request.session['grad'], 'drzava': request.session['drzava'],
+                           'broj': request.session['broja_telefona'],
+                           'jedinstven': request.session['jedinstveni_broj_osiguranika']})
+    else:
+        #request.session['lokacija'] = 1.5
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'email': request.session['email'], 'ime': request.session['ime'],
+                       'prezime': request.session['prezime'], 'lokacija': request.session['lokacija'],
+                       'lozinka': request.session['lozinka'], 'adresa': request.session['adresa_prebivalista'],
+                       'grad': request.session['grad'], 'drzava': request.session['drzava'],
+                       'broj': request.session['broja_telefona'],
+                       'jedinstven': request.session['jedinstveni_broj_osiguranika']})
