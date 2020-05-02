@@ -11,66 +11,169 @@
       <ul>
           <li><form method="POST" action="glavnaStranicaPacijent" >{% csrf_token %}<input type="submit" value="Pocetna Strana"></form></li>
           <li><form method="POST" action="licniPodaciPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Informacije of vama"></form></li>
+          <li><form method="POST" action="zdravstveniKartonPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Zdravstveni karton"></form></li>
           <li><form method="POST" action="IzlogujSe" >{% csrf_token %}<input type="submit" class="meni" value="Izloguj se" ></form></li>
       </ul>
       
       {% if lokacija == 0 %}
         <h1>Ulogovani ste kao {{ime}} {{prezime}} a vas e-mail je: {{email}}</h1>
         <br /><br />
-      {% elif lokacija == 1 %}
+      {% elif lokacija == 1 or lokacija == 1.5 %}
       <table class="greenTable" align="center">
           <thead>
           <tr>
           <th>Atribut</th>
+          {% if lokacija == 1.5 %}
+            <th>Staro</th>
+            <th>Novo</th>
+          {% else %}
           <th>Sadrzaj</th>
+          {% endif %}
           </tr>
           </thead>
           <tfoot>
           <tr>
-          <td colspan="2">
-          <div class="links"><a class="active" href="#"><form method="POST" action="licniPodaciPacijent" >{% csrf_token %}<input type="submit" value="Promenite Informacije o Vama"></form></a></div>
-          </td>
+            {% if lokacija == 1.5 %}
+            <td colspan="3">
+            <div class="links"><form method="POST" action="promenaLicniPodaciPacijent" >{% csrf_token %}<input type="submit" value="Potvrdite promenu"></div>
+            </td>
+            {% else %}
+            <td colspan="2">
+            <div class="links"><form method="POST" action="promenaLicniPodaciPacijent" >{% csrf_token %}<input type="submit" value="Promenite Informacije o Vama"></form></div>
+            </td>
+            {% endif %}
           </tr>
           </tfoot>
           <tbody>
           <tr>
           <td>E-Mail</td>
           <td>{{email}}</td>
+          {% if lokacija == 1.5 %}
+          <td></td>
+          {% endif %}
           </tr>
           <tr>
           <td>Lozinka</td>
           <td>{{lozinka}}</td>
+          {% if lokacija == 1.5 %}
+          <td><input type="text" id="lozinka2" name="lozinka2" ></td>
+          {% endif %}
           </tr>
           <tr>
           <td>Ime</td>
           <td>{{ime}}</td>
+          {% if lokacija == 1.5 %}
+          <td><input type="text" id="ime2" name="ime2" ></td>
+          {% endif %}
           </tr>
           <tr>
           <td>Prezime</td>
           <td>{{prezime}}</td>
+          {% if lokacija == 1.5 %}
+          <td><input type="text" id="prezime2" name="prezime2" ></td>
+          {% endif %}
           </tr>
           <tr>
             <td>Adresa prebivališta</td>
             <td>{{adresa}}</td>
+            {% if lokacija == 1.5 %}
+            <td><input type="text" id="adresa2" name="adresa2" ></td>
+            {% endif %}
           </tr>
           <tr>
             <td>Grad</td>
             <td>{{grad}}</td>
+            {% if lokacija == 1.5 %}
+            <td><input type="text" id="grad2" name="grad2" ></td>
+            {% endif %}
           </tr>
           <tr>
             <td>Drzava</td>
             <td>{{drzava}}</td>
+            {% if lokacija == 1.5 %}
+            <td><input type="text" id="drzava2" name="drzava2" ></td>
+            {% endif %}
           </tr>
           <tr>
             <td>Broj telefona</td>
             <td>{{broj}}</td>
+            {% if lokacija == 1.5 %}
+            <td><input type="text" id="broj2" name="broj2" ></td>
+          </form>
+            {% endif %}
           </tr>
           <tr>
             <td>Jedinstveni broj osiguranika</td>
             <td>{{jedinstven}}</td>
+            {% if lokacija == 1.5 %}
+            <td></td>
+            {% endif %}
           </tr>
           </tbody>
         </table>
+      {% if lokacija == 1.5 %}
+        <h2 align = "center">Ostaviti prazno ako nećete da se promeni!</h2>
+      {% endif %}
+
+      {% elif lokacija == 2 %}
+      <table class="steelBlueCols" align="center">
+        <thead>
+        <tr>
+        <th>Atribut</th>
+        <th>Opis</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>Ime</td>
+        <td>{{ime}}</td>
+        </tr>
+        <tr>
+        <td>Prezime</td>
+        <td>{{prezime}}</td>
+        </tr>
+        <tr>
+        <td>Jedinstveni broj osiguranika</td>
+        <td>{{jedinstven}}</td>
+        </tr>
+        <tr>
+        <td>Šifra bolesti</td>
+        <td>{{sifra}}</td>
+        </tr>
+        <tr>
+        <td>Datum pregleda</td>
+        <td>{{datum}}</td>
+        </tr>
+        <tr>
+        <td>Diagnoza</td>
+        <td>{{diagnoza}}</td>
+        </tr>
+        <tr>
+        <td>Lekovi</td>
+        <td>{{lekovi}}</td>
+        </tr>
+        <tr>
+        <td>Dioptrija</td>
+        <td>{{dioptrija}}</td>
+        </tr>
+        <tr>
+        <td>Alergije na lek</td>
+        <td>{{alergije}}</td>
+        </tr>
+        <tr>
+        <td>Visina</td>
+        <td>{{visina}}</td>
+        </tr>
+        <tr>
+        <td>Tezina</td>
+        <td>{{tezina}}</td>
+        </tr>
+        <tr>
+        <td>Krvna grupa</td>
+        <td>{{krvna}}</td>
+        </tr>
+        </tbody>
+      </table>
 
       {% endif %}
 
@@ -93,7 +196,56 @@
       <!---------------------------------------------------------------KRAJ WEB STRANICE---------------------------------------->
         
     </body>
-
+    <style>
+      table.steelBlueCols {
+        font-family: 'Times New Roman', Times, serif;
+        border: 4px solid #36BF38;
+        background-color: #555555;
+        width: 400px;
+        text-align: center;
+        border-collapse: collapse;
+      }
+      table.steelBlueCols td, table.steelBlueCols th {
+        border: 1px solid #555555;
+        padding: 5px 10px;
+      }
+      table.steelBlueCols tbody td {
+        font-size: 18px;
+        font-weight: bold;
+        color: #FFFFFF;
+      }
+      table.steelBlueCols td:nth-child(even) {
+        background: #398AA4;
+      }
+      table.steelBlueCols thead {
+        background: #398AA4;
+        border-bottom: 10px solid #398AA4;
+      }
+      table.steelBlueCols thead th {
+        font-size: 15px;
+        font-weight: bold;
+        color: #FFFFFF;
+        text-align: left;
+        border-left: 2px solid #398AA4;
+      }
+      table.steelBlueCols thead th:first-child {
+        border-left: none;
+      }
+      
+      table.steelBlueCols tfoot td {
+        font-size: 13px;
+      }
+      table.steelBlueCols tfoot .links {
+        text-align: right;
+      }
+      table.steelBlueCols tfoot .links a{
+        display: inline-block;
+        background: #FFFFFF;
+        color: #398AA4;
+        padding: 2px 8px;
+        border-radius: 5px;
+      }
+    </style>
     <style>
       table.greenTable {
         font-family: 'Times New Roman', Times, serif;

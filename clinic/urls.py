@@ -13,6 +13,8 @@ urlpatterns = [
     path('pacijent/loginPacijent', views.loginPacijent, name = 'loginPacijent'),
     path('pacijent/glavnaStranicaPacijent', views.glavnaStranicaPacijent, name = 'glavnaStranicaPacijent'),
     path('pacijent/licniPodaciPacijent', views.licniPodaciPacijent, name = 'licniPodaciPacijent'),
+    path('pacijent/promenaLicniPodaciPacijent', views.promenaLicniPodaciPacijent, name = 'promenaLicniPodaciPacijent'),
+    path('pacijent/zdravstveniKartonPacijent', views.zdravstveniKartonPacijent, name = 'zdravstveniKartonPacijent'),
     path('lekar/izmeni', views.izmeni_lekara),
     path('sala/izmeni', views.izmeni_salu),
     path('klinika/izmeni', views.izmeni_kliniku),
