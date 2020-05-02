@@ -630,3 +630,45 @@ def promenaLicniPodaciPacijent(request):
                        'grad': request.session['grad'], 'drzava': request.session['drzava'],
                        'broj': request.session['broja_telefona'],
                        'jedinstven': request.session['jedinstveni_broj_osiguranika']})
+
+def zdravstveniKartonPacijent(request):
+    if request.method == 'POST':
+        pacijent = Pacijent.objects.get(email_adresa = request.session['email'])
+        request.session['sifra_bolesti'] = pacijent.sifra_bolesti
+        request.session['datum'] = pacijent.datum
+        request.session['diagnoza'] = pacijent.diagnoza
+        request.session['lekovi'] = pacijent.lekovi
+        request.session['dioptrija'] = pacijent.dioptrija
+        request.session['alergije_na_lek'] = pacijent.alergije_na_lek
+        request.session['visina'] = pacijent.visina
+        request.session['tezina'] = pacijent.tezina
+        request.session['krvna_grupa'] = pacijent.krvna_grupa
+
+        return render(request, 'pacijent/glavnaStranicaPacijent.html', {'ime':request.session['ime'],'prezime':request.session['prezime'],'jedinstven':request.session['jedinstveni_broj_osiguranika'],
+                                                                       'sifra': request.session['sifra_bolesti'],'datum':request.session['datum'],'diagnoza':request.session['diagnoza'],
+                                                                       'lekovi': request.session['lekovi'],'dioptrija':request.session['dioptrija'],'alergije':request.session['alergije_na_lek'],
+                                                                       'visina': request.session['visina'],'tezina':request.session['tezina'],'krvna':request.session['krvna_grupa']
+                                                                       })
+    else:
+        pacijent = Pacijent.objects.get(email_adresa=request.session['email'])
+        request.session['sifra_bolesti'] = pacijent.sifra_bolesti
+        request.session['datum'] = pacijent.datum
+        request.session['diagnoza'] = pacijent.diagnoza
+        request.session['lekovi'] = pacijent.lekovi
+        request.session['dioptrija'] = pacijent.dioptrija
+        request.session['alergije_na_lek'] = pacijent.alergije_na_lek
+        request.session['visina'] = pacijent.visina
+        request.session['tezina'] = pacijent.tezina
+        request.session['krvna_grupa'] = pacijent.krvna_grupa
+
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'ime': request.session['ime'], 'prezime': request.session['prezime'],
+                       'jedinstven': request.session['jedinstveni_broj_osiguranika'],
+                       'sifra': request.session['sifra_bolesti'], 'datum': request.session['datum'],
+                       'diagnoza': request.session['diagnoza'],
+                       'lekovi': request.session['lekovi'], 'dioptrija': request.session['dioptrija'],
+                       'alergije': request.session['alergije_na_lek'],
+                       'visina': request.session['visina'], 'tezina': request.session['tezina'],
+                       'krvna': request.session['krvna_grupa']
+                       })
+
