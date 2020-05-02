@@ -466,9 +466,9 @@ def registracijaPacijent(request):
                                            broja_telefona=broja_telefona,
                                            jedinstveni_broj_osiguranika=jedinstveni_broj_osiguranika,
                                            adresa_prebivalista=adresa_prebivalista, grad=grad, drzava=drzava,
-                                           sifra_bolesti="aaa", datum="date.today()", diagnoza="aaaa", lekovi="aaaa",
-                                           dioptrija="aaaa", alergije_na_lek="aaaa",
-                                           visina="aaaa", tezina="aaaa", krvna_grupa="aaaa")
+                                           sifra_bolesti="Prazno", datum=date.today().strftime("%d/%m/%Y"), diagnoza="Prazno", lekovi="Prazno",
+                                           dioptrija="Prazno", alergije_na_lek="Prazno",
+                                           visina="Prazno", tezina="Prazno", krvna_grupa="Prazno")
         pacijent.save()
         # print("napravljen pacijent " + ime)
         return redirect('loginPacijent')
@@ -633,6 +633,7 @@ def promenaLicniPodaciPacijent(request):
 
 def zdravstveniKartonPacijent(request):
     if request.method == 'POST':
+        request.session['lokacija'] = 2
         pacijent = Pacijent.objects.get(email_adresa = request.session['email'])
         request.session['sifra_bolesti'] = pacijent.sifra_bolesti
         request.session['datum'] = pacijent.datum
@@ -647,9 +648,11 @@ def zdravstveniKartonPacijent(request):
         return render(request, 'pacijent/glavnaStranicaPacijent.html', {'ime':request.session['ime'],'prezime':request.session['prezime'],'jedinstven':request.session['jedinstveni_broj_osiguranika'],
                                                                        'sifra': request.session['sifra_bolesti'],'datum':request.session['datum'],'diagnoza':request.session['diagnoza'],
                                                                        'lekovi': request.session['lekovi'],'dioptrija':request.session['dioptrija'],'alergije':request.session['alergije_na_lek'],
-                                                                       'visina': request.session['visina'],'tezina':request.session['tezina'],'krvna':request.session['krvna_grupa']
+                                                                       'visina': request.session['visina'],'tezina':request.session['tezina'],'krvna':request.session['krvna_grupa'],
+                                                                        'lokacija': request.session['lokacija']
                                                                        })
     else:
+        request.session['lokacija'] = 2
         pacijent = Pacijent.objects.get(email_adresa=request.session['email'])
         request.session['sifra_bolesti'] = pacijent.sifra_bolesti
         request.session['datum'] = pacijent.datum
@@ -669,6 +672,6 @@ def zdravstveniKartonPacijent(request):
                        'lekovi': request.session['lekovi'], 'dioptrija': request.session['dioptrija'],
                        'alergije': request.session['alergije_na_lek'],
                        'visina': request.session['visina'], 'tezina': request.session['tezina'],
-                       'krvna': request.session['krvna_grupa']
+                       'krvna': request.session['krvna_grupa'],'lokacija': request.session['lokacija']
                        })
 

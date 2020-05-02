@@ -11,6 +11,7 @@
       <ul>
           <li><form method="POST" action="glavnaStranicaPacijent" >{% csrf_token %}<input type="submit" value="Pocetna Strana"></form></li>
           <li><form method="POST" action="licniPodaciPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Informacije of vama"></form></li>
+          <li><form method="POST" action="zdravstveniKartonPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Zdravstveni karton"></form></li>
           <li><form method="POST" action="IzlogujSe" >{% csrf_token %}<input type="submit" class="meni" value="Izloguj se" ></form></li>
       </ul>
       
@@ -115,7 +116,7 @@
       {% endif %}
 
       {% elif lokacija == 2 %}
-      <table class="steelBlueCols">
+      <table class="steelBlueCols" align="center">
         <thead>
         <tr>
         <th>Atribut</th>
@@ -140,7 +141,7 @@
         <td>{{sifra}}</td>
         </tr>
         <tr>
-        <td>Datum</td>
+        <td>Datum pregleda</td>
         <td>{{datum}}</td>
         </tr>
         <tr>
