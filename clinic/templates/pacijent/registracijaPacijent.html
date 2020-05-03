@@ -2,23 +2,70 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Eir - Registracija pacijent</title>    
+        <title>Eir - Registracija pacijent</title>   
+        <link rel="stylesheet" type="text/css" href="minimalistBlack.css" class="minimalistBlack">
+         
     </head>
 <body>
     <form method="POST" action="registracijaPacijent" onsubmit="return logovanje()">
         {% csrf_token %}
-        E-mail: <input type="text" id="email" name="email" ><br>
-        Lozinka: <input type="text" id="sifra" name="sifra"> <br>
-        Ponovi lozinku: <input type="text" id="sifra2" name="sifra2"> <br>
-        Ime: <input type="text" id="ime" name="ime"><br>
-        Prezime: <input type="text" id="prezime" name="prezime"><br>
-        Adresa prebivalista: <input type="text" id="adresa" name="adresa"><br>
-        Grad: <input type="text" id="grad" name="grad"><br>
-        Drzava: <input type="text" id="drzava" name="drzava"><br>
-        Broja telefona: <input type="text" id="broj" name="broj"><br>
-        Jedinstveni broj osiguranika: <input type="text" id="jedinstveni" name="jedinstveni"><br>
-        <br>
-        <input type="submit" value="Registruj se"> 
+        <table class="minimalistBlack">
+            <thead>
+            <tr>
+            <th>Atribut</th>
+            <th>Opis</th>
+            </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                  <td colspan="2">
+                    <input type="submit" value="Registruj se" style="width:100%">
+                  </td>
+                </tr>
+            </tfoot>
+            <tbody>
+            <tr>
+            <td>E-mail</td>
+            <td><input type="text" id="email" name="email" ></td>
+            </tr>
+            <tr>
+            <td>Lozinka</td>
+            <td><input type="text" id="sifra" name="sifra"></td>
+            </tr>
+            <tr>
+            <td>Ponovi lozinku</td>
+            <td><input type="text" id="sifra2" name="sifra2"></td>
+            </tr>
+            <tr>
+            <td>Ime</td>
+            <td><input type="text" id="ime" name="ime"></td>
+            </tr>
+            <tr>
+            <td>Prezime</td>
+            <td><input type="text" id="prezime" name="prezime"></td>
+            </tr>
+            <tr>
+            <td>Adresa prebivalista</td>
+            <td><input type="text" id="adresa" name="adresa"></td>
+            </tr>
+            <tr>
+            <td>Grad</td>
+            <td><input type="text" id="grad" name="grad"></td>
+            </tr>
+            <tr>
+            <td>Drzava</td>
+            <td><input type="text" id="drzava" name="drzava"></td>
+            </tr>
+            <tr>
+            <td>Broja telefona</td>
+            <td><input type="text" id="broj" name="broj"></td>
+            </tr>
+            <tr>
+            <td>Jedinstveni broj osiguranika</td>
+            <td><input type="text" id="jedinstveni" name="jedinstveni"></td>
+            </tr>
+            </tbody>
+        </table> 
     </form>
 
     <script>
@@ -66,6 +113,40 @@
         }
         }
     </script>
-
 </body>
+
+<style>
+    table.minimalistBlack {
+    font-family: "Times New Roman", Times, serif;
+    border: 3px solid #2EF259;
+    text-align: left;
+    border-collapse: collapse;
+    }
+    table.minimalistBlack td, table.minimalistBlack th {
+    border: 1px solid #000000;
+    padding: 5px 4px;
+    }
+    table.minimalistBlack tbody td {
+    font-size: 18px;
+    }
+    table.minimalistBlack thead {
+    background: #69FF5C;
+    background: -moz-linear-gradient(top, #8eff85 0%, #78ff6c 66%, #69FF5C 100%);
+    background: -webkit-linear-gradient(top, #8eff85 0%, #78ff6c 66%, #69FF5C 100%);
+    background: linear-gradient(to bottom, #8eff85 0%, #78ff6c 66%, #69FF5C 100%);
+    border-bottom: 3px solid #1FD87F;
+    }
+    table.minimalistBlack thead th {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000;
+    text-align: left;
+    }
+    table.minimalistBlack tfoot td {
+        font-size: 18px;
+        font-weight: bold;
+        color: #000000;
+        }
+</style>
+
 </html>
