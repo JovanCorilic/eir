@@ -73,17 +73,13 @@
             <ul>
                         <li><form method="POST" action="index" >{% csrf_token %}<input type="submit" value="Pocetna Strana"></form></li>
                         <li><form method="POST" action="login" >{% csrf_token %}<input type="submit" class="meni" value="Uloguj se" ></form></li>
-                        <li><form method="POST" action="pacijent/registracijaPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Registruj se" ></form></li>
+                        <li>
+                            <form method="POST" action="pacijent/registracijaPacijent" >{% csrf_token %}
+                                <input type="submit" class="meni" value="Registruj se" >
+                            </form>
+                        </li>
             </ul>
-            <!--<a href="registerKorisnik">Registruj se</a><br />-->
-            <!--<form action="/pacijent/registracijaPacijent">
-                <input type="submit" value="Registracija za pacijenta" />
-            </form><br>
-            <a href="registerLekara">Registruj Lekara</a><br />
-            <a href="registerAdmina">Registruj Admina</a><br />
-            <a href="login">Uloguj se</a><br />
-            <br />
-            <br />-->
+
 
             {% endif %}<!--------------------------------------------------------- FOOTER ZA SVE-------------------------------------------->
             <style>
@@ -106,6 +102,16 @@
             </div>
         {% endif %}<!---------------------------------------------------------------KRAJ WEB STRANICE---------------------------------------->
         <!--<a href="/superadmin/register">Registruj administratora klinike</a>-->
+    <!--<a href="registerKorisnik">Registruj se</a><br />-->
+            <!--
+            <form action="/pacijent/registracijaPacijent">
+                <input type="submit" value="Registracija za pacijenta" />
+            </form><br>
+            <a href="registerLekara">Registruj Lekara</a><br />
+            <a href="registerAdmina">Registruj Admina</a><br />
+            <a href="login">Uloguj se</a><br />
+            <br />
+            <br />-->
     </body>
     <script>
             function proverii() {
