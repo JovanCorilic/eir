@@ -20,6 +20,7 @@ urlpatterns = [
     path('pacijent/prikazKlinikaPacijentSortirano', views.prikazKlinikaPacijentSortirano, name = 'prikazKlinikaPacijentSortirano'),
     path('pacijent/pretragaKlinikaPacijent', views.pretragaKlinikaPacijent, name = 'pretragaKlinikaPacijent'),
     path('pacijent/sortiranjeLekaraPacijent', views.sortiranjeLekaraPacijent, name = 'sortiranjeLekaraPacijent'),
+    path('pacijent/pretragaLekaraPacijent', views.pretragaLekaraPacijent, name = 'pretragaLekaraPacijent'),
     path('lekar/izmeni', views.izmeni_lekara),
     path('sala/izmeni', views.izmeni_salu),
     path('klinika/izmeni', views.izmeni_kliniku),

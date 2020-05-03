@@ -769,3 +769,23 @@ def sortiranjeLekaraPacijent(request):
         request.session['lokacija'] = 3.5
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'lokacija': request.session['lokacija']})
+
+def pretragaLekaraPacijent(request):
+    if request.method == 'POST':
+        if 'pretragaIme' in request.POST:
+            pretrazuje = "ime"
+        else:
+            pretrazuje = "prezime"
+        sadrzaj = request.POST['unosPretraga']
+
+        if (pretrazuje == "ime"):
+            lekari = Lekar.objects.filter(radno_mesto=request.session['nazivKlinike'], ime__icontains=sadrzaj)
+        else:
+            lekari = Lekar.objects.filter(radno_mesto=request.session['nazivKlinike'], prezime__icontains=sadrzaj)
+        request.session['lokacija'] = 3.5
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija'], 'lekari': lekari})
+    else:
+        request.session['lokacija'] = 3.5
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija']})

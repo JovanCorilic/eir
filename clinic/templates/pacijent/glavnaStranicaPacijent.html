@@ -184,6 +184,14 @@
       <input type="submit" id = "pretragaNaziv" name="pretragaNaziv" value="Pretraga u koloni naziv">
       <input type="submit" id = "pretragaOpis" name="pretragaOpis" value="Pretraga u koloni tip pregleda">
       </form>
+
+      {% elif lokacija == 3.5 %}
+      <form method="POST" action="pretragaLekaraPacijent" >{% csrf_token %}
+        <input type="text" id="unosPretraga" name="unosPretraga" value="">
+        <input type="submit" id = "pretragaIme" name="pretragaIme" value="Pretraga u koloni ime">
+        <input type="submit" id = "pretragaPrezime" name="pretragaPrezime" value="Pretraga u koloni prezime">
+        </form>
+      </form>
       {% endif %}
       <br />
       <table class="minimalistBlack">
