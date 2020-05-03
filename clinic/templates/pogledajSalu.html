@@ -6,6 +6,7 @@
 		<link rel="stylesheet" href="css/stil.css">
 	</head>
 	<body>
+	<form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
 		<div class="unos" style="margin-left:70px">
 			<h1>{{sala.broj}} {{sala.naziv}}</h1>
 			<form method="POST" action="ObrisiSalu">{% csrf_token %}<input type="hidden" name="koga" value="{{ sala.naziv }}"><input type="submit" name="{{ sala.naziv }}" class="sub" value="Obrisi" ></form>
@@ -75,6 +76,7 @@
           font-weight: bold;
         }
     </style>
+
 <script>
     function a(){
         document.getElementById("naziv").disabled = false;

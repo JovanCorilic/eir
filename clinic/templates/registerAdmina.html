@@ -6,6 +6,7 @@
 		<link rel="stylesheet" href="css/stil.css">
 	</head>
 	<body>
+	<form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
 		<form method="POST" action="registerAdmina" onSubmit="return proveri();">
             {% csrf_token %}
 		<div class="unos">

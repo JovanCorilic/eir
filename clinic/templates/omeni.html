@@ -6,9 +6,10 @@
 		<link rel="stylesheet" href="css/stil.css">
 	</head>
 	<body>
+<form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
 		<div class="unos" style="margin-left:70px">
 			<h1>{{ime}} {{prezime}}</h1>
-			<form method="POST" action="ObrisiKorisnika" onSubmit="return proveri();">{% csrf_token %}<input type="submit" class="sub" value="Obrisi" ></form>
+
 		</div>
 		<form method="POST" action="IzmeniKorisnika" onSubmit="return proveri();" >{% csrf_token %}
 			<div class="unos2">

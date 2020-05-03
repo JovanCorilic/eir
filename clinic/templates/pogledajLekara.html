@@ -6,9 +6,10 @@
 		<link rel="stylesheet" href="css/stil.css">
 	</head>
 	<body>
+<form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
 		<div class="unos" style="margin-left:70px">
 			<h1>{{lekar.ime}} {{lekar.prezime}}</h1>
-            <form method="POST" action="ObrisiLekara">{% csrf_token %}<input type="hidden" name="koga" value="{{ lekar.ime }}"><input type="submit" name="{{ lekar.ime }}" class="sub" value="Obrisi" ></form>
+            <form method="POST" action="ObrisiLekara">{% csrf_token %}<input type="hidden" name="koga" value="{{ lekar.email_adresa }}"><input type="submit" name="{{ lekar.ime }}" class="sub" value="Obrisi" ></form>
 		</div>
 		<form method="POST" action="IzmeniLekara" onSubmit="return proveri();" >{% csrf_token %}
 			<div class="unos2">
@@ -54,7 +55,7 @@
 						<th align="left"><label id="lpozicija" style="color: red;"></label></th>
 					</tr>
 					<tr>
-						<th><input type="hidden" name="koga" value="{{ lekar.ime }}"></th>
+						<th><input type="hidden" name="koga" value="{{ lekar.email_adresa }}"></th>
 						<th align="left"><input type="submit" class="sub" onclick="a()" value="Sacuvaj Promene"></th>
 						<th align="left"><label style="color: red;">
 						</label></th>

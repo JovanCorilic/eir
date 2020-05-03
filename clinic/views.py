@@ -270,10 +270,16 @@ def pogledajPacijente(request):
 
 def PogledajPacijenta(request):
     odabrani = None
+
     for pacijent in Pacijent.objects.all():
-        if request.POST[pacijent.ime] is not None:
-            odabrani = pacijent
-    return render(request, 'pogledajPacijenta.html', {'pacijent': odabrani})
+        try:
+            if request.POST[pacijent.email_adresa] is not None:
+                odabrani = pacijent
+                return render(request, 'pogledajPacijenta.html', {'pacijent': odabrani})
+        except:
+            pass
+
+
 
 
 def pogledajSale(request):
@@ -397,7 +403,7 @@ def PogledajLekara(request):
     odabrani = None
     for kli in Lekar.objects.all():
         try:
-            if request.POST[kli.ime] is not None:
+            if request.POST[kli.email_adresa] is not None:
                 odabrani = kli
         except:
             pass
@@ -411,12 +417,12 @@ def IzmeniLekara(request):
         prezime = request.POST['prezime']
         broja_telefona = request.POST['broja_telefona']
 
-        if Lekar.objects.filter(ime=request.POST['koga']).exists():
+        if Lekar.objects.filter(email_adresa=request.POST['koga']).exists():
             if request.session['ime'] == ime:
                 request.session['ime'] = ime
                 request.session['prezime'] = prezime
 
-            k = Lekar.objects.filter(ime=request.POST['koga'])[0]
+            k = Lekar.objects.filter(email_adresa=request.POST['koga'])[0]
             k.ime = ime
             k.prezime = prezime
             k.broja_telefona = broja_telefona
@@ -430,7 +436,7 @@ def IzmeniLekara(request):
 
 def ObrisiLekara(request):
     try:
-        Lekar.objects.filter(ime=request.POST['koga']).delete()
+        Lekar.objects.filter(email_adresa=request.POST['koga']).delete()
         return redirect('index')
     except:
         return redirect('index')

@@ -5,6 +5,7 @@
 		<title>Dodaj Salu</title>
 	</head>
 	<body>
+<form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
 		<form method="POST" action="DodajSalu" onSubmit="return proveri();">
             {% csrf_token %}
 		<div class="unos">

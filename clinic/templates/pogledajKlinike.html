@@ -5,6 +5,7 @@
     <title>Klinike</title>
 </head>
 <body onload="tt()">
+<form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
     <div class="unos">
 		<h2>Klinike</h2>
 		Pretraga <input class="avs" id="pretraga" onchange="tt()"><br />

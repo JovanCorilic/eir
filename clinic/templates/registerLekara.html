@@ -5,7 +5,8 @@
 		<title>Registracija Lekara</title>
 		<link rel="stylesheet" href="css/stil.css">
 	</head>
-	<body>
+	<body><form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
+	
 		<form method="POST" action="registerLekara" onSubmit="return proveri();">
             {% csrf_token %}
 		<div class="unos">

@@ -5,6 +5,7 @@
     <title>Lekari</title>
 </head>
 <body onload="tt()">
+<form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
     <div class="unos">
 		<h2>Lekari</h2>
 		Pretraga <input class="avs" id="pretraga" onchange="tt()"><br />
@@ -40,7 +41,7 @@
 		        	{{ lekar.pozicija }}
 		        </td>
 		        <td class="td">
-		        <form method="POST" action="PogledajLekara" >{% csrf_token %}<input name="{{lekar.ime}}" type="submit" class="tabdugme" value="Pogledaj" ></form>
+		        <form method="POST" action="PogledajLekara" >{% csrf_token %}<input name="{{lekar.email_adresa}}" type="submit" class="tabdugme" value="Pogledaj" ></form>
 		        </td>
 		    </tr>
 		    {% endfor %}
@@ -130,6 +131,35 @@
 
         input[type=submit]:hover:not(.meni) {
           background-color: #01b601;
+        }
+    </style>
+<style>
+        input[type=text], input[type=number]:not(.avs), input[type=password], select{
+          width: 100%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          font-weight: bold;
+        }
+        .sub {
+          background-color: #4CAF50;
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          cursor: pointer;
+          font-weight: bold;
         }
     </style>
 </html>

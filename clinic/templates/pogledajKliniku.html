@@ -5,6 +5,7 @@
 		<title>{{klinika.naziv}}</title>
 	</head>
 	<body>
+<form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
 		<div class="unos" style="margin-left:70px">
 			<h1>{{klinika.naziv}}</h1>
         </div>

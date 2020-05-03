@@ -121,4 +121,7 @@ def loginKorisnik(request):
             messages.info(request, "Pogrešno korisničko ime ili lozinka")
             return redirect('loginKorisnik')
     else:
-        return render(request, 'login.html')
+        uloga = ""
+        if 'uloga' in req.session:
+            uloga = req.session['uloga']
+        return render(request, 'login.html', {'uloga': uloga,})
