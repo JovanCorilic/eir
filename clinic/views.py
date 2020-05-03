@@ -687,6 +687,32 @@ def prikazKlinikaPacijent(request):
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'lokacija': request.session['lokacija'], 'klinike': klinike})
 
+def prikazKlinikaPacijentSortirano(request):
+    if request.method == 'POST':
+        temp = request.POST['sortiraj']
+        if(temp == "Sortiraj po nazivu"):
+            poCemu = "naziv"
+        elif temp == "Sortiraj po adresi":
+            poCemu = "adresa"
+        else:
+            poCemu = "opis"
+        klinike = Klinika.objects.order_by(poCemu)
+        request.session['lokacija'] = 3
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija'], 'klinike': klinike})
+    else:
+        temp = request.POST['sortiraj']
+        if (temp == "Sortiraj po nazivu"):
+            poCemu = "naziv"
+        elif temp == "Sortiraj po adresi":
+            poCemu = "adresa"
+        else:
+            poCemu = "opis"
+        klinike = Klinika.objects.order_by(poCemu)
+        request.session['lokacija'] = 3
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija'], 'klinike': klinike})
+
 def prikazLekaraKlinikePacijent(request):
     if request.method == 'POST':
         nazivKlinike = request.POST['nazivKlinike']
