@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Eir Pacijent</title>
+        
+    </head>
+    <body>
+
+    <!--------------------------------------- POCETNA STRANA PACIJENTA ------------------------------------->
+      <ul>
+          <li><form method="POST" action="pacijent/glavnaStranicaPacijent" >{% csrf_token %}<input type="submit" value="Pocetna Strana"></form></li>
+          <li><form method="POST" action="pacijent/licniPodaciPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Informacije of vama"></form></li>
+          <li><form method="POST" action="pacijent/zdravstveniKartonPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Zdravstveni karton"></form></li>
+          <li><form method="POST" action="pacijent/prikazKlinikaPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Prikaži klinike"></form></li>
+          <li><form method="POST" action="pacijent/IzlogujSe" >{% csrf_token %}<input type="submit" class="meni" value="Izloguj se" ></form></li>
+      </ul>
+      <h1>Ulogovani ste kao {{ime}} {{prezime}} a vas e-mail je: {{email}}</h1>
+      
+
+      <!--------------------------------------------------------- FOOTER ZA SVE-------------------------------------------->
+        <style>
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background-color:silver;
+        }
+        </style>
+        </head>
+
+        <div class="footer">
+          <p>© Copyright 2020 Tim 20</p>
+        </div>
+      <!---------------------------------------------------------------KRAJ WEB STRANICE---------------------------------------->
+        
+    </body>
+
+    <style>
+      table.minimalistBlack {
+        font-family: "Times New Roman", Times, serif;
+        border: 3px solid #37ED2D;
+        width: 100%;
+        text-align: left;
+        border-collapse: collapse;
+      }
+      table.minimalistBlack td, table.minimalistBlack th {
+        border: 1px solid #000000;
+        padding: 5px 4px;
+      }
+      table.minimalistBlack tbody td {
+        font-size: 18px;
+      }
+      table.minimalistBlack thead {
+        background: #33D31E;
+        background: -moz-linear-gradient(top, #66de56 0%, #47d734 66%, #33D31E 100%);
+        background: -webkit-linear-gradient(top, #66de56 0%, #47d734 66%, #33D31E 100%);
+        background: linear-gradient(to bottom, #66de56 0%, #47d734 66%, #33D31E 100%);
+        border-bottom: 3px solid #000000;
+      }
+      table.minimalistBlack thead th {
+        font-size: 19px;
+        font-weight: bold;
+        color: #000000;
+        text-align: left;
+      }
+      table.minimalistBlack tfoot {
+        font-size: 18px;
+        font-weight: bold;
+        color: #000000;
+        border-top: 3px solid #000000;
+      }
+      table.minimalistBlack tfoot td {
+        font-size: 18px;
+      }
+    </style>
+
+    <style>
+      table.steelBlueCols {
+        font-family: 'Times New Roman', Times, serif;
+        border: 4px solid #36BF38;
+        background-color: #555555;
+        width: 400px;
+        text-align: center;
+        border-collapse: collapse;
+      }
+      table.steelBlueCols td, table.steelBlueCols th {
+        border: 1px solid #555555;
+        padding: 5px 10px;
+      }
+      table.steelBlueCols tbody td {
+        font-size: 18px;
+        font-weight: bold;
+        color: #FFFFFF;
+      }
+      table.steelBlueCols td:nth-child(even) {
+        background: #398AA4;
+      }
+      table.steelBlueCols thead {
+        background: #398AA4;
+        border-bottom: 10px solid #398AA4;
+      }
+      table.steelBlueCols thead th {
+        font-size: 15px;
+        font-weight: bold;
+        color: #FFFFFF;
+        text-align: left;
+        border-left: 2px solid #398AA4;
+      }
+      table.steelBlueCols thead th:first-child {
+        border-left: none;
+      }
+      
+      table.steelBlueCols tfoot td {
+        font-size: 13px;
+      }
+      table.steelBlueCols tfoot .links {
+        text-align: right;
+      }
+      table.steelBlueCols tfoot .links a{
+        display: inline-block;
+        background: #FFFFFF;
+        color: #398AA4;
+        padding: 2px 8px;
+        border-radius: 5px;
+      }
+    </style>
+    <style>
+      table.greenTable {
+        font-family: 'Times New Roman', Times, serif;
+        border: 6px solid rgb(0, 0, 0);
+        background-color: #D4EED1;
+        width: 30%;
+      
+        text-align: center;
+      }
+      table.greenTable td, table.greenTable th {
+        border: 1px solid rgb(0, 0, 0);
+        padding: 3px 2px;
+      }
+      table.greenTable tbody td {
+        font-size: 18px;
+      }
+      table.greenTable thead {
+        background: #24943A;
+        background: -moz-linear-gradient(top, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+        background: -webkit-linear-gradient(top, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+        background: linear-gradient(to bottom, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+        border-bottom: 0px solid #444444;
+      }
+      table.greenTable thead th {
+        font-size: 19px;
+        font-weight: bold;
+        color: #F0F0F0;
+        text-align: left;
+        border-left: 2px solid rgb(0, 0, 0);
+      }
+      table.greenTable thead th:first-child {
+        border-left: none;
+      }
+
+      table.greenTable tfoot {
+        font-size: 13px;
+        font-weight: bold;
+        color: #F0F0F0;
+        background: rgb(0, 0, 0);
+        background: -moz-linear-gradient(top, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+        background: -webkit-linear-gradient(top, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+        background: linear-gradient(to bottom, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+        border-top: 1px solid rgb(0, 0, 0);
+      }
+      table.greenTable tfoot td {
+        font-size: 13px;
+      }
+      table.greenTable tfoot .links {
+        text-align: right;
+      }
+      table.greenTable tfoot .links a{
+        display: inline-block;
+        background: #FFFFFF;
+        color: rgb(0, 0, 0);
+        padding: 2px 8px;
+        border-radius: 5px;
+      }
+    </style>
+
+    <style>
+        html, body {
+            margin:0;
+            margin-top: 30px
+        }
+        li input {
+          background-color: #4CAF50;
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
+          margin: 0px;
+          border: 0;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          font-weight: bold;
+        }
+        input[type=submit]:hover  {
+          background-color: #111;
+        }
+
+        input[type=submit]:hover:not(.meni) {
+          background-color: #01b601;
+        }
+
+        .meni {
+          background-color: #393939;
+        }
+        .desno{
+            float: right;
+        }
+        input[type=submit]:hover {
+          background-color: #111;
+        }
+
+        input[type=submit]:hover:not(.meni) {
+          background-color: #01b601;
+        }
+        ul {
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          background-color: #333;
+          position: fixed;
+          top: 0;
+          width: 100%;
+        }
+
+        li {
+          float: left;
+        }
+
+        li a {
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+          background-color: #111;
+        }
+
+        .active {
+          background-color: #4CAF50;
+        }
+    </style>
+</html>

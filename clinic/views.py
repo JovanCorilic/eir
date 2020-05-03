@@ -441,15 +441,15 @@ def ObrisiLekara(request):
 
 def registracijaPacijent(request):
     if request.method == 'POST':
-        email_adresa = request.POST['email']
-        lozinka = request.POST['sifra']
-        ime = request.POST['ime']
-        prezime = request.POST['prezime']
-        adresa_prebivalista = request.POST['adresa']
-        grad = request.POST['grad']
-        drzava = request.POST['drzava']
-        broja_telefona = request.POST['broj']
-        jedinstveni_broj_osiguranika = request.POST['jedinstveni']
+        email_adresa = request.POST.get('email', "")
+        lozinka = request.POST.get('sifra', "")
+        ime = request.POST.get('ime', "")
+        prezime = request.POST.get('prezime', "")
+        adresa_prebivalista = request.POST.get('adresa', "")
+        grad = request.POST.get('grad', "")
+        drzava = request.POST.get('drzava', "")
+        broja_telefona = request.POST.get('broj', "")
+        jedinstveni_broj_osiguranika = request.POST.get('jedinstveni', "")
 
         if Admin.objects.filter(email_adresa=email_adresa).exists() or Pacijent.objects.filter(
                 email_adresa=email_adresa).exists() or Lekar.objects.filter(email_adresa=email_adresa).exists():
@@ -471,7 +471,7 @@ def registracijaPacijent(request):
                                            visina="Prazno", tezina="Prazno", krvna_grupa="Prazno")
         pacijent.save()
         # print("napravljen pacijent " + ime)
-        return redirect('loginPacijent')
+        return redirect('loginKorisnik')
     else:
         return render(request, 'pacijent/registracijaPacijent.html')
 
@@ -506,25 +506,6 @@ def loginPacijent(request):
                 request.session['tezina'] = recnik.get('tezina')
                 request.session['krvna_grupa'] = recnik.get('krvna_grupa')
                 request.session['lokacija'] = 0
-
-                """email_adresa
-                lozinka
-                ime
-                prezime
-                adresa_prebivalista
-                grad
-                drzava
-                broja_telefona
-                jedinstveni_broj_osiguranika
-                sifra_bolesti
-                datum
-                diagnoza
-                lekovi
-                dioptrija
-                alergije_na_lek
-                visina
-                tezina
-                krvna_grupa"""
                 return render(request, 'pacijent/glavnaStranicaPacijent.html', {'email': request.session['email'], 'ime': request.session['ime'], 'prezime': request.session['prezime'],
                                                                                 'lokacija': request.session['lokacija']})
             else:
