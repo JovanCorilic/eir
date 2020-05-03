@@ -31,7 +31,7 @@ class SalaAdmin(admin.ModelAdmin):
 
 class KlinikaAdmin(admin.ModelAdmin):
     list_display = ("naziv", "adresa", "opis")
-    list_filter = ("naziv",)
+    list_filter = ("naziv", "opis")
     search_fields = ("ime", "adresa", "opis")
 
 class AdminAdmin(admin.ModelAdmin):

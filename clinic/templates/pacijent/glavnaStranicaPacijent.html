@@ -177,14 +177,22 @@
       </table>
 
       {% elif lokacija == 3 or lokacija == 3.5 %}
-
+      
+      {% if lokacija == 3 %}
+      <form method="POST" action="pretragaKlinikaPacijent" >{% csrf_token %}
+      <input type="text" id="unosPretraga" name="unosPretraga" value="">
+      <input type="submit" id = "pretragaNaziv" name="pretragaNaziv" value="Pretraga u koloni naziv">
+      <input type="submit" id = "pretragaOpis" name="pretragaOpis" value="Pretraga u koloni tip pregleda">
+      </form>
+      {% endif %}
+      <br />
       <table class="minimalistBlack">
         <thead>
         <tr>
         {% if lokacija == 3 %}
         <th>Naziv</th>
         <th>Adresa</th>
-        <th>Opis</th>
+        <th>Tip pregleda</th>
         <th>Uđi u kliniku</th>
         {% elif lokacija == 3.5 %}
         <th>Ime</th>
