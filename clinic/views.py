@@ -439,40 +439,54 @@ def ObrisiLekara(request):
 #nemoj ispod ove linije raditi
 
 def registracijaPacijent(request):
-    if request.method == 'POST':
-        email_adresa = request.POST.get('email', "")
-        lozinka = request.POST.get('sifra', "")
-        ime = request.POST.get('ime', "")
-        prezime = request.POST.get('prezime', "")
-        adresa_prebivalista = request.POST.get('adresa', "")
-        grad = request.POST.get('grad', "")
-        drzava = request.POST.get('drzava', "")
-        broja_telefona = request.POST.get('broj', "")
-        jedinstveni_broj_osiguranika = request.POST.get('jedinstveni', "")
+    try:
+        if request.method == 'POST':
+            """email_adresa = request.POST.get('email', "")
+            lozinka = request.POST.get('sifra', "")
+            ime = request.POST.get('ime', "")
+            prezime = request.POST.get('prezime', "")
+            adresa_prebivalista = request.POST.get('adresa', "")
+            grad = request.POST.get('grad', "")
+            drzava = request.POST.get('drzava', "")
+            broja_telefona = request.POST.get('broj', "")
+            jedinstveni_broj_osiguranika = request.POST.get('jedinstveni', "")"""
 
-        if Admin.objects.filter(email_adresa=email_adresa).exists() or Pacijent.objects.filter(
-                email_adresa=email_adresa).exists() or Lekar.objects.filter(email_adresa=email_adresa).exists():
-            # print("Email adresa je vec zauzeta")
-            messages.info(request, "Email adresa je vec zauzeta")
-            return redirect('registracijaPacijent')
+            email_adresa = request.POST['email']
+            lozinka = request.POST['sifra']
+            ime = request.POST['ime']
+            prezime = request.POST['prezime']
+            adresa_prebivalista = request.POST['adresa']
+            grad = request.POST['grad']
+            drzava = request.POST['drzava']
+            broja_telefona = request.POST['broj']
+            jedinstveni_broj_osiguranika = request.POST['jedinstveni']
 
-        elif "[" in ime or "]" in ime or "[NPL]" in ime:
-            # print("ime ne sme da sadrzi [NPL]")
-            messages.info(request, "ime ne sme da sadrzi karaktere [ ili ]")
-            return redirect('registracijaPacijent')
+            if Admin.objects.filter(email_adresa=email_adresa).exists() or Pacijent.objects.filter(
+                    email_adresa=email_adresa).exists() or Lekar.objects.filter(email_adresa=email_adresa).exists():
+                # print("Email adresa je vec zauzeta")
+                messages.info(request, "Email adresa je vec zauzeta")
+                return redirect('registracijaPacijent')
 
-        pacijent = Pacijent.objects.create(email_adresa=email_adresa, lozinka=lozinka, ime=ime, prezime=prezime,
-                                           broja_telefona=broja_telefona,
-                                           jedinstveni_broj_osiguranika=jedinstveni_broj_osiguranika,
-                                           adresa_prebivalista=adresa_prebivalista, grad=grad, drzava=drzava,
-                                           sifra_bolesti="Prazno", datum=date.today().strftime("%d/%m/%Y"), diagnoza="Prazno", lekovi="Prazno",
-                                           dioptrija="Prazno", alergije_na_lek="Prazno",
-                                           visina="Prazno", tezina="Prazno", krvna_grupa="Prazno")
-        pacijent.save()
-        # print("napravljen pacijent " + ime)
-        return redirect('loginKorisnik')
-    else:
-        return render(request, 'pacijent/registracijaPacijent.html')
+            elif "[" in ime or "]" in ime or "[NPL]" in ime:
+                # print("ime ne sme da sadrzi [NPL]")
+                messages.info(request, "ime ne sme da sadrzi karaktere [ ili ]")
+                return redirect('registracijaPacijent')
+
+            pacijent = Pacijent.objects.create(email_adresa=email_adresa, lozinka=lozinka, ime=ime, prezime=prezime,
+                                               broja_telefona=broja_telefona,
+                                               jedinstveni_broj_osiguranika=jedinstveni_broj_osiguranika,
+                                               adresa_prebivalista=adresa_prebivalista, grad=grad, drzava=drzava,
+                                               sifra_bolesti="Prazno", datum=date.today().strftime("%d/%m/%Y"), diagnoza="Prazno", lekovi="Prazno",
+                                               dioptrija="Prazno", alergije_na_lek="Prazno",
+                                               visina="Prazno", tezina="Prazno", krvna_grupa="Prazno")
+
+            pacijent.save()
+            # print("napravljen pacijent " + ime)
+            return redirect('loginKorisnik')
+        else:
+            return render(request, 'pacijent/registracijaPacijent.html')
+    except:
+        return redirect('registracijaPacijent')
 
 def loginPacijent(request):
     if request.method == 'POST':
