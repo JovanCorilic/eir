@@ -122,6 +122,6 @@ def loginKorisnik(request):
             return redirect('loginKorisnik')
     else:
         uloga = ""
-        if 'uloga' in req.session:
-            uloga = req.session['uloga']
+        if 'uloga' in request.session:
+            uloga = request.session['uloga']
         return render(request, 'login.html', {'uloga': uloga,})
