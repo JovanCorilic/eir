@@ -12,6 +12,7 @@
           <li><form method="POST" action="glavnaStranicaPacijent" >{% csrf_token %}<input type="submit" value="Pocetna Strana"></form></li>
           <li><form method="POST" action="licniPodaciPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Informacije of vama"></form></li>
           <li><form method="POST" action="zdravstveniKartonPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Zdravstveni karton"></form></li>
+          <li><form method="POST" action="prikazKlinikaPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Prikaži klinike"></form></li>
           <li><form method="POST" action="IzlogujSe" >{% csrf_token %}<input type="submit" class="meni" value="Izloguj se" ></form></li>
       </ul>
       
@@ -175,6 +176,34 @@
         </tbody>
       </table>
 
+      {% elif lokacija == 3 %}
+
+      <table class="minimalistBlack">
+        <thead>
+        <tr>
+        <th>Naziv</th>
+        <th>Adresa</th>
+        <th>Opis</th>
+        <th>Uđi u nju</th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+        <td>foot1</td>
+        <td>foot2</td>
+        <td>foot2</td>
+        <td>foot3</td>
+        </tr>
+        </tfoot>
+        <tbody>
+        <tr>
+        {% for klinika in klinike %}
+        <td>{{klinika.naziv}}</td><td>{{klinika.adresa}}</td><td>{{klinika.opis}}</td><td><form method="POST" action="prikazKlinikaPacijent" >{% csrf_token %}<input type="submit" value="Uđi u kliniku"></td></tr>
+        {% endfor %}
+        </tbody>
+        </tr>
+      </table>
+
       {% endif %}
 
       <!--------------------------------------------------------- FOOTER ZA SVE-------------------------------------------->
@@ -196,6 +225,46 @@
       <!---------------------------------------------------------------KRAJ WEB STRANICE---------------------------------------->
         
     </body>
+
+    <style>
+      table.minimalistBlack {
+        font-family: "Times New Roman", Times, serif;
+        border: 3px solid #37ED2D;
+        width: 100%;
+        text-align: left;
+        border-collapse: collapse;
+      }
+      table.minimalistBlack td, table.minimalistBlack th {
+        border: 1px solid #000000;
+        padding: 5px 4px;
+      }
+      table.minimalistBlack tbody td {
+        font-size: 18px;
+      }
+      table.minimalistBlack thead {
+        background: #33D31E;
+        background: -moz-linear-gradient(top, #66de56 0%, #47d734 66%, #33D31E 100%);
+        background: -webkit-linear-gradient(top, #66de56 0%, #47d734 66%, #33D31E 100%);
+        background: linear-gradient(to bottom, #66de56 0%, #47d734 66%, #33D31E 100%);
+        border-bottom: 3px solid #000000;
+      }
+      table.minimalistBlack thead th {
+        font-size: 19px;
+        font-weight: bold;
+        color: #000000;
+        text-align: left;
+      }
+      table.minimalistBlack tfoot {
+        font-size: 18px;
+        font-weight: bold;
+        color: #000000;
+        border-top: 3px solid #000000;
+      }
+      table.minimalistBlack tfoot td {
+        font-size: 18px;
+      }
+    </style>
+
     <style>
       table.steelBlueCols {
         font-family: 'Times New Roman', Times, serif;

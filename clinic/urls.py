@@ -15,6 +15,7 @@ urlpatterns = [
     path('pacijent/licniPodaciPacijent', views.licniPodaciPacijent, name = 'licniPodaciPacijent'),
     path('pacijent/promenaLicniPodaciPacijent', views.promenaLicniPodaciPacijent, name = 'promenaLicniPodaciPacijent'),
     path('pacijent/zdravstveniKartonPacijent', views.zdravstveniKartonPacijent, name = 'zdravstveniKartonPacijent'),
+    path('pacijent/prikazKlinikaPacijent', views.prikazKlinikaPacijent, name = 'prikazKlinikaPacijent'),
     path('lekar/izmeni', views.izmeni_lekara),
     path('sala/izmeni', views.izmeni_salu),
     path('klinika/izmeni', views.izmeni_kliniku),

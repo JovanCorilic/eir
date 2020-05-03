@@ -675,3 +675,14 @@ def zdravstveniKartonPacijent(request):
                        'krvna': request.session['krvna_grupa'],'lokacija': request.session['lokacija']
                        })
 
+def prikazKlinikaPacijent(request):
+    if request.method == 'POST':
+        klinike = Klinika.objects.all()
+        request.session['lokacija'] = 3
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija'], 'klinike': klinike})
+    else:
+        klinike = Klinika.objects.all()
+        request.session['lokacija'] = 3
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija'], 'klinike': klinike})
