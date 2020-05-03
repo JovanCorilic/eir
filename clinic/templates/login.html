@@ -6,8 +6,7 @@
     </head>
 <body>
     <form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
-    {{ uloga }}
-    {% if uloga != 'ADMIN' and uloga != 'LEKAR' and uloga != 'PACIJENT' %}
+
     <form method="POST" action="loginKorisnik" onSubmit="return proveri();">
         {% csrf_token %}
         <div class="unos">
@@ -34,9 +33,7 @@
             </table>
         </div>
     </form>
-    {%else%}
-        <H3>Vec ste ulogovani</H3>
-    {%endif%}
+
 
     <script>
 			function proveri() {
