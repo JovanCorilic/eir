@@ -686,3 +686,16 @@ def prikazKlinikaPacijent(request):
         request.session['lokacija'] = 3
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'lokacija': request.session['lokacija'], 'klinike': klinike})
+
+def prikazLekaraKlinikePacijent(request):
+    if request.method == 'POST':
+        nazivKlinike = request.POST['nazivKlinike']
+        naziv = nazivKlinike.split()
+        lekari = Lekar.objects.filter(radno_mesto = naziv[3])
+        request.session['lokacija'] = 3.5
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija'], 'lekari': lekari})
+    else:
+        request.session['lokacija'] = 3.5
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija']})
