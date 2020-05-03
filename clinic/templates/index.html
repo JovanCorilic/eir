@@ -57,6 +57,10 @@
 
                 <h1>Ulogovani ste kao {{ime}}</h1>
                 <br /><br />
+                <a href="registerLekara">Registruj Lekara</a><br />
+                <a href="registerAdmina">Registruj Admina</a><br />
+                <a href="login">Uloguj se</a><br />
+                <br />
                 <form method="POST" action="pogledajPacijente" >{% csrf_token %}<input type="submit" value="Pregledaj Sve Pacijente"></form>
                 <form method="POST" action="pogledajSale" >{% csrf_token %}<input type="submit" value="Pregledaj Sve Sale"></form>
                 <form method="get" action="DodajSalu">{% csrf_token %}<input type="submit" value="Dodaj Salu"></form>
@@ -69,22 +73,17 @@
             <ul>
                         <li><form method="POST" action="index" >{% csrf_token %}<input type="submit" value="Pocetna Strana"></form></li>
                         <li><form method="POST" action="login" >{% csrf_token %}<input type="submit" class="meni" value="Uloguj se" ></form></li>
+                        <li><form method="POST" action="pacijent/registracijaPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Registruj se" ></form></li>
             </ul>
             <!--<a href="registerKorisnik">Registruj se</a><br />-->
+            <!--<form action="/pacijent/registracijaPacijent">
+                <input type="submit" value="Registracija za pacijenta" />
+            </form><br>
             <a href="registerLekara">Registruj Lekara</a><br />
             <a href="registerAdmina">Registruj Admina</a><br />
             <a href="login">Uloguj se</a><br />
             <br />
-            <br />
-            <form action="/superadmin/register">
-                <input type="submit" value="Registruj administratora klinike" />
-            </form><br>
-            <form action="/pacijent/registracijaPacijent">
-                <input type="submit" value="Registracija za pacijenta" />
-            </form><br>
-            <form action="/pacijent/loginPacijent">
-                <input type="submit" value="Login" />
-            </form>
+            <br />-->
 
             {% endif %}<!--------------------------------------------------------- FOOTER ZA SVE-------------------------------------------->
             <style>
@@ -100,7 +99,7 @@
             </head>
 
 
-            <br />Hej! Ovo je hip i moderna veb aplikacija...<br />
+            <h1>Dobrodošli :)</h1>
 
             <div class="footer">
               <p>© Copyright 2020 Tim 20</p>

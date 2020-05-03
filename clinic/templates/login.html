@@ -5,7 +5,7 @@
         <title>Eir - Logovanje</title>    
     </head>
 <body>
-    {% if not 'ulogovan' in request.session %}
+    
     <form method="POST" action="loginKorisnik" onSubmit="return proveri();">
         {% csrf_token %}
         <div class="unos">
@@ -32,11 +32,9 @@
             </table>
         </div>
     </form>
-    {% else %}
+    
 
-    <h2>Već ste ulogovani</h2>
-
-    {% endif %}
+    
 
     <script>
 			function proveri() {
@@ -46,7 +44,7 @@
 					popunjeno = false
 					document.getElementById('lemail').innerHTML = 'Ovo polje je obavezno!';
 				}
-				else if(document.getElementById("email").value.includes("@") == false || document.getElementById("email").value.includes(".") == false){
+				else if(document.getElementById("email").value.includes("@") == false ){
 					popunjeno = false
 					document.getElementById('lemail').innerHTML = 'Email koji ste uneli je pogresan!';
 				}

@@ -58,21 +58,33 @@ def loginKorisnik(request):
         print("Tacni username i password za LEKAR? -> " + str(Lekar.objects.filter(email_adresa=email_adresa, lozinka=lozinka).exists()))
         print("Tacni username i password za ADMIN? -> " + str(Admin.objects.filter(email_adresa=email_adresa, lozinka=lozinka).exists()))
         if Pacijent.objects.filter(email_adresa=email_adresa, lozinka=lozinka).exists():
-            print("Ulogovan kao " + Pacijent.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime)
-            #sadrzaj = {
-            #    "ime": Pacijent.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime,
-            #    "email": email_adresa,
-            #    "uloga": "PACIJENT"
-            #}
-
-            request.session['ime'] = Pacijent.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime
             request.session['email'] = email_adresa
-            request.session['uloga'] = "PACIJENT"
-            request.session['prezime'] = Lekar.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].prezime
+            temp = list(Pacijent.objects.filter(email_adresa=email_adresa).values())
+            recnik = temp[0]
+            request.session['lozinka'] = lozinka
+            # ime = recnik.get('ime')
+            request.session['ime'] = recnik.get('ime')
+            request.session['prezime'] = recnik.get('prezime')
+            request.session['adresa_prebivalista'] = recnik.get('adresa_prebivalista')
+            request.session['grad'] = recnik.get('grad')
+            request.session['drzava'] = recnik.get('drzava')
+            request.session['broja_telefona'] = recnik.get('broja_telefona')
+            request.session['jedinstveni_broj_osiguranika'] = recnik.get('jedinstveni_broj_osiguranika')
+            request.session['sifra_bolesti'] = recnik.get('sifra_bolesti')
+            request.session['datum'] = recnik.get('datum')
+            request.session['diagnoza'] = recnik.get('diagnoza')
+            request.session['lekovi'] = recnik.get('lekovi')
+            request.session['dioptrija'] = recnik.get('dioptrija')
+            request.session['alergije_na_lek'] = recnik.get('alergije_na_lek')
+            request.session['visina'] = recnik.get('visina')
+            request.session['tezina'] = recnik.get('tezina')
+            request.session['krvna_grupa'] = recnik.get('krvna_grupa')
             request.session['ulogovan'] = 'true'
-            #response = redirect('/')
-            #return render(request, 'index.html', sadrzaj)
-            return redirect('glavnaStranicaPacijent')
+            request.session['lokacija'] = 0
+            return render(request, 'glavnaStranicaPacijent.html',
+                          {'email': request.session['email'], 'ime': request.session['ime'],
+                           'prezime': request.session['prezime'],
+                           'lokacija': request.session['lokacija']})
         elif Lekar.objects.filter(email_adresa=email_adresa, lozinka=lozinka).exists():
             print("Ulogovan kao " + Lekar.objects.filter(email_adresa=email_adresa, lozinka=lozinka)[0].ime)
             #sadrzaj = {
