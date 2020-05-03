@@ -738,7 +738,30 @@ def prikazLekaraKlinikePacijent(request):
     if request.method == 'POST':
         nazivKlinike = request.POST['nazivKlinike']
         naziv = nazivKlinike.split()
+        request.session['nazivKlinike'] = naziv[3]
         lekari = Lekar.objects.filter(radno_mesto = naziv[3])
+        request.session['lokacija'] = 3.5
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija'], 'lekari': lekari})
+    else:
+        request.session['lokacija'] = 3.5
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija']})
+
+def sortiranjeLekaraPacijent(request):
+    if request.method == 'POST':
+
+        if 'sortirajIme' in request.POST:
+            tip = 'ime'
+        elif 'sortirajPrezime' in request.POST:
+            tip = 'prezime'
+        elif 'sortirajEmail' in request.POST:
+            tip = 'email_adresa'
+        else:
+            tip = 'pozicija'
+
+        lekari = Lekar.objects.filter(radno_mesto=request.session['nazivKlinike']).order_by(tip)
+
         request.session['lokacija'] = 3.5
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'lokacija': request.session['lokacija'], 'lekari': lekari})
