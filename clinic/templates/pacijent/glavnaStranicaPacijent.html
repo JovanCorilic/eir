@@ -13,7 +13,7 @@
           <li><form method="POST" action="licniPodaciPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Informacije of vama"></form></li>
           <li><form method="POST" action="zdravstveniKartonPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Zdravstveni karton"></form></li>
           <li><form method="POST" action="prikazKlinikaPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Prikaži klinike"></form></li>
-          <li><form method="POST" action="IzlogujSe" >{% csrf_token %}<input type="submit" class="meni" value="Izloguj se" ></form></li>
+          <li><form method="POST" action="../IzlogujSe" >{% csrf_token %}<input type="submit" class="meni" value="Izloguj se" ></form></li>
       </ul>
       
       {% if lokacija == 0 %}

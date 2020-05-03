@@ -36,6 +36,15 @@ def IzlogujSe(request):
     del request.session['ulogovan']
     return render(request, 'index.html', {'ime': ime, 'email': email, 'uloga': uloga})
 
+def IzlogujSePacijent(request):
+    ime = ""  # ako ne postoji
+    email = ""
+    uloga = ""
+    request.session['ime'] = ''
+    request.session['email'] = ''
+    request.session['uloga'] = 'NEULOGOVAN'
+    del request.session['ulogovan']
+    return render(request, 'index.html', {'ime': ime, 'email': email, 'uloga': uloga})
 
 def register_clinic_admin(req):
     return render(req, 'superadmin/register.html')
