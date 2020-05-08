@@ -95,3 +95,19 @@ class Klinika(models.Model):
 
     def __str__(self):
         return self.adresa
+
+class Pregled(models.Model):
+    klinika = models.CharField(max_length=500, default=None)
+    zakazan = models.CharField(max_length=500, default=None)
+    lekar = models.CharField(max_length=500, default=None)
+    sala = models.CharField(max_length=500, default=None)
+    tip_pregleda = models.CharField(max_length=500, default=None)
+    vreme = models.DateTimeField(max_length=500, default=None)
+    sifra_bolesti = models.CharField(max_length=500, default=None)
+    diagnoza = models.CharField(max_length=500, default=None)
+    lekovi = models.CharField(max_length=500, default=None)
+
+    objects = UserManager()
+
+    def __str__(self):
+        return self.vreme
