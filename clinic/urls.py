@@ -21,6 +21,8 @@ urlpatterns = [
     path('pacijent/pretragaKlinikaPacijent', views.pretragaKlinikaPacijent, name = 'pretragaKlinikaPacijent'),
     path('pacijent/sortiranjeLekaraPacijent', views.sortiranjeLekaraPacijent, name = 'sortiranjeLekaraPacijent'),
     path('pacijent/pretragaLekaraPacijent', views.pretragaLekaraPacijent, name = 'pretragaLekaraPacijent'),
+    path('pacijent/prikaziBrzePreglede', views.prikaziBrzePreglede, name = 'prikaziBrzePreglede'),
+    path('pacijent/zakaziBrzPregled', views.zakaziBrzPregled, name = 'zakaziBrzPregled'),
     path('lekar/izmeni', views.izmeni_lekara),
     path('sala/izmeni', views.izmeni_salu),
     path('klinika/izmeni', views.izmeni_kliniku),

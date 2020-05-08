@@ -97,6 +97,7 @@ class Klinika(models.Model):
         return self.adresa
 
 class Pregled(models.Model):
+    id = models.CharField(max_length=500, primary_key=True,  default=None)
     klinika = models.CharField(max_length=500, default=None)
     zakazan = models.CharField(max_length=500, default=None)
     lekar = models.CharField(max_length=500, default=None)
@@ -108,6 +109,3 @@ class Pregled(models.Model):
     lekovi = models.CharField(max_length=500, default=None)
 
     objects = UserManager()
-
-    def __str__(self):
-        return self.vreme

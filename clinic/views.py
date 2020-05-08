@@ -2,7 +2,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import auth
-from clinic.models import Pacijent, Admin, Klinika
+from clinic.models import Pacijent, Admin, Klinika, Pregled
 from django.contrib import messages
 from datetime import date
 from clinic.models import Lekar
@@ -787,5 +787,39 @@ def pretragaLekaraPacijent(request):
                       {'lokacija': request.session['lokacija'], 'lekari': lekari})
     else:
         request.session['lokacija'] = 3.5
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija']})
+
+def prikaziBrzePreglede(request):
+    if request.method == 'POST':
+        nazivKlinike = request.POST['nazivKlinike']
+        naziv = nazivKlinike.split()
+        request.session['nazivKlinike'] = naziv[4]
+        pregledi = Pregled.objects.filter(klinika=naziv[4], zakazan="Prazno")
+        lekari = Lekar.objects.filter(radno_mesto=naziv[4])
+        request.session['lokacija'] = 3.6
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija'], 'pregledi': pregledi, 'lekari': lekari})
+    else:
+        request.session['lokacija'] = 3.6
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija']})
+
+def zakaziBrzPregled(request):
+    if request.method == 'POST':
+        idPregled = request.POST['id123']
+
+        pregled = Pregled.objects.get(id=idPregled)
+        pregled.zakazan = request.session['email']
+        pregled.save()
+
+        pregledi = Pregled.objects.filter(klinika=request.session['nazivKlinike'], zakazan="Prazno")
+        lekari = Lekar.objects.filter(radno_mesto=request.session['nazivKlinike'])
+        request.session['lokacija'] = 3.6
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija'], 'pregledi': pregledi, 'lekari': lekari})
+
+    else:
+        request.session['lokacija'] = 3.6
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'lokacija': request.session['lokacija']})
