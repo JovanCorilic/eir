@@ -495,51 +495,6 @@ def registracijaPacijent(request):
     except:
         return redirect('registracijaPacijent')
 
-def loginPacijent(request):
-    if request.method == 'POST':
-        email_adresa = request.POST['email']
-        sifra = request.POST['sifra']
-        print("1")
-        if Pacijent.objects.filter(email_adresa=email_adresa).exists():
-            print("2")
-            if Pacijent.objects.filter(lozinka=sifra).exists():
-                print("3")
-                request.session['email'] = email_adresa
-                temp = list(Pacijent.objects.filter(email_adresa = email_adresa).values())
-                recnik = temp[0]
-                request.session['lozinka'] = sifra
-                #ime = recnik.get('ime')
-                request.session['ime'] = recnik.get('ime')
-                request.session['prezime'] = recnik.get('prezime')
-                request.session['adresa_prebivalista'] = recnik.get('adresa_prebivalista')
-                request.session['grad'] = recnik.get('grad')
-                request.session['drzava'] = recnik.get('drzava')
-                request.session['broja_telefona'] = recnik.get('broja_telefona')
-                request.session['jedinstveni_broj_osiguranika'] = recnik.get('jedinstveni_broj_osiguranika')
-                request.session['sifra_bolesti'] = recnik.get('sifra_bolesti')
-                request.session['datum'] = recnik.get('datum')
-                request.session['diagnoza'] = recnik.get('diagnoza')
-                request.session['lekovi'] = recnik.get('lekovi')
-                request.session['dioptrija'] = recnik.get('dioptrija')
-                request.session['alergije_na_lek'] = recnik.get('alergije_na_lek')
-                request.session['visina'] = recnik.get('visina')
-                request.session['tezina'] = recnik.get('tezina')
-                request.session['krvna_grupa'] = recnik.get('krvna_grupa')
-                request.session['lokacija'] = 0
-                return render(request, 'pacijent/glavnaStranicaPacijent.html', {'email': request.session['email'], 'ime': request.session['ime'], 'prezime': request.session['prezime'],
-                                                                                'lokacija': request.session['lokacija']})
-            else:
-                print("4")
-                messages.info(request, "Sifra nije dobra!")
-                return redirect('loginPacijent')
-        else:
-            print("5")
-            messages.info(request, "Email koji ste uneli ne postoji!")
-            return redirect('loginPacijent')
-    else:
-        pac = Pacijent.objects.all
-        return render(request, 'pacijent/loginPacijent.html')
-
 #return render(request, 'pogledajLekare.html', {'lekari': kk})
 
 def glavnaStranicaPacijent(request):
@@ -824,3 +779,17 @@ def zakaziBrzPregled(request):
         request.session['lokacija'] = 3.6
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'lokacija': request.session['lokacija']})
+
+def sviPreglediPacijent(request):
+    if request.method == 'POST':
+        pregledi = Pregled.objects.filter(zakazan=request.session['email']).order_by('vreme')
+        request.session['lokacija'] = 4
+        lekari = Lekar.objects.filter(radno_mesto=request.session['nazivKlinike'])
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija'], 'pregledi': pregledi, 'lekari': lekari})
+    else:
+        pregledi = Pregled.objects.filter(zakazan=request.session['email']).order_by('vreme')
+        request.session['lokacija'] = 4
+        lekari = Lekar.objects.filter(radno_mesto=request.session['nazivKlinike'])
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija'], 'pregledi': pregledi, 'lekari': lekari})
