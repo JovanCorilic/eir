@@ -315,7 +315,7 @@
         <td>{{pregled.diagnoza}}</td>
         <td>{{pregled.lekovi}}</td>
         <td>
-          {% if pregled.vreme > sada and sada < provera %}
+          {% if pregled.temp == "da" %}
           <form method="POST" action="otkaziPregledPacijent" >{% csrf_token %}<div id="myDIV"><button id = "id123" name="id123" value = "{{pregled.id}}" style="width:100%">Otkaži</button></div></form>
           {% endif %}
         </td>

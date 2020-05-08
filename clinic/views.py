@@ -785,21 +785,30 @@ def sviPreglediPacijent(request):
         pregledi = Pregled.objects.filter(zakazan=request.session['email']).order_by('-vreme')
         request.session['lokacija'] = 4
         lekari = Lekar.objects.filter(radno_mesto=request.session['nazivKlinike'])
-
-        provera = []
-        for pregled in pregledi:
-            provera.append(pregled.vreme - datetime.timedelta(days=1))
+        sada = datetime.datetime.now()
+        for i in range(len(pregledi)):
+            temp = pregledi[i].vreme - datetime.timedelta(days=1)
+            if pregledi[i].vreme > sada and sada < temp:
+                pregledi[i].temp = "da"
+            else:
+                pregledi[i].temp = "ne"
 
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
-                      {'lokacija': request.session['lokacija'], 'pregledi': pregledi, 'lekari': lekari,
-                       'sada': datetime.datetime.now(), 'provera': provera })
+                      {'lokacija': request.session['lokacija'], 'pregledi': pregledi, 'lekari': lekari })
     else:
-        pregledi = Pregled.objects.filter(zakazan=request.session['email']).order_by('vreme')
+        pregledi = Pregled.objects.filter(zakazan=request.session['email']).order_by('-vreme')
         request.session['lokacija'] = 4
         lekari = Lekar.objects.filter(radno_mesto=request.session['nazivKlinike'])
-        provera = datetime.datetime.now() - datetime.timedelta(days=1)
+        sada = datetime.datetime.now()
+        for i in range(len(pregledi)):
+            temp = pregledi[i].vreme - datetime.timedelta(days=1)
+            if pregledi[i].vreme > sada and sada < temp:
+                pregledi[i].temp = "da"
+            else:
+                pregledi[i].temp = "ne"
+
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
-                      {'lokacija': request.session['lokacija'], 'pregledi': pregledi, 'lekari': lekari, 'sada': datetime.datetime.now(), 'provera': provera})
+                      {'lokacija': request.session['lokacija'], 'pregledi': pregledi, 'lekari': lekari})
 
 def otkaziPregledPacijent(request):
     if request.method == 'POST':
@@ -811,13 +820,28 @@ def otkaziPregledPacijent(request):
         pregledi = Pregled.objects.filter(zakazan=request.session['email']).order_by('vreme')
         request.session['lokacija'] = 4
         lekari = Lekar.objects.filter(radno_mesto=request.session['nazivKlinike'])
+        sada = datetime.datetime.now()
+        for i in range(len(pregledi)):
+            temp = pregledi[i].vreme - datetime.timedelta(days=1)
+            if pregledi[i].vreme > sada and sada < temp:
+                pregledi[i].temp = "da"
+            else:
+                pregledi[i].temp = "ne"
+
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'lokacija': request.session['lokacija'], 'pregledi': pregledi, 'lekari': lekari,
-                       'sada': datetime.datetime.now(), 'provera': provera, 'br': 0})
+                       'sada': datetime.datetime.now(), 'provera': provera})
     else:
-        pregledi = Pregled.objects.filter(zakazan=request.session['email']).order_by('vreme')
+        pregledi = Pregled.objects.filter(zakazan=request.session['email']).order_by('-vreme')
         request.session['lokacija'] = 4
-        provera = datetime.datetime.now() - datetime.timedelta(days=1)
         lekari = Lekar.objects.filter(radno_mesto=request.session['nazivKlinike'])
+        sada = datetime.datetime.now()
+        for i in range(len(pregledi)):
+            temp = pregledi[i].vreme - datetime.timedelta(days=1)
+            if pregledi[i].vreme > sada and sada < temp:
+                pregledi[i].temp = "da"
+            else:
+                pregledi[i].temp = "ne"
+
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
-                      {'lokacija': request.session['lokacija'], 'pregledi': pregledi, 'lekari': lekari, 'sada': datetime.datetime.now(), 'provera': provera})
+                      {'lokacija': request.session['lokacija'], 'pregledi': pregledi, 'lekari': lekari})
