@@ -7,6 +7,7 @@ from django.contrib import messages
 from datetime import date
 from clinic.models import Lekar
 from clinic.models import Sala
+import datetime
 
 
 def index(req):
@@ -795,7 +796,7 @@ def prikaziBrzePreglede(request):
         nazivKlinike = request.POST['nazivKlinike']
         naziv = nazivKlinike.split()
         request.session['nazivKlinike'] = naziv[4]
-        pregledi = Pregled.objects.filter(klinika=naziv[4], zakazan="Prazno")
+        pregledi = Pregled.objects.filter(klinika=naziv[4], zakazan="Prazno", vreme__gte = datetime.datetime.now())
         lekari = Lekar.objects.filter(radno_mesto=naziv[4])
         request.session['lokacija'] = 3.6
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
