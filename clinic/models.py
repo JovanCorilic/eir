@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, UserManager
-
+import datetime
 
 class Snippet(models.Model):
     title = models.CharField(max_length=50)
@@ -107,5 +107,6 @@ class Pregled(models.Model):
     sifra_bolesti = models.CharField(max_length=500, default=None)
     diagnoza = models.CharField(max_length=500, default=None)
     lekovi = models.CharField(max_length=500, default=None)
+    temp = "da"
 
     objects = UserManager()

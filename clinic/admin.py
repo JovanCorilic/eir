@@ -40,7 +40,7 @@ class AdminAdmin(admin.ModelAdmin):
     search_fields = ("ime", "prezime")
 
 class PregledAdmin(admin.ModelAdmin):
-    list_display = ("id", "klinika", "zakazan", "lekar", "sala", "tip_pregleda", "vreme", "sifra_bolesti", "lekovi", "diagnoza")
+    list_display = ("id", "klinika", "zakazan", "lekar", "sala", "tip_pregleda", "vreme", "sifra_bolesti", "lekovi", "diagnoza", "temp")
     list_filter = ("id", "klinika", "lekar", "tip_pregleda", "sala")
     search_fields = ("id", "klinika", "lekar", "tip_pregleda", "sala")
 
