@@ -16,7 +16,6 @@
           <li><form method="POST" action="sviPreglediPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Prikaži preglede"></form></li>
           <li><form method="POST" action="../IzlogujSe" >{% csrf_token %}<input type="submit" class="meni" value="Izloguj se" ></form></li>
       </ul>
-      
       {% if lokacija == 0 %}
         <h1>Ulogovani ste kao {{ime}} {{prezime}} a vas e-mail je: {{email}}</h1>
         <br /><br />
@@ -263,7 +262,7 @@
           {% endfor %}
         </td>
         <td>{{pregled.sala}}</td><td>{{pregled.tip_pregleda}}</td><td>{{pregled.vreme}}</td>
-        <td><form method="POST" action="zakaziBrzPregled" >{% csrf_token %}<div id="myDIV"><button id = "id123" name="id123" value = "{{pregled.id}}">Zakaži</button></div></form>
+        <td><form method="POST" action="zakaziBrzPregled" >{% csrf_token %}<div id="myDIV"><button id = "id123" name="id123" value = "{{pregled.id}}" style="width:100%">Zakaži</button></div></form>
         </td>
         </tr>
         {% endfor %}
@@ -284,10 +283,12 @@
         <th>Tip pregleda</th>
         <th>Diagnoza</th>
         <th>Lekovi</th>
+        <th>Otkazivanje</th>
         </tr>
         </thead>
         <tfoot>
         <tr>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -313,7 +314,13 @@
         <td>{{pregled.tip_pregleda}}</td>
         <td>{{pregled.diagnoza}}</td>
         <td>{{pregled.lekovi}}</td>
+        <td>
+          {% if pregled.vreme > sada and sada < provera %}
+          <form method="POST" action="otkaziPregledPacijent" >{% csrf_token %}<div id="myDIV"><button id = "id123" name="id123" value = "{{pregled.id}}" style="width:100%">Otkaži</button></div></form>
+          {% endif %}
+        </td>
         </tr>
+        
         {% endfor %}
         </tbody>
         </table>
