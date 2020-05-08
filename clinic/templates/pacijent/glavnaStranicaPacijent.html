@@ -176,7 +176,7 @@
         </tbody>
       </table>
 
-      {% elif lokacija == 3 or lokacija == 3.5 %}
+      {% elif lokacija == 3 or lokacija == 3.5 or lokacija == 3.6 %}
       
       {% if lokacija == 3 %}
       <form method="POST" action="pretragaKlinikaPacijent" >{% csrf_token %}
@@ -207,6 +207,13 @@
         <th>Prezime</th>
         <th>Email adresa</th>
         <th>Pozicija</th>
+        {% elif lokacija == 3.6 %}
+        <th>Ime</th>
+        <th>Prezime</th>
+        <th>Sala</th>
+        <th>Tip pregleda</th>
+        <th>Vreme</th>
+        <th>Zakazivanje</th>
         {% endif %}
         </tr>
         </thead>
@@ -231,19 +238,42 @@
         <tr>
         {% if lokacija == 3 %}
         {% for klinika in klinike %}
-        <td>{{klinika.naziv}}</td><td>{{klinika.adresa}}</td><td>{{klinika.opis}}</td><td><form method="POST" action="prikazLekaraKlinikePacijent" >{% csrf_token %}<input type="submit" id = "nazivKlinike" name="nazivKlinike" value="Uđi u kliniku {{klinika.naziv}}" style="width:100%"></form></td></tr>
+        <td>{{klinika.naziv}}</td><td>{{klinika.adresa}}</td><td>{{klinika.opis}}</td>
+        <td><form method="POST" action="prikazLekaraKlinikePacijent" >{% csrf_token %}<input type="submit" id = "nazivKlinike" name="nazivKlinike" value="Uđi u kliniku {{klinika.naziv}}" style="width:100%"></form>
+        <form method="POST" action="prikaziBrzePreglede" >{% csrf_token %}<input type="submit" id = "nazivKlinike" name="nazivKlinike" value="Prikaži brze preglede iz {{klinika.naziv}}" style="width:100%"></form>
+        </td>
+        </tr>
         {% endfor %}
         {% elif lokacija == 3.5 %}
         {% for lekar in lekari %}
         <td>{{lekar.ime}}</td><td>{{lekar.prezime}}</td><td>{{lekar.email_adresa}}</td><td>{{lekar.pozicija}}</td></tr>
         {% endfor %}
+
+        {% elif lokacija == 3.6 %}
+        {% for pregled in pregledi %}
+        <td>
+          {% for lekar in lekari %}
+          {% if lekar.email_adresa == pregled.lekar %}
+          {{lekar.ime}}
+        </td>
+        <td>
+          {{lekar.prezime}}
+          {% endif %}
+          {% endfor %}
+        </td>
+        <td>{{pregled.sala}}</td><td>{{pregled.tip_pregleda}}</td><td>{{pregled.vreme}}</td>
+        <td><form method="POST" action="zakaziBrzPregled" >{% csrf_token %}<div id="myDIV"><button id = "id123" name="id123" value = "{{pregled.id}}">Zakaži</button></div></form>
+        </td>
+        </tr>
+        {% endfor %}
+
         {% endif %}
         </tbody>
         </tr>
       </table>
 
       {% endif %}
-
+    
       <!--------------------------------------------------------- FOOTER ZA SVE-------------------------------------------->
         <style>
         .footer {
@@ -263,7 +293,13 @@
       <!---------------------------------------------------------------KRAJ WEB STRANICE---------------------------------------->
         
     </body>
-
+    <script>
+      function myFunction() {
+        var x = document.getElementById("myDIV");
+        
+        x.innerHTML = "Zakazano!";
+      }
+    </script>
     <style>
       table.minimalistBlack {
         font-family: "Times New Roman", Times, serif;
@@ -300,6 +336,9 @@
       }
       table.minimalistBlack tfoot td {
         font-size: 18px;
+      }
+      button.vidljivost{
+        visibility: hidden;
       }
     </style>
 

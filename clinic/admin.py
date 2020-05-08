@@ -40,9 +40,9 @@ class AdminAdmin(admin.ModelAdmin):
     search_fields = ("ime", "prezime")
 
 class PregledAdmin(admin.ModelAdmin):
-    list_display = ("klinika", "zakazan", "lekar", "sala", "tip_pregleda", "vreme", "sifra_bolesti", "lekovi", "diagnoza")
-    list_filter = ("klinika", "lekar", "tip_pregleda", "sala")
-    search_fields = ("klinika", "lekar", "tip_pregleda", "sala")
+    list_display = ("id", "klinika", "zakazan", "lekar", "sala", "tip_pregleda", "vreme", "sifra_bolesti", "lekovi", "diagnoza")
+    list_filter = ("id", "klinika", "lekar", "tip_pregleda", "sala")
+    search_fields = ("id", "klinika", "lekar", "tip_pregleda", "sala")
 
 admin.site.register(Snippet, SnippetAdmin)
 admin.site.register(Pacijent, PacijentAdmin)
