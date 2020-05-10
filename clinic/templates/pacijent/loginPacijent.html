@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Eir - Registracija pacijent</title>
+    </head>
+<body>
+    <form method="POST" action="loginPacijent" onsubmit="return logovanje()">
+        {% csrf_token %}
+        E-mail: <input type="text" id="email" name="email" ><br>
+        Lozinka: <input type="password" id="sifra" name="sifra"> <br>
+        <br>
+        <input type="submit" value="Uloguj se">
+    </form>
+
+    <script>
+        function logovanje() {
+        var at = document.getElementById("email").value.indexOf("@");
+        var loz = document.getElementById("sifra").value;
+        submitOK = "true";
+
+        if (at == -1) {
+            alert("Nije validan email!");
+            submitOK = "false";
+        }
+
+        if (submitOK == "false") {
+            return false;
+        }
+        }
+    </script>
+
+</body>
+</html>

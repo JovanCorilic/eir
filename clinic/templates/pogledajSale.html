@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sale</title>
+</head>
+<body onload="tt()">
+<form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
+    <div class="unos">
+		<h2>Sale</h2>
+		Pretraga <input class="avs" id="pretraga" onchange="tt()"><br />
+		<table border="1" class="table" id="tabb">
+		    <tr class="tr">
+		        <th class="th">Broj</th>
+		        <th class="th">Naziv</th>
+		        <th class="th">Klinika Kojoj Pripada</th>
+                <th class="th">Opis</th>
+				{% if uloga == 'ADMIN' %}
+                <th class="th"></th>
+				{% endif %}
+		    </tr>
+		    {% for sala in sale %}
+		    <tr>
+		        <td class="td">
+		            {{ sala.broj }}
+		        </td>
+		        <td class="td">
+		            {{ sala.naziv }}
+		        </td>
+		        <td class="td">
+		            {{ sala.id_klinike_kojoj_pripada }}
+		        </td>
+		        <td class="td">
+		        	{{ sala.opis }}
+		        </td>
+				{% if uloga == 'ADMIN' %}
+		        <td class="td">
+		        	<form method="POST" action="pogledajSalu" >{% csrf_token %}<input name="{{sala.naziv}}" type="submit" class="tabdugme" value="Pogledaj" ></form>
+		        </td>
+				{% endif %}
+		    </tr>
+		    {% endfor %}
+
+		</table>
+	</div>
+</body>
+    <script>
+		function tt() {
+			var table, tr, i, txtValue;
+			var uneto = document.getElementById("pretraga").value;
+
+			var unos = false;
+
+			if(uneto == ""){
+				unos = true;
+			}
+
+			table = document.getElementById("tabb");
+			tr = table.getElementsByTagName("tr");
+
+			for (i = 0; i < tr.length; i++) {
+
+		    	var td1 = tr[i].getElementsByTagName("td")[0];
+		    	var td2 = tr[i].getElementsByTagName("td")[1];
+		    	var td3 = tr[i].getElementsByTagName("td")[2];
+		    	var td4 = tr[i].getElementsByTagName("td")[3];
+
+
+		    	if (td1 || td2 || td3 || td4) {
+		      		txtValue1 = td1.textContent || td1.innerText;
+		      		txtValue2 = td2.textContent || td2.innerText;
+		      		txtValue3 = td3.textContent || td3.innerText;
+		      		txtValue4 = td4.textContent || td4.innerText;
+
+
+		      		txtValue1 = txtValue1 == undefined ? '' : txtValue1.trim();
+		      		txtValue2 = txtValue2 == undefined ? '' : txtValue2.trim();
+		      		txtValue3 = txtValue3 == undefined ? '' : txtValue3.trim();
+		      		txtValue4 = txtValue4 == undefined ? '' : txtValue4.trim();
+
+		      		var sadrzi = txtValue1.includes(uneto) || txtValue2.includes(uneto) || txtValue3.includes(uneto) || txtValue4.includes(uneto);
+
+		      		if (sadrzi || unos) {
+		        		tr[i].style.display = "";
+		      		}
+		      		else {
+		        		tr[i].style.display = "none";
+		      		}
+		    	}
+		  	}
+		}
+	</script>
+    <style>
+        .table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+
+        .td {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+        }
+
+        .th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+          background-color: #509050;
+        }
+
+        .even {
+          background-color: #4CAa50;
+        }
+
+        .tr{
+            padding:5px;
+            background-color: #60b060;
+        }
+
+        .th{
+            padding:5px;
+        }
+
+        input[type=submit]:hover {
+          background-color: #111;
+        }
+
+        input[type=submit]:hover:not(.meni) {
+          background-color: #01b601;
+        }
+    </style>
+<style>
+        input[type=text], input[type=number]:not(.avs), input[type=password], select{
+          width: 100%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          font-weight: bold;
+        }
+        .sub {
+          background-color: #4CAF50;
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          cursor: pointer;
+          font-weight: bold;
+        }
+    </style>
+</html>

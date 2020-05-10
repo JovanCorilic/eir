@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+	<head>
+		<title>{{lekar.ime}} {{lekar.prezime}}</title>
+		<link rel="stylesheet" href="css/stil.css">
+	</head>
+	<body>
+<form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
+		<div class="unos" style="margin-left:70px">
+			<h1>{{lekar.ime}} {{lekar.prezime}}</h1>
+            <form method="POST" action="ObrisiLekara">{% csrf_token %}<input type="hidden" name="koga" value="{{ lekar.email_adresa }}"><input type="submit" name="{{ lekar.ime }}" class="sub" value="Obrisi" ></form>
+		</div>
+		<form method="POST" action="IzmeniLekara" onSubmit="return proveri();" >{% csrf_token %}
+			<div class="unos2">
+				<table>
+					<tr>
+						<th align="right">Ime </th>
+						<th><input type="text" name="ime" id="ime"  value="{{lekar.ime}}"></th>
+						<th></th>
+					</tr>
+					<tr>
+						<th align="right">Prezime </th>
+						<th><input type="text" name="prezime" id="prezime" value="{{lekar.prezime}}"></th>
+						<th></th>
+					</tr>
+					<tr>
+						<th align="right">Email </th>
+						<th><input type="text" name="email" id="email" disabled value="{{lekar.email_adresa}}"></th>
+						<th align="left"><label id="lemail" style="color: red;"></label></th>
+					</tr>
+					<tr>
+						<th align="right">Broja Telefona </th>
+                        <th><input type="text" name="broja_telefona"  id="broja_telefona" value="{{lekar.broja_telefona}}"></th>
+						<th align="left"><label id="lbroja_telefona" style="color: red;"></label></th>
+					</tr>
+					<tr>
+						<th align="right">Jedinstveni Broj Osiguranika </th>
+						<th><input type="text" name="jedinstveni_broj_osiguranika" disabled id="jedinstveni_broj_osiguranika" value="{{lekar.jedinstveni_broj_osiguranika}}"></th>
+						<th align="left"><label id="ljedinstveni_broj_osiguranika" style="color: red;"></label></th>
+					</tr>
+                    <tr>
+						<th align="right">Datum Registracije </th>
+						<th><input type="text" name="datum" id="datum" disabled value="{{lekar.datum}}"></th>
+						<th align="left"><label id="ldatum" style="color: red;"></label></th>
+					</tr>
+                    <tr>
+						<th align="right">Radno Mesto </th>
+						<th><input type="text" name="radno_mesto" id="radno_mesto" disabled value="{{lekar.radno_mesto}}"></th>
+						<th align="left"><label id="lradno_mesto" style="color: red;"></label></th>
+					</tr>
+                    <tr>
+						<th align="right">Pozicija </th>
+						<th><input type="text" name="pozicija" id="pozicija" disabled value="{{lekar.pozicija}}"></th>
+						<th align="left"><label id="lpozicija" style="color: red;"></label></th>
+					</tr>
+					<tr>
+						<th><input type="hidden" name="koga" value="{{ lekar.email_adresa }}"></th>
+						<th align="left"><input type="submit" class="sub" onclick="a()" value="Sacuvaj Promene"></th>
+						<th align="left"><label style="color: red;">
+						</label></th>
+					</tr>
+				</table>
+			</div>
+		</form>
+		<script>
+			function proveri() {
+				var popunjeno = true;
+
+				if(document.getElementById("ime").value == ""){
+					popunjeno = false
+					document.getElementById('lime').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else{
+					document.getElementById('lime').innerHTML = '';
+				}
+				if(document.getElementById("prezime").value != document.getElementById("password2").value){
+					popunjeno = false
+					document.getElementById('lprezime').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else{
+					document.getElementById('lprezime').innerHTML = '';
+				}
+				if(document.getElementById("broja_telefona").value != document.getElementById("password2").value){
+					popunjeno = false
+					document.getElementById('lbroja_telefona').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else{
+					document.getElementById('lbroja_telefona').innerHTML = '';
+				}
+				if(document.getElementById("radno_mesto").value != document.getElementById("password2").value){
+					popunjeno = false
+					document.getElementById('lradno_mesto').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else{
+					document.getElementById('lradno_mesto').innerHTML = '';
+				}
+				if(document.getElementById("pozicija").value != document.getElementById("password2").value){
+					popunjeno = false
+					document.getElementById('lpozicija').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else{
+					document.getElementById('lpozicija').innerHTML = '';
+				}
+				if(!popunjeno) {alert("Morate da pravilno popunite sva polja")}
+				return popunjeno;
+			}
+		</script>
+	</body>
+<style>
+        input[type=text], input[type=number]:not(.avs), input[type=password], select{
+          width: 100%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          font-weight: bold;
+        }
+        .sub {
+          background-color: #4CAF50;
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          cursor: pointer;
+          font-weight: bold;
+        }
+    </style>
+</html>

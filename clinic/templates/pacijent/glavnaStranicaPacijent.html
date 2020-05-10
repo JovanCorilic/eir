@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Eir Pacijent</title>
+        
+    </head>
+    <body>
+
+    <!--------------------------------------- POCETNA STRANA PACIJENTA ------------------------------------->
+      <ul>
+          <li><form method="POST" action="glavnaStranicaPacijent" >{% csrf_token %}<input type="submit" value="Pocetna Strana"></form></li>
+          <li><form method="POST" action="licniPodaciPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Informacije of vama"></form></li>
+          <li><form method="POST" action="zdravstveniKartonPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Zdravstveni karton"></form></li>
+          <li><form method="POST" action="prikazKlinikaPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Prikaži klinike"></form></li>
+          <li><form method="POST" action="sviPreglediPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Prikaži preglede"></form></li>
+          <li><form method="POST" action="../IzlogujSe" >{% csrf_token %}<input type="submit" class="meni" value="Izloguj se" ></form></li>
+      </ul>
+      {% if lokacija == 0 %}
+        <h1>Ulogovani ste kao {{ime}} {{prezime}} a vas e-mail je: {{email}}</h1>
+        <br /><br />
+      {% elif lokacija == 1 or lokacija == 1.5 %}
+      <table class="greenTable" align="center">
+          <thead>
+          <tr>
+          <th>Atribut</th>
+          {% if lokacija == 1.5 %}
+            <th>Staro</th>
+            <th>Novo</th>
+          {% else %}
+          <th>Sadrzaj</th>
+          {% endif %}
+          </tr>
+          </thead>
+          <tfoot>
+          <tr>
+            {% if lokacija == 1.5 %}
+            <td colspan="3">
+            <div class="links"><form method="POST" action="promenaLicniPodaciPacijent" >{% csrf_token %}<input type="submit" value="Potvrdite promenu"></div>
+            </td>
+            {% else %}
+            <td colspan="2">
+            <div class="links"><form method="POST" action="promenaLicniPodaciPacijent" >{% csrf_token %}<input type="submit" value="Promenite Informacije o Vama"></form></div>
+            </td>
+            {% endif %}
+          </tr>
+          </tfoot>
+          <tbody>
+          <tr>
+          <td>E-Mail</td>
+          <td>{{email}}</td>
+          {% if lokacija == 1.5 %}
+          <td></td>
+          {% endif %}
+          </tr>
+          <tr>
+          <td>Lozinka</td>
+          <td>{{lozinka}}</td>
+          {% if lokacija == 1.5 %}
+          <td><input type="text" id="lozinka2" name="lozinka2" ></td>
+          {% endif %}
+          </tr>
+          <tr>
+          <td>Ime</td>
+          <td>{{ime}}</td>
+          {% if lokacija == 1.5 %}
+          <td><input type="text" id="ime2" name="ime2" ></td>
+          {% endif %}
+          </tr>
+          <tr>
+          <td>Prezime</td>
+          <td>{{prezime}}</td>
+          {% if lokacija == 1.5 %}
+          <td><input type="text" id="prezime2" name="prezime2" ></td>
+          {% endif %}
+          </tr>
+          <tr>
+            <td>Adresa prebivališta</td>
+            <td>{{adresa}}</td>
+            {% if lokacija == 1.5 %}
+            <td><input type="text" id="adresa2" name="adresa2" ></td>
+            {% endif %}
+          </tr>
+          <tr>
+            <td>Grad</td>
+            <td>{{grad}}</td>
+            {% if lokacija == 1.5 %}
+            <td><input type="text" id="grad2" name="grad2" ></td>
+            {% endif %}
+          </tr>
+          <tr>
+            <td>Drzava</td>
+            <td>{{drzava}}</td>
+            {% if lokacija == 1.5 %}
+            <td><input type="text" id="drzava2" name="drzava2" ></td>
+            {% endif %}
+          </tr>
+          <tr>
+            <td>Broj telefona</td>
+            <td>{{broj}}</td>
+            {% if lokacija == 1.5 %}
+            <td><input type="text" id="broj2" name="broj2" ></td>
+          </form>
+            {% endif %}
+          </tr>
+          <tr>
+            <td>Jedinstveni broj osiguranika</td>
+            <td>{{jedinstven}}</td>
+            {% if lokacija == 1.5 %}
+            <td></td>
+            {% endif %}
+          </tr>
+          </tbody>
+        </table>
+      {% if lokacija == 1.5 %}
+        <h2 align = "center">Ostaviti prazno ako nećete da se promeni!</h2>
+      {% endif %}
+
+      {% elif lokacija == 2 %}
+      <table class="steelBlueCols" align="center">
+        <thead>
+        <tr>
+        <th>Atribut</th>
+        <th>Opis</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>Ime</td>
+        <td>{{ime}}</td>
+        </tr>
+        <tr>
+        <td>Prezime</td>
+        <td>{{prezime}}</td>
+        </tr>
+        <tr>
+        <td>Jedinstveni broj osiguranika</td>
+        <td>{{jedinstven}}</td>
+        </tr>
+        <tr>
+        <td>Šifra bolesti</td>
+        <td>{{sifra}}</td>
+        </tr>
+        <tr>
+        <td>Datum pregleda</td>
+        <td>{{datum}}</td>
+        </tr>
+        <tr>
+        <td>Diagnoza</td>
+        <td>{{diagnoza}}</td>
+        </tr>
+        <tr>
+        <td>Lekovi</td>
+        <td>{{lekovi}}</td>
+        </tr>
+        <tr>
+        <td>Dioptrija</td>
+        <td>{{dioptrija}}</td>
+        </tr>
+        <tr>
+        <td>Alergije na lek</td>
+        <td>{{alergije}}</td>
+        </tr>
+        <tr>
+        <td>Visina</td>
+        <td>{{visina}}</td>
+        </tr>
+        <tr>
+        <td>Tezina</td>
+        <td>{{tezina}}</td>
+        </tr>
+        <tr>
+        <td>Krvna grupa</td>
+        <td>{{krvna}}</td>
+        </tr>
+        </tbody>
+      </table>
+
+      {% elif lokacija == 3 or lokacija == 3.5 or lokacija == 3.6 %}
+      
+      {% if lokacija == 3 %}
+      <form method="POST" action="pretragaKlinikaPacijent" >{% csrf_token %}
+      <input type="text" id="unosPretraga" name="unosPretraga" value="">
+      <input type="submit" id = "pretragaNaziv" name="pretragaNaziv" value="Pretraga u koloni naziv">
+      <input type="submit" id = "pretragaOpis" name="pretragaOpis" value="Pretraga u koloni tip pregleda">
+      </form>
+
+      {% elif lokacija == 3.5 %}
+      <form method="POST" action="pretragaLekaraPacijent" >{% csrf_token %}
+        <input type="text" id="unosPretraga" name="unosPretraga" value="">
+        <input type="submit" id = "pretragaIme" name="pretragaIme" value="Pretraga u koloni ime">
+        <input type="submit" id = "pretragaPrezime" name="pretragaPrezime" value="Pretraga u koloni prezime">
+        </form>
+      </form>
+      {% endif %}
+      <br />
+      <table class="minimalistBlack">
+        <thead>
+        <tr>
+        {% if lokacija == 3 %}
+        <th>Naziv</th>
+        <th>Adresa</th>
+        <th>Tip pregleda</th>
+        <th>Uđi u kliniku</th>
+        {% elif lokacija == 3.5 %}
+        <th>Ime</th>
+        <th>Prezime</th>
+        <th>Email adresa</th>
+        <th>Pozicija</th>
+        {% elif lokacija == 3.6 %}
+        <th>Ime</th>
+        <th>Prezime</th>
+        <th>Sala</th>
+        <th>Tip pregleda</th>
+        <th>Vreme</th>
+        <th>Zakazivanje</th>
+        {% endif %}
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+        {% if lokacija == 3 %}
+        <td><form method="POST" action="prikazKlinikaPacijentSortirano" >{% csrf_token %}<input type="submit" id = "sortiraj" name="sortiraj" value="Sortiraj po nazivu" style="width:100%"></form></td>
+        <td><form method="POST" action="prikazKlinikaPacijentSortirano" >{% csrf_token %}<input type="submit" id = "sortiraj" name="sortiraj" value="Sortiraj po adresi" style="width:100%"></form></td>
+        <td><form method="POST" action="prikazKlinikaPacijentSortirano" >{% csrf_token %}<input type="submit" id = "sortiraj" name="sortiraj" value="Sortiraj po opisu" style="width:100%"></form></td>
+        <td></td>
+        {% elif lokacija == 3.5 %}
+        <form method="POST" action="sortiranjeLekaraPacijent" >{% csrf_token %}
+        <td><input type="submit" id = "sortirajIme" name="sortirajIme" value="Sortiraj po imenu" style="width:100%"></td>
+        <td><input type="submit" id = "sortirajPrezime" name="sortirajPrezime" value="Sortiraj po prezimenu" style="width:100%"></td>
+        <td><input type="submit" id = "sortirajEmail" name="sortirajEmail" value="Sortiraj po email adresi" style="width:100%"></td>
+        <td><input type="submit" id = "sortirajPozicija" name="sortirajPozicija" value="Sortiraj po poziciji" style="width:100%"></td>
+        </form>
+        {% endif %}
+        </tr>
+        </tfoot>
+        <tbody>
+        <tr>
+        {% if lokacija == 3 %}
+        {% for klinika in klinike %}
+        <td>{{klinika.naziv}}</td><td>{{klinika.adresa}}</td><td>{{klinika.opis}}</td>
+        <td><form method="POST" action="prikazLekaraKlinikePacijent" >{% csrf_token %}<input type="submit" id = "nazivKlinike" name="nazivKlinike" value="Uđi u kliniku {{klinika.naziv}}" style="width:100%"></form>
+        <form method="POST" action="prikaziBrzePreglede" >{% csrf_token %}<input type="submit" id = "nazivKlinike" name="nazivKlinike" value="Prikaži brze preglede iz {{klinika.naziv}}" style="width:100%"></form>
+        </td>
+        </tr>
+        {% endfor %}
+        {% elif lokacija == 3.5 %}
+        {% for lekar in lekari %}
+        <td>{{lekar.ime}}</td><td>{{lekar.prezime}}</td><td>{{lekar.email_adresa}}</td><td>{{lekar.pozicija}}</td></tr>
+        {% endfor %}
+
+        {% elif lokacija == 3.6 %}
+        {% for pregled in pregledi %}
+        <td>
+          {% for lekar in lekari %}
+          {% if lekar.email_adresa == pregled.lekar %}
+          {{lekar.ime}}
+        </td>
+        <td>
+          {{lekar.prezime}}
+          {% endif %}
+          {% endfor %}
+        </td>
+        <td>{{pregled.sala}}</td><td>{{pregled.tip_pregleda}}</td><td>{{pregled.vreme}}</td>
+        <td><form method="POST" action="zakaziBrzPregled" >{% csrf_token %}<div id="myDIV"><button id = "id123" name="id123" value = "{{pregled.id}}" style="width:100%">Zakaži</button></div></form>
+        </td>
+        </tr>
+        {% endfor %}
+
+        {% endif %}
+        </tbody>
+        </tr>
+      </table>
+
+      {% elif lokacija == 4 %}
+      <table class="comicGreen">
+        <thead>
+        <tr>
+        <th>Vreme</th>
+        <th>Klinika</th>
+        <th>Sala</th>
+        <th>Lekar</th>
+        <th>Tip pregleda</th>
+        <th>Diagnoza</th>
+        <th>Lekovi</th>
+        <th>Otkazivanje</th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        </tfoot>
+        <tbody>
+        {% for pregled in pregledi %}
+        <tr>
+        <td>{{pregled.vreme}}</td>
+        <td>{{pregled.klinika}}</td>
+        <td>{{pregled.sala}}</td>
+        <td>
+          {% for lekar in lekari %}
+          {% if lekar.email_adresa == pregled.lekar %}
+          {{lekar.ime}} {{lekar.prezime}}
+          {% endif %}
+          {% endfor %}
+        </td>
+        <td>{{pregled.tip_pregleda}}</td>
+        <td>{{pregled.diagnoza}}</td>
+        <td>{{pregled.lekovi}}</td>
+        <td>
+          {% if pregled.temp == "da" %}
+          <form method="POST" action="otkaziPregledPacijent" >{% csrf_token %}<div id="myDIV"><button id = "id123" name="id123" value = "{{pregled.id}}" style="width:100%">Otkaži</button></div></form>
+          {% endif %}
+        </td>
+        </tr>
+        
+        {% endfor %}
+        </tbody>
+        </table>
+      {% endif %}
+    
+      <!--------------------------------------------------------- FOOTER ZA SVE-------------------------------------------->
+        <style>
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background-color:silver;
+        }
+        </style>
+        </head>
+
+        <div class="footer">
+          <p>© Copyright 2020 Tim 20</p>
+        </div>
+      <!---------------------------------------------------------------KRAJ WEB STRANICE---------------------------------------->
+        
+    </body>
+    <script>
+      function myFunction() {
+        var x = document.getElementById("myDIV");
+        
+        x.innerHTML = "Zakazano!";
+      }
+    </script>
+
+    <style>
+      table.comicGreen {
+        font-family: "Comic Sans MS", cursive, sans-serif;
+        border: 2px solid #4F7849;
+        background-color: #EEEEEE;
+        width: 100%;
+        text-align: center;
+        border-collapse: collapse;
+      }
+      table.comicGreen td, table.comicGreen th {
+        border: 1px solid #4F7849;
+        padding: 3px 2px;
+      }
+      table.comicGreen tbody td {
+        font-size: 19px;
+        font-weight: bold;
+        color: #4F7849;
+      }
+      table.comicGreen tr:nth-child(even) {
+        background: #CEE0CC;
+      }
+      table.comicGreen thead {
+        background: #4F7849;
+        background: -moz-linear-gradient(top, #7b9a76 0%, #60855b 66%, #4F7849 100%);
+        background: -webkit-linear-gradient(top, #7b9a76 0%, #60855b 66%, #4F7849 100%);
+        background: linear-gradient(to bottom, #7b9a76 0%, #60855b 66%, #4F7849 100%);
+        border-bottom: 1px solid #444444;
+      }
+      table.comicGreen thead th {
+        font-size: 21px;
+        font-weight: bold;
+        color: #FFFFFF;
+        text-align: left;
+        border-left: 2px solid #D0E4F5;
+      }
+      table.comicGreen thead th:first-child {
+        border-left: none;
+      }
+
+      table.comicGreen tfoot {
+        font-size: 21px;
+        font-weight: bold;
+        color: #FFFFFF;
+        background: #4F7849;
+        background: -moz-linear-gradient(top, #7b9a76 0%, #60855b 66%, #4F7849 100%);
+        background: -webkit-linear-gradient(top, #7b9a76 0%, #60855b 66%, #4F7849 100%);
+        background: linear-gradient(to bottom, #7b9a76 0%, #60855b 66%, #4F7849 100%);
+        border-top: 1px solid #444444;
+      }
+      table.comicGreen tfoot td {
+        font-size: 21px;
+      }
+    </style>
+
+    <style>
+      table.minimalistBlack {
+        font-family: "Times New Roman", Times, serif;
+        border: 3px solid #37ED2D;
+        width: 100%;
+        text-align: left;
+        border-collapse: collapse;
+      }
+      table.minimalistBlack td, table.minimalistBlack th {
+        border: 1px solid #000000;
+        padding: 5px 4px;
+      }
+      table.minimalistBlack tbody td {
+        font-size: 18px;
+      }
+      table.minimalistBlack thead {
+        background: #33D31E;
+        background: -moz-linear-gradient(top, #66de56 0%, #47d734 66%, #33D31E 100%);
+        background: -webkit-linear-gradient(top, #66de56 0%, #47d734 66%, #33D31E 100%);
+        background: linear-gradient(to bottom, #66de56 0%, #47d734 66%, #33D31E 100%);
+        border-bottom: 3px solid #000000;
+      }
+      table.minimalistBlack thead th {
+        font-size: 19px;
+        font-weight: bold;
+        color: #000000;
+        text-align: left;
+      }
+      table.minimalistBlack tfoot {
+        font-size: 18px;
+        font-weight: bold;
+        color: #000000;
+        border-top: 3px solid #000000;
+      }
+      table.minimalistBlack tfoot td {
+        font-size: 18px;
+      }
+      button.vidljivost{
+        visibility: hidden;
+      }
+    </style>
+
+    <style>
+      table.steelBlueCols {
+        font-family: 'Times New Roman', Times, serif;
+        border: 4px solid #36BF38;
+        background-color: #555555;
+        width: 400px;
+        text-align: center;
+        border-collapse: collapse;
+      }
+      table.steelBlueCols td, table.steelBlueCols th {
+        border: 1px solid #555555;
+        padding: 5px 10px;
+      }
+      table.steelBlueCols tbody td {
+        font-size: 18px;
+        font-weight: bold;
+        color: #FFFFFF;
+      }
+      table.steelBlueCols td:nth-child(even) {
+        background: #398AA4;
+      }
+      table.steelBlueCols thead {
+        background: #398AA4;
+        border-bottom: 10px solid #398AA4;
+      }
+      table.steelBlueCols thead th {
+        font-size: 15px;
+        font-weight: bold;
+        color: #FFFFFF;
+        text-align: left;
+        border-left: 2px solid #398AA4;
+      }
+      table.steelBlueCols thead th:first-child {
+        border-left: none;
+      }
+      
+      table.steelBlueCols tfoot td {
+        font-size: 13px;
+      }
+      table.steelBlueCols tfoot .links {
+        text-align: right;
+      }
+      table.steelBlueCols tfoot .links a{
+        display: inline-block;
+        background: #FFFFFF;
+        color: #398AA4;
+        padding: 2px 8px;
+        border-radius: 5px;
+      }
+    </style>
+    <style>
+      table.greenTable {
+        font-family: 'Times New Roman', Times, serif;
+        border: 6px solid rgb(0, 0, 0);
+        background-color: #D4EED1;
+        width: 30%;
+      
+        text-align: center;
+      }
+      table.greenTable td, table.greenTable th {
+        border: 1px solid rgb(0, 0, 0);
+        padding: 3px 2px;
+      }
+      table.greenTable tbody td {
+        font-size: 18px;
+      }
+      table.greenTable thead {
+        background: #24943A;
+        background: -moz-linear-gradient(top, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+        background: -webkit-linear-gradient(top, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+        background: linear-gradient(to bottom, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+        border-bottom: 0px solid #444444;
+      }
+      table.greenTable thead th {
+        font-size: 19px;
+        font-weight: bold;
+        color: #F0F0F0;
+        text-align: left;
+        border-left: 2px solid rgb(0, 0, 0);
+      }
+      table.greenTable thead th:first-child {
+        border-left: none;
+      }
+
+      table.greenTable tfoot {
+        font-size: 13px;
+        font-weight: bold;
+        color: #F0F0F0;
+        background: rgb(0, 0, 0);
+        background: -moz-linear-gradient(top, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+        background: -webkit-linear-gradient(top, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+        background: linear-gradient(to bottom, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+        border-top: 1px solid rgb(0, 0, 0);
+      }
+      table.greenTable tfoot td {
+        font-size: 13px;
+      }
+      table.greenTable tfoot .links {
+        text-align: right;
+      }
+      table.greenTable tfoot .links a{
+        display: inline-block;
+        background: #FFFFFF;
+        color: rgb(0, 0, 0);
+        padding: 2px 8px;
+        border-radius: 5px;
+      }
+    </style>
+
+    <style>
+        html, body {
+            margin:0;
+            margin-top: 30px
+        }
+        li input {
+          background-color: #4CAF50;
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
+          margin: 0px;
+          border: 0;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          font-weight: bold;
+        }
+        input[type=submit]:hover  {
+          background-color: #111;
+        }
+
+        input[type=submit]:hover:not(.meni) {
+          background-color: #01b601;
+        }
+
+        .meni {
+          background-color: #393939;
+        }
+        .desno{
+            float: right;
+        }
+        input[type=submit]:hover {
+          background-color: #111;
+        }
+
+        input[type=submit]:hover:not(.meni) {
+          background-color: #01b601;
+        }
+        ul {
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          background-color: #333;
+          position: fixed;
+          top: 0;
+          width: 100%;
+        }
+
+        li {
+          float: left;
+        }
+
+        li a {
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+          background-color: #111;
+        }
+
+        .active {
+          background-color: #4CAF50;
+        }
+    </style>
+</html>

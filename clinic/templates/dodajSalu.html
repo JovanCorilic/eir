@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Dodaj Salu</title>
+	</head>
+	<body>
+<form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
+		<form method="POST" action="DodajSalu" onSubmit="return proveri();">
+            {% csrf_token %}
+		<div class="unos">
+				<table>
+					<tr>
+						<th align="right">Broj </th>
+						<th><input type="text" name="broj" id="broj" placeholder="Broj"></th>
+						<th align="left"><label id="lbroj" style="color: red;"></label></th>
+					</tr>
+					<tr>
+						<th align="right">Naziv </th>
+						<th><input type="text" name="naziv" id="naziv" placeholder="Naziv"></th>
+						<th align="left"><label id="lnaziv" style="color: red;"></label></th>
+					</tr>
+					<tr>
+						<th align="right">Naziv Klinike Kojoj Pripada </th>
+						<th>
+                        <select name="id" id="id">
+                            {% for ss in niz%}
+                          <option value="{{ss}}">{{ss}}</option>
+                            {%endfor%}
+                        </select>
+                        </th>
+						<th align="left"><label id="lid" style="color: red;"></label></th>
+					</tr>
+                    <tr>
+						<th align="right">Opis </th>
+						<th><input type="text" name="opis" id="opis" placeholder="Opis"></th>
+					</tr>
+					<tr>
+						<th></th>
+						<th align="left"><input type="submit" class="sub" value="Dodaj"></th>
+						<th align="left"><label style="color: red;">
+                            {% if messages|length > 0 %}
+                            	Molimo vas da proverite undete podatke
+                            {% endif %}
+						</label></th>
+					</tr>
+				</table>
+			</div>
+		</form>
+		<script>
+			function proveri() {
+				var popunjeno = true;
+
+				if(document.getElementById("broj").value == ""){
+					popunjeno = false
+					document.getElementById('lbroj').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else{
+					document.getElementById('lbroj').innerHTML = '';
+				}
+
+				if(document.getElementById("naziv").value == ""){
+					popunjeno = false
+					document.getElementById('lnaziv').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else{
+					document.getElementById('lnaziv').innerHTML = '';
+				}
+
+				if(document.getElementById("id").value == ""){
+					popunjeno = false
+					document.getElementById('lid').innerHTML = 'Ovo polje je obavezno!';
+				}
+				else{
+					document.getElementById('lid').innerHTML = '';
+				}
+
+				if(!popunjeno) {alert("Morate da pravilno popunite sva polja")}
+				return popunjeno;
+			}
+		</script>
+	</body>
+    <style>
+        input[type=text], input[type=number]:not(.avs), input[type=password], select{
+          width: 100%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          font-weight: bold;
+        }
+        .sub {
+          background-color: #4CAF50;
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          cursor: pointer;
+          font-weight: bold;
+        }
+    </style>
+</html>
