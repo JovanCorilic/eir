@@ -11,7 +11,6 @@ import datetime
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
-from .forms import SignupForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -455,34 +454,6 @@ def ObrisiLekara(request):
 #-----------------------------------------------------------------------------------------------------------------------
 #nemoj ispod ove linije raditi
 
-def home(request):
-    return render(request, 'index.html')
-
-def signup(request):
-    if request.method == 'POST':
-        form = SignupForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.is_active = False
-            user.save()
-            current_site = get_current_site(request)
-            mail_subject = 'Aktivirajte vaš Pacijent akount'
-            message = render_to_string('acc_active_email.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-                'token':account_activation_token.make_token(user),
-            })
-            to_email = form.cleaned_data.get('email')
-            email = EmailMessage(
-                        mail_subject, message, to=[to_email]
-            )
-            email.send()
-            return HttpResponse('Molim vas potvrdite vašu email registraciju.')
-    else:
-        form = SignupForm()
-    return render(request, 'signup.html', {'form': form})
-
 def activate(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
@@ -851,7 +822,7 @@ def sviPreglediPacijent(request):
     if request.method == 'POST':
         pregledi = Pregled.objects.filter(zakazan=request.session['email']).order_by('-vreme')
         request.session['lokacija'] = 4
-        lekari = Lekar.objects.filter(radno_mesto=request.session['nazivKlinike'])
+        lekari = Lekar.objects.all()
         sada = datetime.datetime.now()
         for i in range(len(pregledi)):
             temp = pregledi[i].vreme - datetime.timedelta(days=1)
@@ -865,7 +836,7 @@ def sviPreglediPacijent(request):
     else:
         pregledi = Pregled.objects.filter(zakazan=request.session['email']).order_by('-vreme')
         request.session['lokacija'] = 4
-        lekari = Lekar.objects.filter(radno_mesto=request.session['nazivKlinike'])
+        lekari = Lekar.objects.all()
         sada = datetime.datetime.now()
         for i in range(len(pregledi)):
             temp = pregledi[i].vreme - datetime.timedelta(days=1)
@@ -886,7 +857,7 @@ def otkaziPregledPacijent(request):
         provera = datetime.datetime.now() - datetime.timedelta(days=1)
         pregledi = Pregled.objects.filter(zakazan=request.session['email']).order_by('vreme')
         request.session['lokacija'] = 4
-        lekari = Lekar.objects.filter(radno_mesto=request.session['nazivKlinike'])
+        lekari = Lekar.objects.all()
         sada = datetime.datetime.now()
         for i in range(len(pregledi)):
             temp = pregledi[i].vreme - datetime.timedelta(days=1)
@@ -901,7 +872,7 @@ def otkaziPregledPacijent(request):
     else:
         pregledi = Pregled.objects.filter(zakazan=request.session['email']).order_by('-vreme')
         request.session['lokacija'] = 4
-        lekari = Lekar.objects.filter(radno_mesto=request.session['nazivKlinike'])
+        lekari = Lekar.objects.all()
         sada = datetime.datetime.now()
         for i in range(len(pregledi)):
             temp = pregledi[i].vreme - datetime.timedelta(days=1)
