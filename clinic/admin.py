@@ -12,7 +12,7 @@ class SnippetAdmin(admin.ModelAdmin):
 
 
 class PacijentAdmin(admin.ModelAdmin):
-    list_display = ("email_adresa","lozinka", "ime", "prezime", "adresa_prebivalista", "grad", "drzava", "broja_telefona", "jedinstveni_broj_osiguranika", "sifra_bolesti","datum","diagnoza","lekovi","dioptrija","alergije_na_lek","visina","tezina","krvna_grupa")
+    list_display = ("aktiviran", "email_adresa","lozinka", "ime", "prezime", "adresa_prebivalista", "grad", "drzava", "broja_telefona", "jedinstveni_broj_osiguranika", "sifra_bolesti","datum","diagnoza","lekovi","dioptrija","alergije_na_lek","visina","tezina","krvna_grupa")
     list_filter = ("ime", "prezime","email_adresa","lozinka")
     search_fields = ("ime", "prezime")
 
