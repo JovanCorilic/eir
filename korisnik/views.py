@@ -63,6 +63,10 @@ def loginKorisnik(request):
             recnik = temp[0]
             request.session['lozinka'] = lozinka
             # ime = recnik.get('ime')
+            print(recnik.get('aktiviran'))
+            if not recnik.get('aktiviran') == 1:
+                messages.info(request, "Email koji ste uneli nije još verifikovan!")
+                return redirect('loginKorisnik')
             request.session['ime'] = recnik.get('ime')
             request.session['prezime'] = recnik.get('prezime')
             request.session['adresa_prebivalista'] = recnik.get('adresa_prebivalista')
