@@ -35,6 +35,10 @@ I za bazu PostgresSQL mora:
 ```
 pip install psycopg2
 ```
+Mora i:
+```
+pip install six
+```
 Aplikacija se onda može pokrenuti jednim jednostavnim
 ```sh
 python manage.py runserver
