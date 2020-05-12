@@ -1088,7 +1088,9 @@ def pretragaLekaraPacijent(request):
                       {'lokacija': request.session['lokacija']})
 
 def prikaziBrzePreglede(request):
+    autoTermin(request)
     if request.method == 'POST':
+
         nazivKlinike = request.POST['nazivKlinike']
         naziv = nazivKlinike.split()
         request.session['nazivKlinike'] = naziv[4]
@@ -1103,6 +1105,7 @@ def prikaziBrzePreglede(request):
                       {'lokacija': request.session['lokacija']})
 
 def zakaziBrzPregled(request):
+    autoTermin(request)
     if request.method == 'POST':
         idPregled = request.POST['id123']
 
