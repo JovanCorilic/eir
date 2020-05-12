@@ -711,29 +711,29 @@ def autoTermin(request):
         if len(kk) == 0:
             for i in (6, 8, 10, 12, 14, 16, 18, 20):
                 try:
-                    print('iteracija --------------------------')
-                    print("za kliniku " + klinika.naziv)
-                    print(i)
-                    print(random.choice(Sala.objects.filter(id_klinike_kojoj_pripada=klinika.naziv)))
-                    print(random.choice(Lekar.objects.filter(radno_mesto=klinika.naziv)))
-                    print((date.today() + datetime.timedelta(hours=i)))
-                    manualTermin(random.choice(random.choice(Lekar.objects.filter(radno_mesto=klinika.naziv)), Sala.objects.filter(id_klinike_kojoj_pripada=klinika.naziv)), (date.today() + datetime.timedelta(hours=i)), "Opsti Pregled", request)
+                    print('iteracija ' + "za kliniku " + klinika.naziv)
+                    sala = random.choice(Sala.objects.filter(id_klinike_kojoj_pripada=klinika.naziv))
+                    lekar = random.choice(Lekar.objects.filter(radno_mesto=klinika.naziv))
+                    vreme = datetime.datetime.today().replace(hour=i, minute=0, second=0)
+                    manualTermin(lekar, sala, vreme, "Opsti Pregled", request)
                 except:
+                    print("nesto fali")
                     pass
 
 
 def manualTermin(lekar, sala, vreme, tip_pregleda, request):
+    print("usao")
     id = 1
     if Pregled.objects.filter(id=id).exists():
         while Pregled.objects.filter(id=id).exists():
             id += 1
-
+    print("dodeljen id " + id.__str__())
     if not Pregled.objects.filter(id=id).exists():
         if proveriTermin(vreme, sala, lekar):
             ii = 0
             while True:
                 ii += 1
-                if ii >= 1000:
+                if ii >= 100:
                     return
                 try:
                     email = ""
@@ -746,12 +746,15 @@ def manualTermin(lekar, sala, vreme, tip_pregleda, request):
                     for korinisk in Admin.objects.all():
                         if korinisk.email_adresa == email:
                             klinika = korinisk.naziv_klinike
+
                     ter = Pregled.objects.create(id=id, klinika=klinika, zakazan="Prazno", lekar=lekar, sala=sala,
                                                  tip_pregleda=tip_pregleda, vreme=vreme, sifra_bolesti="Prazno", diagnoza="Prazno",
                                                  lekovi="Prazno")
                     ter.save()
+                    print("sacuvao :)")
                     return
                 except:
+                    print("pukao...")
                     pass
 
 #-----------------------------------------------------------------------------------------------------------------------

@@ -65,7 +65,7 @@
                         <th align="left"><div id="termini" align="left" style="color:green;padding:5px;display:inline"></div></th>
                     </tr>
 
-                    {% if sifra_bolesti == "Prazno" %}
+                    {% if termin.sifra_bolesti != "Prazno" %}
                     <tr>
 						<th align="right">Sifra Bolesti </th>
                         <th><input type="text" name="sifra_bolesti" id="sifra_bolesti" disabled value="{{termin.sifra_bolesti}}"></th>
