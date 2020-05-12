@@ -34,6 +34,7 @@ class Pacijent(models.Model):
     visina = models.CharField(max_length=500, default=None)
     tezina = models.CharField(max_length=500, default=None)
     krvna_grupa = models.CharField(max_length=500, default=None)
+    aktiviran = models.IntegerField( default=1)
 
     objects = UserManager()
 
