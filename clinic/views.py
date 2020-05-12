@@ -731,7 +731,7 @@ def manualTermin(lekar, sala, vreme, tip_pregleda, request):
     if not Pregled.objects.filter(id=id).exists():
         if proveriTermin(vreme, sala, lekar):
             ii = 0
-                        while True:
+                while True:
                 ii += 1
                 if ii >= 100:
                     return
