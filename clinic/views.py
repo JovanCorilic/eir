@@ -715,13 +715,13 @@ def autoTermin(request):
                     sala = random.choice(Sala.objects.filter(id_klinike_kojoj_pripada=klinika.naziv))
                     lekar = random.choice(Lekar.objects.filter(radno_mesto=klinika.naziv))
                     vreme = datetime.datetime.today().replace(hour=i, minute=0, second=0)
-                    manualTermin(lekar, sala, vreme, "Opsti Pregled", request)
+                    manualTermin(lekar, sala, vreme, klinika.naziv, "Opsti Pregled", request)
                 except:
                     print("nesto fali")
                     pass
 
 
-def manualTermin(lekar, sala, vreme, tip_pregleda, request):
+def manualTermin(lekar, sala, vreme, klinika, tip_pregleda, request):
     print("usao")
     id = 1
     if Pregled.objects.filter(id=id).exists():
@@ -731,7 +731,7 @@ def manualTermin(lekar, sala, vreme, tip_pregleda, request):
     if not Pregled.objects.filter(id=id).exists():
         if proveriTermin(vreme, sala, lekar):
             ii = 0
-                while True:
+            while True:
                 ii += 1
                 if ii >= 100:
                     return
@@ -743,7 +743,6 @@ def manualTermin(lekar, sala, vreme, tip_pregleda, request):
                     print("sacuvao :)")
                     return
                 except:
-                    print("pukao...")
                     pass
 
 #-----------------------------------------------------------------------------------------------------------------------
