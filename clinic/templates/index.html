@@ -63,6 +63,8 @@
                 <br />
                 <form method="POST" action="pogledajPacijente" >{% csrf_token %}<input type="submit" value="Pregledaj Sve Pacijente"></form>
                 <form method="POST" action="pogledajSale" >{% csrf_token %}<input type="submit" value="Pregledaj Sve Sale"></form>
+                <form method="POST" action="PogledajTermine" >{% csrf_token %}<input type="submit" value="Pregledaj Sve Zakazane Termine"></form>
+                <form method="GET" action="DodajTermin" >{% csrf_token %}<input type="submit" value="Zakazi pregled (template ono)"></form>
                 <form method="get" action="DodajSalu">{% csrf_token %}<input type="submit" value="Dodaj Salu"></form>
                 <form method="POST" action="pogledajKlinike" >{% csrf_token %}<input type="submit" value="Pregledaj Sve Klinike"></form>
                 <form method="get" action="registerLekara">{% csrf_token %}<input type="submit" value="Dodaj Lekara"></form>

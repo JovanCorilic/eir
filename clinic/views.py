@@ -1,5 +1,4 @@
-
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import auth
 from clinic.models import Pacijent, Admin, Klinika, Pregled
@@ -8,6 +7,7 @@ from datetime import date
 from clinic.models import Lekar
 from clinic.models import Sala
 import datetime
+import random
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
@@ -18,6 +18,7 @@ from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
+
 
 def index(req):
     ime = ""  # ako ne postoji
@@ -451,6 +452,308 @@ def ObrisiLekara(request):
     except:
         return redirect('index')
 
+def PogledajTermine(request):
+    uloga = ""
+    if 'uloga' in request.session:
+        uloga = request.session['uloga']
+    email = ""
+    if 'email' in request.session:
+        email = request.session['email']
+    klinika = ""
+    for korinisk in Lekar.objects.all():
+        if korinisk.email_adresa == email:
+            klinika = korinisk.klinika
+    for korinisk in Admin.objects.all():
+        if korinisk.email_adresa == email:
+            klinika = korinisk.naziv_klinike
+    autoTermin(request)
+    sale = []
+    print("sale za " + klinika)
+    for sala in Sala.objects.all():
+        if sala.id_klinike_kojoj_pripada == klinika:
+            sale.append(sala)
+            print(sala)
+
+    enddate = date.today() + datetime.timedelta(days=6)
+    kk = Pregled.objects.filter(vreme__range=[date.today(), enddate], klinika=klinika)
+    mapa = napraviMapu(kk, sale)
+    return render(request, 'pogledajTermine.html', {'termini': kk, 'uloga': uloga, 'mapa': mapa})
+
+def PogledajTermin(request):
+    uloga = ""
+    if 'uloga' in request.session:
+        uloga = request.session['uloga']
+
+    odabrani = Pregled.objects.filter(id=request.POST['koga'])[0]
+    kk = Pregled.objects.filter(vreme__range=[odabrani.vreme.date(), odabrani.vreme + datetime.timedelta(days=1)])
+
+    email = ""
+    if 'email' in request.session:
+        email = request.session['email']
+    klinika = ""
+    for korinisk in Lekar.objects.all():
+        if korinisk.email_adresa == email:
+            klinika = korinisk.klinika
+    for korinisk in Admin.objects.all():
+        if korinisk.email_adresa == email:
+            klinika = korinisk.naziv_klinike
+
+    sale = []
+    for sala in Sala.objects.all():
+        if sala.id_klinike_kojoj_pripada == klinika:
+            sale.append(sala)
+            print(sala)
+    mapa = napraviMapu2(kk, sale)
+
+    lekari = Lekar.objects.filter(radno_mesto=klinika)
+    sale = Sala.objects.filter(id_klinike_kojoj_pripada=klinika)
+
+    lekar = Lekar.objects.filter(radno_mesto=klinika, email_adresa=odabrani.lekar)[0]
+    sala = Sala.objects.filter(id_klinike_kojoj_pripada=klinika, naziv=odabrani.sala)[0]
+
+    lekarid = 0
+    salaid = 0
+    ii = 0
+    for le in lekari:
+        if le.email_adresa == lekar.email_adresa:
+            lekarid = ii
+            break
+        ii += 1
+
+    ii = 0
+    for le in sale:
+        if le.naziv == sala.naziv:
+            salaid = ii
+            break
+        ii += 1
+
+    return render(request, 'pogledajTermin.html', {'mapa': mapa, 'lekari': lekari, 'sale': sale, 'lekar':lekarid, 'sala':salaid, 'termin': Pregled.objects.filter(id=odabrani.id)[0]})
+
+
+def ObrisiTermin(request):
+    try:
+        Pregled.objects.filter(id=request.POST['koga']).delete()
+        return redirect('index')
+    except:
+        return redirect('index')
+
+def IzmeniTermin(request):
+    try:
+        if request.method == 'POST':
+            id = request.POST['broj']
+            lekar = request.POST['lekar']
+            sala = request.POST['sala']
+            vreme = request.POST['vreme']
+
+            if Pregled.objects.filter(id=id).exists():
+                k = Pregled.objects.filter(id=id)[0]
+
+                if Lekar.objects.filter(email_adresa=lekar).exists():
+                    k.lekar = Lekar.objects.filter(email_adresa=lekar)[0].email_adresa
+
+                if Sala.objects.filter(broj=sala).exists():
+                    k.sala = Sala.objects.filter(broj=sala)[0].naziv
+
+                k.vreme = vreme
+                if proveriTermin(vreme, k.sala, k.lekar, id):
+                    print("sacuvano")
+                    k.save()
+                    return redirect('index')
+                return HttpResponse('<h1>Error 400</h1>Bad request<br />Datumi se ne poklapaju', status=400)
+        else:
+            return HttpResponse('<h1>Error 400</h1>Bad request<br />GET metoda nije podrzana', status=400)
+    except:
+        return HttpResponse('<h1>Error 400</h1>Bad request<br />Pogresno ste uneli podatke', status=400)
+
+
+def DodajTermin(request):
+    try:
+        if request.method == 'POST':
+            id = request.POST['broj']
+            lekar = request.POST['lekar']
+            sala = request.POST['sala']
+            vreme = request.POST['vreme']
+            tip_pregleda = request.POST['tip_pregleda']
+            if not Pregled.objects.filter(id=id).exists():
+                if proveriTermin(vreme, sala, lekar):
+                    ii = 0
+                    while True:
+                        ii += 1
+                        if ii >= 1000:
+                            return HttpResponse('<h1>Error 400</h1>Bad request', status=400)
+                        try:
+                            email = ""
+                            if 'email' in request.session:
+                                email = request.session['email']
+                            klinika = ""
+                            for korinisk in Lekar.objects.all():
+                                if korinisk.email_adresa == email:
+                                    klinika = korinisk.klinika
+                            for korinisk in Admin.objects.all():
+                                if korinisk.email_adresa == email:
+                                    klinika = korinisk.naziv_klinike
+                            ter = Pregled.objects.create(id=id, klinika=klinika, zakazan="Nema", lekar=lekar, sala=sala, tip_pregleda=tip_pregleda, vreme=vreme, sifra_bolesti="", diagnoza="", lekovi="")
+                            ter.save()
+                            storage = messages.get_messages(request)
+                            storage.used = True
+                            return redirect('index')
+                        except:
+                            return HttpResponse('<h1>Error 400</h1>Bad request<br />Datumi se ne poklapaju', status=400)
+                else:
+                    return HttpResponse('<h1>Error 400</h1>Bad request<br />Datumi se ne poklapaju', status=400)
+            return HttpResponse('<h1>Error 400</h1>Bad request<br />ID je vec zauzet', status=400)
+        else:
+            email = ""
+            if 'email' in request.session:
+                email = request.session['email']
+            klinika = ""
+            for korinisk in Lekar.objects.all():
+                if korinisk.email_adresa == email:
+                    klinika = korinisk.klinika
+            for korinisk in Admin.objects.all():
+                if korinisk.email_adresa == email:
+                    klinika = korinisk.naziv_klinike
+            sale = []
+            for sala in Sala.objects.all():
+                if sala.id_klinike_kojoj_pripada == klinika:
+                    sale.append(sala)
+                    print(sala)
+            kk = Pregled.objects.filter(
+                vreme__range=[date.today(), date.today() + datetime.timedelta(days=1)])
+            mapa = napraviMapu2(kk, sale)
+
+            lekari = Lekar.objects.filter(radno_mesto=klinika)
+            sale = Sala.objects.filter(id_klinike_kojoj_pripada=klinika)
+            return render(request, "dodajTermin.html", {'klinika': klinika ,'mapa': mapa, 'lekari': lekari, 'sale': sale, 'vreme': date.today()})
+    except:
+        return HttpResponse('<h1>Error 400</h1>Bad request', status=400)
+
+
+def proveriTermin(vreme, sala, lekar, idd=-9999):
+    try:
+        for termin in Pregled.objects.all():
+            if termin.sala == sala and termin.id != idd:
+                if not (termin.vreme > vreme + datetime.timedelta(minutes=30) or termin.vreme + datetime.timedelta(minutes=30) < vreme):
+                    return False
+        for termin in Pregled.objects.all():
+            if termin.lekar == lekar and termin.id != idd:
+                if not (termin.vreme > vreme + datetime.timedelta(minutes=30) or termin.vreme + datetime.timedelta(
+                        minutes=30) < vreme):
+                    return False
+        return True
+    except:
+        vreme = datetime.datetime.strptime(vreme, "%Y-%m-%d %H:%M:%S")
+        for termin in Pregled.objects.all():
+            if termin.sala == sala and termin.id != idd:
+                if not (termin.vreme > vreme + datetime.timedelta(minutes=30) or termin.vreme + datetime.timedelta(
+                        minutes=30) < vreme):
+                    return False
+        for termin in Pregled.objects.all():
+            if termin.lekar == lekar and termin.id != idd:
+                if not (termin.vreme > vreme + datetime.timedelta(minutes=30) or termin.vreme + datetime.timedelta(
+                        minutes=30) < vreme):
+                    return False
+        return True
+
+
+def napraviMapu(pregledi, sale):
+    rezultat = ""
+    for sala in sale:
+        trenutni = datetime.time(0, 0, 0)
+        rezultat += "<div style:\"display: inline;\">Za salu br " + sala.broj + " (\"<i>" + sala.naziv + "<i/>\") : "
+        kraj = "<div style=\"background-color:green;padding: 5px;display: inline\">" + trenutni.__str__() + "</div>"
+        pregledi = pregledi.order_by('vreme')
+        for pregled in pregledi:
+            if pregled.vreme.date() == datetime.datetime.now().date() and pregled.sala == sala.naziv:
+                if pregled.vreme.time() > trenutni:
+                    rezultat += kraj + "<div style=\"background-color:green;padding: 5px;display: inline\">-  " + pregled.vreme.time().__str__() + "</div>" + "<div style=\"background-color:red;padding: 5px;display: inline\">" + pregled.vreme.time().__str__() + "  -</div>"
+                    trenutni = (pregled.vreme + datetime.timedelta(minutes=30)).time()
+                    kraj = "<div style=\"background-color:red;padding: 5px;display: inline\">" + trenutni.__str__() + "</div>" + "<div style=\"background-color:green;padding: 5px;display: inline\">" + trenutni.__str__() + "</div>"
+                else:
+                    if pregled.vreme == datetime.time(0, 0, 0):
+                        rezultat += "<div style:\"display: inline;\"><div style=\"background-color:red;padding: 5px;display: inline\">" + trenutni.__str__() + "</div>"
+                    rezultat += "<div style=\"background-color:red;padding: 5px;display: inline\">" + (pregled.vreme + datetime.timedelta(minutes=30)).time().__str__() + "</div>" + "<div style=\"background-color:green;padding: 5px;display: inline\">" + (pregled.vreme + datetime.timedelta(minutes=30)).time().__str__() + "</div>"
+                    trenutni = (pregled.vreme + datetime.timedelta(minutes=30)).time()
+                    kraj=""
+        rezultat += kraj
+        rezultat += "<div style=\"background-color:green;padding: 5px;display: inline\">- 24:00:00</div>"
+        rezultat += "</div><br />"
+    return rezultat
+
+
+def napraviMapu2(pregledi, sale):
+    rez = "var niz = ["
+    pregledi = pregledi.order_by('vreme')
+    for sala in sale:
+        trenutni = datetime.time(0, 0, 0)
+        rezultat = ""
+        kraj = trenutni.__str__()
+
+        for pregled in pregledi:
+            if pregled.sala == sala.naziv:
+                if pregled.vreme.date() == datetime.datetime.now().date():
+                    if pregled.vreme.time() > trenutni:
+                        rezultat += kraj + " - " + pregled.vreme.time().__str__() + ", "
+                        trenutni = (pregled.vreme + datetime.timedelta(minutes=30)).time()
+                        kraj = trenutni.__str__()
+                    elif pregled.vreme.time() <= trenutni:
+                        rezultat += (pregled.vreme + datetime.timedelta(minutes=30)).time().__str__()
+                        trenutni = (pregled.vreme + datetime.timedelta(minutes=30)).time()
+                        kraj=""
+        rezultat += kraj + " - 24:00:00"
+        rez += "\"" + rezultat + "\","
+    return rez[:-1] + "]"
+
+
+def autoTermin(request):
+    for klinika in Klinika.objects.all():
+        kk = Pregled.objects.filter(vreme__range=[date.today(), date.today() + datetime.timedelta(days=1)], klinika=klinika.naziv)
+        if len(kk) == 0:
+            for i in (6, 8, 10, 12, 14, 16, 18, 20):
+                try:
+                    print('iteracija --------------------------')
+                    print("za kliniku " + klinika.naziv)
+                    print(i)
+                    print(random.choice(Sala.objects.filter(id_klinike_kojoj_pripada=klinika.naziv)))
+                    print(random.choice(Lekar.objects.filter(radno_mesto=klinika.naziv)))
+                    print((date.today() + datetime.timedelta(hours=i)))
+                    manualTermin(random.choice(random.choice(Lekar.objects.filter(radno_mesto=klinika.naziv)), Sala.objects.filter(id_klinike_kojoj_pripada=klinika.naziv)), (date.today() + datetime.timedelta(hours=i)), "Opsti Pregled", request)
+                except:
+                    pass
+
+
+def manualTermin(lekar, sala, vreme, tip_pregleda, request):
+    id = 1
+    if Pregled.objects.filter(id=id).exists():
+        while Pregled.objects.filter(id=id).exists():
+            id += 1
+
+    if not Pregled.objects.filter(id=id).exists():
+        if proveriTermin(vreme, sala, lekar):
+            ii = 0
+            while True:
+                ii += 1
+                if ii >= 1000:
+                    return
+                try:
+                    email = ""
+                    if 'email' in request.session:
+                        email = request.session['email']
+                    klinika = ""
+                    for korinisk in Lekar.objects.all():
+                        if korinisk.email_adresa == email:
+                            klinika = korinisk.klinika
+                    for korinisk in Admin.objects.all():
+                        if korinisk.email_adresa == email:
+                            klinika = korinisk.naziv_klinike
+                    ter = Pregled.objects.create(id=id, klinika=klinika, zakazan="Nema", lekar=lekar, sala=sala,
+                                                 tip_pregleda=tip_pregleda, vreme=vreme, sifra_bolesti="", diagnoza="",
+                                                 lekovi="")
+                    ter.save()
+                    return
+                except:
+                    pass
+
 #-----------------------------------------------------------------------------------------------------------------------
 #nemoj ispod ove linije raditi
 
@@ -527,7 +830,7 @@ def registracijaPacijent(request):
             return HttpResponse('Molim vas potvrdite vašu email registraciju.')
 
             # print("napravljen pacijent " + ime)
-            #return redirect('loginKorisnik')
+            # return redirect('loginKorisnik')
         else:
             return render(request, 'pacijent/registracijaPacijent.html')
     except:
@@ -836,7 +1139,9 @@ def sviPreglediPacijent(request):
     else:
         pregledi = Pregled.objects.filter(zakazan=request.session['email']).order_by('-vreme')
         request.session['lokacija'] = 4
+
         lekari = Lekar.objects.all()
+        
         sada = datetime.datetime.now()
         for i in range(len(pregledi)):
             temp = pregledi[i].vreme - datetime.timedelta(days=1)
@@ -872,7 +1177,9 @@ def otkaziPregledPacijent(request):
     else:
         pregledi = Pregled.objects.filter(zakazan=request.session['email']).order_by('-vreme')
         request.session['lokacija'] = 4
+
         lekari = Lekar.objects.all()
+
         sada = datetime.datetime.now()
         for i in range(len(pregledi)):
             temp = pregledi[i].vreme - datetime.timedelta(days=1)

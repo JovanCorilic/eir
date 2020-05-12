@@ -10,6 +10,7 @@ urlpatterns = [
     path('', views.index),
     path('superadmin/register', views.register_clinic_admin),
     path('login', views.login_pacijent),
+
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
             views.activate, name='activate'),
     path('pacijent/registracijaPacijent', views.registracijaPacijent,  name='registracijaPacijent'),
@@ -51,4 +52,9 @@ urlpatterns = [
     path('PogledajLekara', views.PogledajLekara, name='PogledajLekara'),
     path('IzmeniLekara', views.IzmeniLekara, name='IzmeniLekara'),
     path('ObrisiLekara', views.ObrisiLekara, name='ObrisiLekara'),
+    path('PogledajTermine', views.PogledajTermine, name='PogledajTermine'),
+    path('PogledajTermin', views.PogledajTermin, name='PogledajTermin'),
+    path('ObrisiTermin', views.ObrisiTermin, name='ObrisiTermin'),
+    path('IzmeniTermin', views.IzmeniTermin, name='IzmeniTermin'),
+    path('DodajTermin', views.DodajTermin, name='DodajTermin'),
 ]
