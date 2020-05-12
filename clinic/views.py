@@ -592,7 +592,7 @@ def DodajTermin(request):
                             for korinisk in Admin.objects.all():
                                 if korinisk.email_adresa == email:
                                     klinika = korinisk.naziv_klinike
-                            ter = Pregled.objects.create(id=id, klinika=klinika, zakazan="Nema", lekar=lekar, sala=sala, tip_pregleda=tip_pregleda, vreme=vreme, sifra_bolesti="", diagnoza="", lekovi="")
+                            ter = Pregled.objects.create(id=id, klinika=klinika, zakazan="Prazno", lekar=lekar, sala=sala, tip_pregleda=tip_pregleda, vreme=vreme, sifra_bolesti="Prazno", diagnoza="Prazno", lekovi="Prazno")
                             ter.save()
                             storage = messages.get_messages(request)
                             storage.used = True
@@ -746,9 +746,9 @@ def manualTermin(lekar, sala, vreme, tip_pregleda, request):
                     for korinisk in Admin.objects.all():
                         if korinisk.email_adresa == email:
                             klinika = korinisk.naziv_klinike
-                    ter = Pregled.objects.create(id=id, klinika=klinika, zakazan="Nema", lekar=lekar, sala=sala,
-                                                 tip_pregleda=tip_pregleda, vreme=vreme, sifra_bolesti="", diagnoza="",
-                                                 lekovi="")
+                    ter = Pregled.objects.create(id=id, klinika=klinika, zakazan="Prazno", lekar=lekar, sala=sala,
+                                                 tip_pregleda=tip_pregleda, vreme=vreme, sifra_bolesti="Prazno", diagnoza="Prazno",
+                                                 lekovi="Prazno")
                     ter.save()
                     return
                 except:
