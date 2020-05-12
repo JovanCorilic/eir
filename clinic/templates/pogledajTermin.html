@@ -5,7 +5,7 @@
 		<title>{{termin.broj}} {{termin.naziv}}</title>
 		<link rel="stylesheet" href="css/stil.css">
 	</head>
-	<body onload="saleTermini()">
+	<body onload="ideovi()">
 	<form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
 		<div class="unos" style="margin-left:70px">
 			<h1>{{termin.id}}</h1>
@@ -33,7 +33,7 @@
                         <th>
                             <select name="lekar" id="lekar">
 						    {% for ss in lekari%}
-						  <option value="{{ss.email}}">Dr. {{ss.prezime}}</option>
+									<option value="{{ss.email}}">Dr. {{ss.prezime}}</option>
 						    {%endfor%}
 						</select>
 						<th align="left"><label id="llekar" style="color: red;"></label></th>
@@ -43,7 +43,7 @@
                         <th>
                             <select name="sala" id="sala" onchange="saleTermini()">
 						    {% for ss in sale%}
-						  <option value="{{ss.broj}}">{{ss}}</option>
+									<option value="{{ss.broj}}">{{ss}}</option>
 						    {%endfor%}
 						</select>
 						<th align="left"><label id="lsala" style="color: red;"></label></th>
@@ -129,6 +129,12 @@
     function a(){
         document.getElementById("broj").disabled = false;
 
+    }
+    function ideovi(){
+		document.getElementById("lekar").selectedIndex = {{lekar}};
+		document.getElementById("sala").selectedIndex = {{sala}};
+
+    	saleTermini()
     }
     function saleTermini(){
         var ter = document.getElementById("termini");

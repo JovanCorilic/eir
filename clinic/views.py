@@ -8,7 +8,7 @@ from datetime import date
 from clinic.models import Lekar
 from clinic.models import Sala
 import datetime
-
+import random
 
 def index(req):
     ime = ""  # ako ne postoji
@@ -457,7 +457,7 @@ def PogledajTermine(request):
     for korinisk in Admin.objects.all():
         if korinisk.email_adresa == email:
             klinika = korinisk.naziv_klinike
-
+    autoTermin(request)
     sale = []
     print("sale za " + klinika)
     for sala in Sala.objects.all():
@@ -499,7 +499,26 @@ def PogledajTermin(request):
     lekari = Lekar.objects.filter(radno_mesto=klinika)
     sale = Sala.objects.filter(id_klinike_kojoj_pripada=klinika)
 
-    return render(request, 'pogledajTermin.html', {'mapa': mapa, 'lekari': lekari, 'sale': sale, 'termin': Pregled.objects.filter(id=odabrani.id)[0]})
+    lekar = Lekar.objects.filter(radno_mesto=klinika, email_adresa=odabrani.lekar)[0]
+    sala = Sala.objects.filter(id_klinike_kojoj_pripada=klinika, naziv=odabrani.sala)[0]
+
+    lekarid = 0
+    salaid = 0
+    ii = 0
+    for le in lekari:
+        if le.email_adresa == lekar.email_adresa:
+            lekarid = ii
+            break
+        ii += 1
+
+    ii = 0
+    for le in sale:
+        if le.naziv == sala.naziv:
+            salaid = ii
+            break
+        ii += 1
+
+    return render(request, 'pogledajTermin.html', {'mapa': mapa, 'lekari': lekari, 'sale': sale, 'lekar':lekarid, 'sala':salaid, 'termin': Pregled.objects.filter(id=odabrani.id)[0]})
 
 
 def ObrisiTermin(request):
@@ -602,8 +621,6 @@ def DodajTermin(request):
 
 
 def proveriTermin(vreme, sala, lekar, idd=-9999):
-
-
     try:
         for termin in Pregled.objects.all():
             if termin.sala == sala and termin.id != idd:
@@ -677,6 +694,56 @@ def napraviMapu2(pregledi, sale):
         rezultat += kraj + " - 24:00:00"
         rez += "\"" + rezultat + "\","
     return rez[:-1] + "]"
+
+
+def autoTermin(request):
+    for klinika in Klinika.objects.all():
+        kk = Pregled.objects.filter(vreme__range=[date.today(), date.today() + datetime.timedelta(days=1)], klinika=klinika.naziv)
+        if len(kk) == 0:
+            for i in (6, 8, 10, 12, 14, 16, 18, 20):
+                try:
+                    print('iteracija --------------------------')
+                    print("za kliniku " + klinika.naziv)
+                    print(i)
+                    print(random.choice(Sala.objects.filter(id_klinike_kojoj_pripada=klinika.naziv)))
+                    print(random.choice(Lekar.objects.filter(radno_mesto=klinika.naziv)))
+                    print((date.today() + datetime.timedelta(hours=i)))
+                    manualTermin(random.choice(random.choice(Lekar.objects.filter(radno_mesto=klinika.naziv)), Sala.objects.filter(id_klinike_kojoj_pripada=klinika.naziv)), (date.today() + datetime.timedelta(hours=i)), "Opsti Pregled", request)
+                except:
+                    pass
+
+
+def manualTermin(lekar, sala, vreme, tip_pregleda, request):
+    id = 1
+    if Pregled.objects.filter(id=id).exists():
+        while Pregled.objects.filter(id=id).exists():
+            id += 1
+
+    if not Pregled.objects.filter(id=id).exists():
+        if proveriTermin(vreme, sala, lekar):
+            ii = 0
+            while True:
+                ii += 1
+                if ii >= 1000:
+                    return
+                try:
+                    email = ""
+                    if 'email' in request.session:
+                        email = request.session['email']
+                    klinika = ""
+                    for korinisk in Lekar.objects.all():
+                        if korinisk.email_adresa == email:
+                            klinika = korinisk.klinika
+                    for korinisk in Admin.objects.all():
+                        if korinisk.email_adresa == email:
+                            klinika = korinisk.naziv_klinike
+                    ter = Pregled.objects.create(id=id, klinika=klinika, zakazan="Nema", lekar=lekar, sala=sala,
+                                                 tip_pregleda=tip_pregleda, vreme=vreme, sifra_bolesti="", diagnoza="",
+                                                 lekovi="")
+                    ter.save()
+                    return
+                except:
+                    pass
 
 #-----------------------------------------------------------------------------------------------------------------------
 #nemoj ispod ove linije raditi
