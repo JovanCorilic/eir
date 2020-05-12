@@ -731,22 +731,11 @@ def manualTermin(lekar, sala, vreme, tip_pregleda, request):
     if not Pregled.objects.filter(id=id).exists():
         if proveriTermin(vreme, sala, lekar):
             ii = 0
-            while True:
+                        while True:
                 ii += 1
                 if ii >= 100:
                     return
                 try:
-                    email = ""
-                    if 'email' in request.session:
-                        email = request.session['email']
-                    klinika = ""
-                    for korinisk in Lekar.objects.all():
-                        if korinisk.email_adresa == email:
-                            klinika = korinisk.klinika
-                    for korinisk in Admin.objects.all():
-                        if korinisk.email_adresa == email:
-                            klinika = korinisk.naziv_klinike
-
                     ter = Pregled.objects.create(id=id, klinika=klinika, zakazan="Prazno", lekar=lekar, sala=sala,
                                                  tip_pregleda=tip_pregleda, vreme=vreme, sifra_bolesti="Prazno", diagnoza="Prazno",
                                                  lekovi="Prazno")
