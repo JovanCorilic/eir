@@ -111,3 +111,14 @@ class Pregled(models.Model):
     temp = "da"
 
     objects = UserManager()
+
+class Operacije(models.Model):
+    id = models.CharField(max_length=500, primary_key=True,  default=None)
+    klinika = models.CharField(max_length=500, default=None)
+    pacijent = models.CharField(max_length=500, default=None)
+    lekari = models.CharField(max_length=500, default=None)
+    sala = models.CharField(max_length=500, default=None)
+    tip_operacije = models.CharField(max_length=500, default=None)
+    vreme = models.DateTimeField(max_length=500, default=None)
+
+    objects = UserManager()

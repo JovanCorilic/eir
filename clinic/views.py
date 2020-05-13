@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import auth
-from clinic.models import Pacijent, Admin, Klinika, Pregled
+from clinic.models import Pacijent, Admin, Klinika, Pregled, Operacije
 from django.contrib import messages
 from datetime import date
 from clinic.models import Lekar
@@ -1184,3 +1184,33 @@ def otkaziPregledPacijent(request):
 
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'lokacija': request.session['lokacija'], 'pregledi': pregledi, 'lekari': lekari})
+
+def sveOperacijePacijent(request):
+    if request.method == 'POST':
+        operacije = Operacije.objects.filter(pacijent=request.session['email']).order_by('-vreme')
+        request.session['lokacija'] = 5
+
+        listaLekara = []
+        for operacija in operacije:
+            tempLista = ""
+            for emailLekara in operacija.lekari.split(","):
+                temp = Lekar.objects.get(email_adresa=emailLekara)
+                tempLista = tempLista + temp.ime + " "+ temp.prezime+","
+            listaLekara.append(tempLista)
+        lekari = Lekar.objects.all()
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija'], 'operacije': operacije, 'lekari': lekari})
+    else:
+        operacije = Operacije.objects.filter(pacijent=request.session['email']).order_by('-vreme')
+        request.session['lokacija'] = 5
+
+        listaLekara = [[]]
+        for operacija in operacije:
+            tempLista = []
+            for emailLekara in operacija.lekari.split(","):
+                tempLista.append(
+                    Lekar.objects.filter(email_adresa=emailLekara).ime + " " + Lekar.objects.filter(email_adresa=emailLekara).prezime)
+            listaLekara.append(tempLista)
+
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija'], 'operacije': operacije, 'listaLekara': listaLekara})

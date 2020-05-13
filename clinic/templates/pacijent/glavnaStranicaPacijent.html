@@ -13,14 +13,15 @@
           <li><form method="POST" action="licniPodaciPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Informacije of vama"></form></li>
           <li><form method="POST" action="zdravstveniKartonPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Zdravstveni karton"></form></li>
           <li><form method="POST" action="prikazKlinikaPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Prikaži klinike"></form></li>
-          <li><form method="POST" action="sviPreglediPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Prikaži preglede"></form></li>
+          <li><form method="POST" action="sviPreglediPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Prikaži sve moje preglede"></form></li>
+          <li><form method="POST" action="sveOperacijePacijent" >{% csrf_token %}<input type="submit" class="meni" value="Prikaži sve moje operacije"></form></li>
           <li><form method="POST" action="../IzlogujSe" >{% csrf_token %}<input type="submit" class="meni" value="Izloguj se" ></form></li>
       </ul>
       {% if lokacija == 0 %}
         <h1>Ulogovani ste kao {{ime}} {{prezime}} a vas e-mail je: {{email}}</h1>
         <br /><br />
       {% elif lokacija == 1 or lokacija == 1.5 %}
-      <table class="greenTable" align="center">
+      <table class="minimalistBlack" align="center">
           <thead>
           <tr>
           <th>Atribut</th>
@@ -117,7 +118,7 @@
       {% endif %}
 
       {% elif lokacija == 2 %}
-      <table class="steelBlueCols" align="center">
+      <table class="minimalistBlack" align="center">
         <thead>
         <tr>
         <th>Atribut</th>
@@ -273,7 +274,7 @@
       </table>
 
       {% elif lokacija == 4 %}
-      <table class="comicGreen">
+      <table class="minimalistBlack">
         <thead>
         <tr>
         <th>Vreme</th>
@@ -324,6 +325,51 @@
         {% endfor %}
         </tbody>
         </table>
+
+      {% elif lokacija == 5 %}
+      {% load split_as_option %}
+      <table class="minimalistBlack">
+        <thead>
+        <tr>
+        <th>Vreme</th>
+        <th>Klinika</th>
+        <th>Sala</th>
+        <th>Lekari</th>
+        <th>Tip operacije</th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        </tfoot>
+        <tbody>
+        {% for operacija in operacije %}
+        <tr>
+        <td>{{operacija.vreme}}</td>
+        <td>{{operacija.klinika}}</td>
+        <td>{{operacija.sala}}</td>
+        <td>
+          {% with operacija.lekari|split_as_option:"," as liste %}
+              {% for lista in liste %}
+                {% for lekar in lekari %}
+                  {% if lekar.email_adresa == lista %}
+                    {{lekar.ime}} {{lekar.prezime}}<br>
+                  {% endif %}
+                {% endfor %}
+              {% endfor %}
+          {% endwith %}
+        </td>
+        <td>{{operacija.tip_operacije}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+
       {% endif %}
     
       <!--------------------------------------------------------- FOOTER ZA SVE-------------------------------------------->
