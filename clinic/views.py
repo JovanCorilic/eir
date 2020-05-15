@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import auth
-from clinic.models import Pacijent, Admin, Klinika, Pregled
+from clinic.models import Pacijent, Admin, Klinika, Pregled, Odmor
 from django.contrib import messages
 from datetime import date
 from clinic.models import Lekar
@@ -509,7 +509,12 @@ def PogledajTermin(request):
     sale = Sala.objects.filter(id_klinike_kojoj_pripada=klinika)
 
     lekar = Lekar.objects.filter(radno_mesto=klinika, email_adresa=odabrani.lekar)[0]
-    sala = Sala.objects.filter(id_klinike_kojoj_pripada=klinika, naziv=odabrani.sala)[0]
+    sala = None
+    try:
+        sala = Sala.objects.filter(id_klinike_kojoj_pripada=klinika, naziv=odabrani.sala)[0]
+    except:
+        idd = odabrani.sala.split('-')
+        sala = Sala.objects.filter(id_klinike_kojoj_pripada=klinika, id=idd[0])[0]
 
     lekarid = 0
     salaid = 0
@@ -715,7 +720,7 @@ def autoTermin(request):
                     sala = random.choice(Sala.objects.filter(id_klinike_kojoj_pripada=klinika.naziv))
                     lekar = random.choice(Lekar.objects.filter(radno_mesto=klinika.naziv))
                     vreme = datetime.datetime.today().replace(hour=i, minute=0, second=0)
-                    manualTermin(lekar, sala, vreme, klinika.naziv, "Opsti Pregled", request)
+                    manualTermin(lekar, sala.naziv, vreme, klinika.naziv, "Opsti Pregled", request)
                 except:
                     print("nesto fali")
                     pass
@@ -744,6 +749,60 @@ def manualTermin(lekar, sala, vreme, klinika, tip_pregleda, request):
                     return
                 except:
                     pass
+
+
+def DodajOdmor(request):
+    if request.method == 'POST':
+        vreme = request.POST['vreme']
+        duzina = request.POST['duzina']
+        lekar = request.POST['koga']
+        idd = 0
+
+        bdate = datetime.datetime.today()
+        bdate = bdate.replace(minute=0, hour=0, second=0, year=date.today().year, month=1, day=1)
+        enddate = bdate.replace(minute=0, hour=0, second=0, year=date.today().year + 1, month=1, day=1)
+
+        if Odmor.objects.filter(lekar=lekar, vreme__range=[bdate, enddate]).exists():
+            return redirect('index')
+
+        for lek in Lekar.objects.all():
+            if lek.email_adresa == lekar:
+                lekar = lek
+
+        while True:
+            if idd > 100:
+                return HttpResponse('<h1>Error 400</h1>Bad request', status=400)
+            try:
+                odmor = Odmor.objects.create(id=idd, klinika=lekar.radno_mesto, lekar=lekar.email_adresa, vreme=vreme, duzina=duzina, aktiviran=0)
+                odmor.save()
+                storage = messages.get_messages(request)
+                storage.used = True
+                return redirect('index')
+            except:
+                pass
+    else:
+        niz = []
+        for k in Odmor.objects.all():
+            niz.extend([k])
+        email_adresa = ""
+        uloga = ""
+
+        if 'email' in request.session:
+            email_adresa = request.session['email']
+        if 'uloga' in request.session:
+            uloga = request.session['uloga']
+
+        if uloga == 'LEKAR':
+            request.session['koga'] = email_adresa
+            bdate = datetime.datetime.today()
+            bdate = bdate.replace(minute=0, hour=0, second=0, year=date.today().year, month=1, day=1)
+            enddate = bdate.replace(minute=0, hour=0, second=0, year=date.today().year + 1, month=1, day=1)
+            odobreno = not Odmor.objects.filter(lekar=email_adresa, vreme__range=[bdate, enddate]).exists()
+            vreme = datetime.datetime.today()
+            vreme = vreme.replace(minute=0, hour=0, second=0)
+            return render(request, 'zakaziOdmor.html', {'lekar': email_adresa, 'uloga': uloga, 'odobreno': odobreno, 'vreme': vreme})
+        else:
+            return redirect('index')
 
 #-----------------------------------------------------------------------------------------------------------------------
 #nemoj ispod ove linije raditi

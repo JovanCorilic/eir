@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from .models import Snippet, Pacijent,Lekar,Sala,Klinika,Admin,Pregled
+from .models import Snippet, Pacijent, Lekar, Sala, Klinika, Admin, Pregled, Odmor
 
 admin.site.site_header = "Klinika"
 
@@ -44,6 +44,11 @@ class PregledAdmin(admin.ModelAdmin):
     list_filter = ("id", "klinika", "lekar", "tip_pregleda", "sala")
     search_fields = ("id", "klinika", "lekar", "tip_pregleda", "sala")
 
+class OdmorAdmin(admin.ModelAdmin):
+    list_display = ("id", "klinika", "lekar", "vreme", "duzina", "aktiviran")
+    list_filter = ("id", "klinika", "lekar", "vreme", "duzina", "aktiviran")
+    search_fields = ("id", "klinika", "lekar", "vreme", "duzina", "aktiviran")
+
 admin.site.register(Snippet, SnippetAdmin)
 admin.site.register(Pacijent, PacijentAdmin)
 admin.site.register(Lekar,LekarAdmin)
@@ -51,4 +56,5 @@ admin.site.register(Sala,SalaAdmin)
 admin.site.register(Klinika,KlinikaAdmin)
 admin.site.register(Admin,AdminAdmin)
 admin.site.register(Pregled, PregledAdmin)
+admin.site.register(Odmor, OdmorAdmin)
 admin.site.unregister(Group)

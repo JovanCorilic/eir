@@ -97,6 +97,7 @@ class Klinika(models.Model):
     def __str__(self):
         return self.adresa
 
+
 class Pregled(models.Model):
     id = models.CharField(max_length=500, primary_key=True,  default=None)
     klinika = models.CharField(max_length=500, default=None)
@@ -111,3 +112,17 @@ class Pregled(models.Model):
     temp = "da"
 
     objects = UserManager()
+
+
+class Odmor(models.Model):
+    id = models.CharField(max_length=500, primary_key=True,  default=None)
+    klinika = models.CharField(max_length=500, default=None)
+    lekar = models.CharField(max_length=500, default=None)
+    vreme = models.DateTimeField(max_length=500, default=None)
+    duzina = models.IntegerField(default=10)
+    aktiviran = models.IntegerField(default=0)
+
+    objects = UserManager()
+
+    def __str__(self):
+        return self.lekar.__str__() + " ima odmor " + self.vreme.__str__() + " od " + self.duzina.__str__() + " dana"

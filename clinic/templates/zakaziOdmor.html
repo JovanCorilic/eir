@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zakazi Godislji Odmor</title>
+</head>
+<body>
+    <form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
+    {% if odobreno %}
+    <form method="POST" action="DodajOdmor" onSubmit="return proveri();">{% csrf_token %}
+		<div class="unos">
+				<table>
+					<tr>
+						<th align="right">Datum </th>
+						<th><input type="text" name="vreme" id="vreme" value="{{vreme|escape}}" placeholder="2020-01-01 01:00:00"></th>
+					</tr>
+					<tr>
+						<th align="right">Odaberite broj dana trajanja godisnjeg odmora </th>
+						<th>
+                        <select name="duzina" id="duzina">
+                          <option value="10">10</option>
+                          <option value="15">15</option>
+                        </select>
+                        </th>
+					</tr>
+					<tr>
+						<th></th>
+                        <input type="hidden" name="koga" value="{{lekar}}">
+						<th align="left"><input type="submit" class="sub" value="Dodaj"></th>
+					</tr>
+				</table>
+			</div>
+		</form>
+        {% else %}
+            <h3>Vec ste zakazali godisnji odmor</h3>
+        {% endif %}
+	</body>
+    <style>
+        input[type=text], input[type=number]:not(.avs), input[type=password], select{
+          width: 100%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          font-weight: bold;
+        }
+        .sub {
+          background-color: #4CAF50;
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          cursor: pointer;
+          font-weight: bold;
+        }
+    </style>
+</html>
