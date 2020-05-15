@@ -964,10 +964,56 @@ def NadjiPacijente(email):
                                                                                                             "><tdclass=\"td\">" + pacijent.adresa_prebivalista + "</td><tdclass=\"td\">" + pacijent.drzava + \
                        "</td><tdclass=\"td\">" + pacijent.grad + "</td><tdclass=\"td\">" + pacijent.broja_telefona + \
                        "</td><tdclass=\"td\">" + pacijent.jedinstveni_broj_osiguranika + "</td> "
-        return odgovor
+        return odgovor + "</table>"
 
     return "<h2>Nemate Pacijenata</h2>"
 
+
+def PogledajStanje(request):
+    try:
+        email = ""
+        if 'email' in request.session:
+            email = request.session['email']
+        map = VratiFinansije(email)
+        return render(request, "pogledajStanje.html", {'map': map})
+    except:
+        return HttpResponse('<h1>Error 400</h1>Bad request', status=400)
+
+
+def VratiFinansije(email):
+    odgovor = "<h2>Finansije</h2><table border=\"1\" class=\"table\" id=\"tabb2\">"
+
+    klinika = admin = Admin.objects.filter(email_adresa=email)[0].naziv_klinike
+    ukupno = 0
+
+    bdate = datetime.datetime.today()
+    sdate = bdate.replace(year=2000)
+
+    odgovor += "<tr>" \
+                "<th>" + "Ko" + "</th>" \
+                "<th>" + "Kada" + "</th>" \
+                "<th>" + "Cena" + "</th>" \
+            "</tr>"
+
+    for preg in Pregled.objects.filter(klinika=klinika, vreme__range=[sdate, bdate]):
+        if preg.zakazan != "Prazno":
+            odgovor += "<tr>" \
+                       "<td>" + preg.zakazan + "</td>" \
+                       "<td>" + preg.vreme + "</td>" \
+                       "<td>" + (len(preg.tip_pregleda) * 100 + len(preg.sala) * 10).__str__() + " din</td>" \
+                       "</tr>"
+            ukupno += len(preg.tip_pregleda) * 100 + len(preg.sala) * 10
+
+    odgovor += "<tr>" \
+                "<td></td>" \
+                "<td style=\"text-align: right;\"><b>" + "Ukupno:" + "</b></td>" \
+                "<td><b>" + ukupno.__str__() + " din</b></td>" \
+            "</tr>"
+
+    if ukupno == 0:
+        return "<h2>Nemate jos ni jedan odradjen pregled</h2>"
+
+    return odgovor + "</table>"
 
 # -----------------------------------------------------------------------------------------------------------------------
 # nemoj ispod ove linije raditi

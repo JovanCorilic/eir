@@ -74,6 +74,7 @@
                 <form method="get" action="registerLekara">{% csrf_token %}<input type="submit" value="Dodaj Lekara"></form>
                 <form method="POST" action="pogledajLekare">{% csrf_token %}<input type="submit" value="Pogledaj Lekare"></form>
                 <form method="GET" action="OdobriOdmor">{% csrf_token %}<input type="submit" value="Odbij/Potvrdi Zahteve za Godisnji Odmor"></form>
+                <form method="GET" action="PogledajStanje">{% csrf_token %}<input type="submit" value="Pogledaj Finansijsko Stanje Klinike"></form>
 
                 {% endif %}
             {% else %}<!-----------------------POCETNA ZA NEULOGOVANE KORISNIKE-------------------------->

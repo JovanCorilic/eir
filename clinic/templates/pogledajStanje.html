@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Finansije</title>
+</head>
+<body>
+<form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
+{{map|safe}}
+</body>
+<style>    tooltip {position: relative;display: inline-block;border-bottom: 1px dotted black;}.tooltip
+           .tooltiptext {visibility: hidden;width: 120px;background-color: black;color: #fff;text-align:
+           center;border-radius: 6px;padding: 5px 0;position: absolute;z-index: 1;}.tooltip:hover .tooltiptext {
+           visibility: visible;} .table { font-family: arial, sans-serif; border-collapse: collapse; }
+           .td { border: 1px solid #dddddd; text-align: left; padding: 8px; } .th { border: 1px solid #dddddd;
+           text-align: left; padding: 8px; } .even { background-color: #4CAa50; } .tr{
+           padding:5px; background-color: #60b060; } .th{ padding:5px; } input[type=submit]:hover {
+           background-color: #111; } input[type=submit]:hover:not(.meni) { background-color: #01b601; }input[type=text], input[type=number]:not(.avs), input[type=password], select{
+          width: 100%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          font-weight: bold;
+        }
+        .sub {
+          background-color: #4CAF50;
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          cursor: pointer;
+          font-weight: bold;
+        }</style>
+</html>
