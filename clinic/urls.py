@@ -58,4 +58,5 @@ urlpatterns = [
     path('IzmeniTermin', views.IzmeniTermin, name='IzmeniTermin'),
     path('DodajTermin', views.DodajTermin, name='DodajTermin'),
     path('DodajOdmor', views.DodajOdmor, name='DodajOdmor'),
+    path('OdobriOdmor', views.OdobriOdmor, name='OdobriOdmor'),
 ]

@@ -543,7 +543,6 @@ def ObrisiTermin(request):
         return redirect('index')
 
 def IzmeniTermin(request):
-    try:
         if request.method == 'POST':
             id = request.POST['broj']
             lekar = request.POST['lekar']
@@ -567,8 +566,7 @@ def IzmeniTermin(request):
                 return HttpResponse('<h1>Error 400</h1>Bad request<br />Datumi se ne poklapaju', status=400)
         else:
             return HttpResponse('<h1>Error 400</h1>Bad request<br />GET metoda nije podrzana', status=400)
-    except:
-        return HttpResponse('<h1>Error 400</h1>Bad request<br />Pogresno ste uneli podatke', status=400)
+
 
 
 def DodajTermin(request):
@@ -645,6 +643,16 @@ def proveriTermin(vreme, sala, lekar, idd=-9999):
                 if not (termin.vreme > vreme + datetime.timedelta(minutes=30) or termin.vreme + datetime.timedelta(
                         minutes=30) < vreme):
                     return False
+        lekarOBJ = None
+        for lekarr in Pregled.objects.all():
+            if lekarr.email_adresa == lekar:
+                lekarOBJ = lekarr
+                break
+
+        for odmor in Odmor.objects.all():
+            if odmor.lekar == lekarOBJ.email_adresa:
+                if not (odmor.vreme > vreme + datetime.timedelta(minutes=30) or odmor.vreme + datetime.timedelta(days=odmor.duzina) < vreme):
+                    return False
         return True
     except:
         vreme = datetime.datetime.strptime(vreme, "%Y-%m-%d %H:%M:%S")
@@ -657,6 +665,17 @@ def proveriTermin(vreme, sala, lekar, idd=-9999):
             if termin.lekar == lekar and termin.id != idd:
                 if not (termin.vreme > vreme + datetime.timedelta(minutes=30) or termin.vreme + datetime.timedelta(
                         minutes=30) < vreme):
+                    return False
+        lekarOBJ = None
+        for lekarr in Lekar.objects.all():
+            if lekarr.email_adresa == lekar:
+                lekarOBJ = lekarr
+                break
+
+        for odmor in Odmor.objects.all():
+            if odmor.lekar == lekarOBJ.email_adresa:
+                if not (odmor.vreme> vreme + datetime.timedelta(minutes=30) or odmor.vreme + datetime.timedelta(
+                        days=odmor.duzina) < vreme):
                     return False
         return True
 
@@ -803,6 +822,45 @@ def DodajOdmor(request):
             return render(request, 'zakaziOdmor.html', {'lekar': email_adresa, 'uloga': uloga, 'odobreno': odobreno, 'vreme': vreme})
         else:
             return redirect('index')
+
+
+def OdobriOdmor(request):
+    try:
+        if request.method == 'POST':
+            id = request.POST['koga']
+            kako = request.POST['kako']
+
+            if Odmor.objects.filter(id=id).exists():
+                if kako == 'True':
+                    od = Odmor.objects.filter(id=id)[0]
+                    od.aktiviran = 1
+                    od.save()
+                else:
+                    Odmor.objects.filter(id=id).delete()
+
+                return redirect('OdobriOdmor')
+        else:
+            email = ''
+            if 'email' in request.session:
+                email = request.session['email']
+            uloga = ''
+            if 'uloga' in request.session:
+                uloga = request.session['uloga']
+
+            if uloga == 'ADMIN':
+                org = Admin.objects.filter(email_adresa=email)[0].naziv_klinike
+                niz = []
+                for k in Odmor.objects.filter(aktiviran=0, klinika=org):
+                    niz.extend([k])
+                lekari = []
+                for o in niz:
+                    for l in Lekar.objects.all():
+                        if o.lekar == l.email_adresa:
+                            lekari.extend([{'prezime': l.prezime, 'o': o}])
+                return render(request, 'odobriOdmor.html', {'niz': lekari})
+            return HttpResponse('<h1>Error 400</h1>Bad request<br />Nemate pravo da pristupite ovoj stranici', status=400)
+    except:
+        return HttpResponse('<h1>Error 400</h1>Bad request<br />Pogresno ste uneli podatke', status=400)
 
 #-----------------------------------------------------------------------------------------------------------------------
 #nemoj ispod ove linije raditi
