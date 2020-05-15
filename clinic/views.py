@@ -1190,13 +1190,6 @@ def sveOperacijePacijent(request):
         operacije = Operacije.objects.filter(pacijent=request.session['email']).order_by('-vreme')
         request.session['lokacija'] = 5
 
-        listaLekara = []
-        for operacija in operacije:
-            tempLista = ""
-            for emailLekara in operacija.lekari.split(","):
-                temp = Lekar.objects.get(email_adresa=emailLekara)
-                tempLista = tempLista + temp.ime + " "+ temp.prezime+","
-            listaLekara.append(tempLista)
         lekari = Lekar.objects.all()
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'lokacija': request.session['lokacija'], 'operacije': operacije, 'lekari': lekari})
@@ -1204,13 +1197,42 @@ def sveOperacijePacijent(request):
         operacije = Operacije.objects.filter(pacijent=request.session['email']).order_by('-vreme')
         request.session['lokacija'] = 5
 
-        listaLekara = [[]]
-        for operacija in operacije:
-            tempLista = []
-            for emailLekara in operacija.lekari.split(","):
-                tempLista.append(
-                    Lekar.objects.filter(email_adresa=emailLekara).ime + " " + Lekar.objects.filter(email_adresa=emailLekara).prezime)
-            listaLekara.append(tempLista)
-
+        lekari = Lekar.objects.all()
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
-                      {'lokacija': request.session['lokacija'], 'operacije': operacije, 'listaLekara': listaLekara})
+                      {'lokacija': request.session['lokacija'], 'operacije': operacije, 'lekari': lekari})
+
+def sortiranjeSveOperacijePacijent(request):
+    if request.method == 'POST':
+        if 'sortirajVreme' in request.POST:
+            tip = 'vreme'
+        elif 'sortirajKlinika' in request.POST:
+            tip = 'klinika'
+        elif 'sortirajSala' in request.POST:
+            tip = 'sala'
+        elif 'sortirajLekari' in request.POST:
+            tip = 'lekari'
+        else:
+            tip = 'tip_operacije'
+
+        operacije = Operacije.objects.filter(pacijent=request.session['email']).order_by(tip)
+        lekari = Lekar.objects.all()
+        request.session['lokacija'] = 5
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija'], 'operacije': operacije,'lekari': lekari})
+    else:
+        if 'sortirajVreme' in request.POST:
+            tip = 'vreme'
+        elif 'sortirajKlinika' in request.POST:
+            tip = 'klinika'
+        elif 'sortirajSala' in request.POST:
+            tip = 'sala'
+        elif 'sortirajLekari' in request.POST:
+            tip = 'lekari'
+        else:
+            tip = 'tip_operacije'
+
+        operacije = Operacije.objects.filter(pacijent=request.session['email']).order_by(tip)
+        lekari = Lekar.objects.all()
+        request.session['lokacija'] = 5
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija'], 'operacije': operacije, 'lekari': lekari})
