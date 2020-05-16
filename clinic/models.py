@@ -110,6 +110,7 @@ class Pregled(models.Model):
     diagnoza = models.CharField(max_length=500, default=None)
     lekovi = models.CharField(max_length=500, default=None)
     temp = "da"
+    prihvacen = "da"
 
     objects = UserManager()
 

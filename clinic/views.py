@@ -1538,3 +1538,37 @@ def sortiranjeSveOperacijePacijent(request):
         request.session['lokacija'] = 5
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'lokacija': request.session['lokacija'], 'operacije': operacije, 'lekari': lekari})
+
+def zakazivanjePregledaPacijent(request):
+    if request.method == 'POST':
+        email = request.POST['kojiLekar']
+        lekar = Lekar.objects.get(email_adresa=email)
+        sale = Sala.objects.filter(id_klinike_kojoj_pripada=request.session['nazivKlinike'])
+        return render(request, 'pacijent/zakazivanjePregledaPacijent.html',
+                      { 'lekar': lekar, 'sale':sale})
+    else:
+        return render(request, 'pacijent/zakazivanjePregledaPacijent.html',
+                      )
+
+def posaljiPregledPacijent(request):
+    if request.method == 'POST':
+        vreme = request.POST['vreme']
+        zbog = request.POST['radi']
+        kojiLekar = request.POST['kojiLekar']
+        kojaSala = request.POST['kojasala']
+        temppregled = Pregled.objects.order_by('-id')
+        temp = temppregled.first().id
+        print(temppregled.first().id)
+        pregled = Pregled.objects.create(klinika=request.session['nazivKlinike'], zakazan=request.session['email'],
+                                         lekar=kojiLekar, sala=kojaSala, tip_pregleda=zbog, vreme=vreme,
+                                         sifra_bolesti = "Prazno", diagnoza="Prazno", lekovi="Prazno",
+                                         id=temp)
+        pregled.prihvacen = "ne"
+        pregled.save()
+        lekari = Lekar.objects.filter(radno_mesto=request.session['nazivKlinike'])
+        request.session['lokacija'] = 3.5
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija'], 'lekari': lekari})
+    else:
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija']})

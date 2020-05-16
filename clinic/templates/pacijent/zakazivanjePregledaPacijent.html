@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Eir - Registracija pacijent</title>   
+        <link rel="stylesheet" type="text/css" href="minimalistBlack.css" class="minimalistBlack">
+         
+    </head>
+<body>
+    <form method="POST" action="posaljiPregledPacijent" onsubmit="return logovanje()">
+        {% csrf_token %}
+        <table class="minimalistBlack">
+            <thead>
+            <tr>
+                <td colspan="2">
+                    Lekar : {{lekar.ime}} {{lekar.prezime}}
+                </td>
+            </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                  <td colspan="2">
+                    <button id="kojiLekar" name="kojiLekar" value="{{lekar.email_adresa}}">Zakaži</button>
+                  </td>
+                </tr>
+            </tfoot>
+            <tbody>
+            <tr>
+            <td>Datum da se zakaze kod ovog doktora</td>
+            <td><input type="datetime-local" id="vreme" name="vreme" ></td></tr>
+            <tr>
+                <td>Pregled čega</td>
+                <td><input type="text" id="radi" name="radi" ></td>
+            </tr><tr>
+                <td>Koju salu</td>
+            <td>
+                <select id="kojasala" name="kojasala">
+                    {% for sala in sale %}
+                    <option value="{{sala.naziv}}">{{sala.naziv}}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            </tr>
+            </tbody>
+        </table> 
+    </form>
+
+    <script>
+        function logovanje() {
+        submitOK = "true";
+        }
+    </script>
+</body>
+
+<style>
+    table.minimalistBlack {
+    font-family: "Times New Roman", Times, serif;
+    border: 3px solid #2EF259;
+    text-align: left;
+    border-collapse: collapse;
+    }
+    table.minimalistBlack td, table.minimalistBlack th {
+    border: 1px solid #000000;
+    padding: 5px 4px;
+    }
+    table.minimalistBlack tbody td {
+    font-size: 18px;
+    }
+    table.minimalistBlack thead {
+    background: #69FF5C;
+    background: -moz-linear-gradient(top, #8eff85 0%, #78ff6c 66%, #69FF5C 100%);
+    background: -webkit-linear-gradient(top, #8eff85 0%, #78ff6c 66%, #69FF5C 100%);
+    background: linear-gradient(to bottom, #8eff85 0%, #78ff6c 66%, #69FF5C 100%);
+    border-bottom: 3px solid #1FD87F;
+    }
+    table.minimalistBlack thead th {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000;
+    text-align: left;
+    }
+    table.minimalistBlack tfoot td {
+        font-size: 18px;
+        font-weight: bold;
+        color: #000000;
+        }
+</style>
+
+</html>
