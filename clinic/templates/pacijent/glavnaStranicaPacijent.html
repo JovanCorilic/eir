@@ -308,27 +308,28 @@
         </tfoot>
         <tbody>
         {% for pregled in pregledi %}
-        <tr>
-        <td>{{pregled.vreme}}</td>
-        <td>{{pregled.klinika}}</td>
-        <td>{{pregled.sala}}</td>
-        <td>
-          {% for lekar in lekari %}
-          {% if lekar.email_adresa == pregled.lekar %}
-          {{lekar.ime}} {{lekar.prezime}}
-          {% endif %}
-          {% endfor %}
-        </td>
-        <td>{{pregled.tip_pregleda}}</td>
-        <td>{{pregled.diagnoza}}</td>
-        <td>{{pregled.lekovi}}</td>
-        <td>
-          {% if pregled.temp == "da" %}
-          <form method="POST" action="otkaziPregledPacijent" >{% csrf_token %}<div id="myDIV"><button id = "id123" name="id123" value = "{{pregled.id}}" style="width:100%">Otkaži</button></div></form>
-          {% endif %}
-        </td>
-        </tr>
-        
+        {% if pregled.prihvacen == "da" %}
+          <tr>
+          <td>{{pregled.vreme}}</td>
+          <td>{{pregled.klinika}}</td>
+          <td>{{pregled.sala}}</td>
+          <td>
+            {% for lekar in lekari %}
+            {% if lekar.email_adresa == pregled.lekar %}
+            {{lekar.ime}} {{lekar.prezime}}
+            {% endif %}
+            {% endfor %}
+          </td>
+          <td>{{pregled.tip_pregleda}}</td>
+          <td>{{pregled.diagnoza}}</td>
+          <td>{{pregled.lekovi}}</td>
+          <td>
+            {% if pregled.temp == "da" %}
+            <form method="POST" action="otkaziPregledPacijent" >{% csrf_token %}<div id="myDIV"><button id = "id123" name="id123" value = "{{pregled.id}}" style="width:100%">Otkaži</button></div></form>
+            {% endif %}
+          </td>
+          </tr>
+        {% endif %}
         {% endfor %}
         </tbody>
         </table>

@@ -1028,7 +1028,7 @@ def activate(request, uidb64, token):
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
     if user is not None and account_activation_token.check_token(user, token):
-        user.aktiviran = 1
+        user.aktiviran = 0
         user.save()
         # return redirect('home')
         return HttpResponse('Hvala na vašoj email konfrmacije, sada možete da se ulogujete.')
@@ -1077,7 +1077,7 @@ def registracijaPacijent(request):
                                                sifra_bolesti="Prazno", datum=date.today().strftime("%d/%m/%Y"),
                                                diagnoza="Prazno", lekovi="Prazno",
                                                dioptrija="Prazno", alergije_na_lek="Prazno",
-                                               visina="Prazno", tezina="Prazno", krvna_grupa="Prazno", aktiviran=0)
+                                               visina="Prazno", tezina="Prazno", krvna_grupa="Prazno", aktiviran=-1)
 
             pacijent.save()
             current_site = get_current_site(request)
@@ -1557,14 +1557,22 @@ def posaljiPregledPacijent(request):
         zbog = request.POST['radi']
         kojiLekar = request.POST['kojiLekar']
         kojaSala = request.POST['kojasala']
-        temppregled = Pregled.objects.order_by('-id')
-        temp = temppregled.first().id
-        print(temppregled.first().id)
+        pregledi = Pregled.objects.all()
+        max = -1
+
+        for pregled in pregledi:
+            if(max<int(pregled.id)):
+                max = int(pregled.id)
+
+        if(max == -1):
+            max = 1
+        else:
+            max = max + 1
+
         pregled = Pregled.objects.create(klinika=request.session['nazivKlinike'], zakazan=request.session['email'],
                                          lekar=kojiLekar, sala=kojaSala, tip_pregleda=zbog, vreme=vreme,
                                          sifra_bolesti = "Prazno", diagnoza="Prazno", lekovi="Prazno",
-                                         id=temp)
-        pregled.prihvacen = "ne"
+                                         id=max, prihvacen="ne")
         pregled.save()
         lekari = Lekar.objects.filter(radno_mesto=request.session['nazivKlinike'])
         request.session['lokacija'] = 3.5
