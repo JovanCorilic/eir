@@ -114,6 +114,18 @@ class Pregled(models.Model):
     objects = UserManager()
 
 
+class Operacije(models.Model):
+    id = models.CharField(max_length=500, primary_key=True,  default=None)
+    klinika = models.CharField(max_length=500, default=None)
+    pacijent = models.CharField(max_length=500, default=None)
+    lekari = models.CharField(max_length=500, default=None)
+    sala = models.CharField(max_length=500, default=None)
+    tip_operacije = models.CharField(max_length=500, default=None)
+    vreme = models.DateTimeField(max_length=500, default=None)
+
+    objects = UserManager()
+
+
 class Odmor(models.Model):
     id = models.CharField(max_length=500, primary_key=True,  default=None)
     klinika = models.CharField(max_length=500, default=None)
@@ -126,3 +138,4 @@ class Odmor(models.Model):
 
     def __str__(self):
         return self.lekar.__str__() + " ima odmor " + self.vreme.__str__() + " od " + self.duzina.__str__() + " dana"
+

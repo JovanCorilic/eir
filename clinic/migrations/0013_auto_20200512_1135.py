@@ -10,10 +10,4 @@ class Migration(migrations.Migration):
         ('Model_Podataka', '0012_auto_20200501_1015'),
     ]
 
-    operations = [
-        migrations.AddField(
-            model_name='pacijent',
-            name='aktiviran',
-            field=models.IntegerField(default=1),
-        ),
-    ]
+
