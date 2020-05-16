@@ -48,7 +48,7 @@
                 <br /><br />
                 {{radniKalendar|safe}}<br />{{pacijenti|safe}}
                 <br /><br />
-
+                <form method="GET" action="DodajTermin" >{% csrf_token %}<input type="submit" value="Zakazi pregled"></form>
                 <form method="POST" action="pogledajPacijente" >{% csrf_token %}<input type="submit" value="Pregledaj Sve Pacijente"></form>
                 <form method="GET" action="DodajOdmor" >{% csrf_token %}<input type="submit" value="Zakazi Godisnji Odmor"></form>
                 {% elif uloga == 'ADMIN' %}<!------------------------------------------POCETNA ZA ADMINA--------------------------------------->

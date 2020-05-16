@@ -21,13 +21,19 @@
 						<th></th>
 					</tr>
 					<tr>
-						<th align="right">Lekar </th>
-                        <th>
+						<th align="right">
+							{% if uloga == 'ADMIN' %}Lekar </th>
+						<th>
+
                             <select name="lekar" id="lekar">
 						    {% for ss in lekari%}
 						  <option value="{{ss.email_adresa}}">Dr. {{ss.prezime}}</option>
 						    {%endfor%}
 						</select>
+						{% else %}
+							<input type="hidden" name="lekar" value="{{ lekar }}">
+						{%endif%}
+						</th>
 						<th align="left"><label id="llekar" style="color: red;"></label></th>
 					</tr>
                     <tr>
