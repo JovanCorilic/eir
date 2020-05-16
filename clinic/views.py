@@ -594,6 +594,7 @@ def DodajTermin(request):
             sala = request.POST['sala']
             vreme = request.POST['vreme']
             tip_pregleda = request.POST['tip_pregleda']
+            print(lekar)
             if not Pregled.objects.filter(id=id).exists():
                 if proveriTermin(vreme, sala, lekar):
                     ii = 0
@@ -608,7 +609,7 @@ def DodajTermin(request):
                             klinika = ""
                             for korinisk in Lekar.objects.all():
                                 if korinisk.email_adresa == email:
-                                    klinika = korinisk.klinika
+                                    klinika = korinisk.radno_mesto
                             for korinisk in Admin.objects.all():
                                 if korinisk.email_adresa == email:
                                     klinika = korinisk.naziv_klinike
@@ -628,10 +629,13 @@ def DodajTermin(request):
             email = ""
             if 'email' in request.session:
                 email = request.session['email']
+            uloga = ""
+            if 'uloga' in request.session:
+                uloga = request.session['uloga']
             klinika = ""
             for korinisk in Lekar.objects.all():
                 if korinisk.email_adresa == email:
-                    klinika = korinisk.klinika
+                    klinika = korinisk.radno_mesto
             for korinisk in Admin.objects.all():
                 if korinisk.email_adresa == email:
                     klinika = korinisk.naziv_klinike
@@ -647,7 +651,7 @@ def DodajTermin(request):
             lekari = Lekar.objects.filter(radno_mesto=klinika)
             sale = Sala.objects.filter(id_klinike_kojoj_pripada=klinika)
             return render(request, "dodajTermin.html",
-                          {'klinika': klinika, 'mapa': mapa, 'lekari': lekari, 'sale': sale, 'vreme': date.today()})
+                          {'klinika': klinika, 'mapa': mapa, 'lekari': lekari, 'sale': sale, 'uloga': uloga, 'lekar':email, 'vreme': date.today()})
     except:
         return HttpResponse('<h1>Error 400</h1>Bad request', status=400)
 
@@ -656,13 +660,11 @@ def proveriTermin(vreme, sala, lekar, idd=-9999):
     try:
         for termin in Pregled.objects.all():
             if termin.sala == sala and termin.id != idd:
-                if not (termin.vreme > vreme + datetime.timedelta(minutes=30) or termin.vreme + datetime.timedelta(
-                        minutes=30) < vreme):
+                if not (termin.vreme > vreme + datetime.timedelta(minutes=30) or termin.vreme + datetime.timedelta(minutes=30) < vreme):
                     return False
         for termin in Pregled.objects.all():
             if termin.lekar == lekar and termin.id != idd:
-                if not (termin.vreme > vreme + datetime.timedelta(minutes=30) or termin.vreme + datetime.timedelta(
-                        minutes=30) < vreme):
+                if not (termin.vreme > vreme + datetime.timedelta(minutes=30) or termin.vreme + datetime.timedelta(minutes=30) < vreme):
                     return False
         lekarOBJ = None
         for lekarr in Pregled.objects.all():
@@ -672,8 +674,7 @@ def proveriTermin(vreme, sala, lekar, idd=-9999):
 
         for odmor in Odmor.objects.all():
             if odmor.lekar == lekarOBJ.email_adresa:
-                if not (odmor.vreme > vreme + datetime.timedelta(minutes=30) or odmor.vreme + datetime.timedelta(
-                        days=odmor.duzina) < vreme):
+                if not (odmor.vreme > vreme + datetime.timedelta(minutes=30) or odmor.vreme + datetime.timedelta(days=odmor.duzina) < vreme):
                     return False
         return True
     except:
