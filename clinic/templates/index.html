@@ -46,7 +46,11 @@
 
                 <h1>Ulogovani ste kao {{ime}}</h1>
                 <br /><br />
+                {{radniKalendar|safe}}<br />{{pacijenti|safe}}
+                <br /><br />
+
                 <form method="POST" action="pogledajPacijente" >{% csrf_token %}<input type="submit" value="Pregledaj Sve Pacijente"></form>
+                <form method="GET" action="DodajOdmor" >{% csrf_token %}<input type="submit" value="Zakazi Godisnji Odmor"></form>
                 {% elif uloga == 'ADMIN' %}<!------------------------------------------POCETNA ZA ADMINA--------------------------------------->
                     <ul>
                         <li><form method="POST" action="index" >{% csrf_token %}<input type="submit" value="Pocetna Strana"></form></li>
@@ -69,6 +73,8 @@
                 <form method="POST" action="pogledajKlinike" >{% csrf_token %}<input type="submit" value="Pregledaj Sve Klinike"></form>
                 <form method="get" action="registerLekara">{% csrf_token %}<input type="submit" value="Dodaj Lekara"></form>
                 <form method="POST" action="pogledajLekare">{% csrf_token %}<input type="submit" value="Pogledaj Lekare"></form>
+                <form method="GET" action="OdobriOdmor">{% csrf_token %}<input type="submit" value="Odbij/Potvrdi Zahteve za Godisnji Odmor"></form>
+                <form method="GET" action="PogledajStanje">{% csrf_token %}<input type="submit" value="Pogledaj Finansijsko Stanje Klinike"></form>
 
                 {% endif %}
             {% else %}<!-----------------------POCETNA ZA NEULOGOVANE KORISNIKE-------------------------->
