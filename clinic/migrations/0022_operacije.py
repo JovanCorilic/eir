@@ -15,12 +15,12 @@ class Migration(migrations.Migration):
             name='Operacije',
             fields=[
                 ('id', models.CharField(default=None, max_length=500, primary_key=True, serialize=False)),
-                ('klinika', models.CharField(default='Prazno', max_length=500)),
-                ('pacijent', models.CharField(default='Prazno', max_length=500)),
-                ('lekari', models.CharField(default='Prazno', max_length=500)),
-                ('sala', models.CharField(default='Prazno', max_length=500)),
-                ('tip_operacije', models.CharField(default='Prazno', max_length=500)),
-                ('vreme', models.DateTimeField(default='Prazno', max_length=500)),
+                ('klinika', models.CharField(default=None, max_length=500)),
+                ('pacijent', models.CharField(default=None, max_length=500)),
+                ('lekari', models.CharField(default=None, max_length=500)),
+                ('sala', models.CharField(default=None, max_length=500)),
+                ('tip_operacije', models.CharField(default=None, max_length=500)),
+                ('vreme', models.DateTimeField(default=None, max_length=500)),
             ],
             managers=[
                 ('objects', django.contrib.auth.models.UserManager()),
