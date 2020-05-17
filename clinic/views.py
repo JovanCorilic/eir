@@ -230,15 +230,14 @@ def Omeni(request):
             jedinstveni_broj_osiguranika = Admin.objects.filter(email_adresa=email_adresa)[
                 0].jedinstveni_broj_osiguranika
             datum = Admin.objects.filter(email_adresa=email_adresa)[0].datum
-            radno_mesto = Admin.objects.filter(email_adresa=email_adresa)[0].radno_mesto
-            pozicija = Admin.objects.filter(email_adresa=email_adresa)[0].pozicija
+            radno_mesto = Admin.objects.filter(email_adresa=email_adresa)[0].naziv_klinike
 
             request.session['koga'] = email_adresa
 
             return render(request, 'omeni.html', {'email': email_adresa, 'uloga': uloga, 'ime': ime, 'prezime': prezime,
                                                   'lozinka': lozinka, 'broja_telefona': broja_telefona,
                                                   'jedinstveni_broj_osiguranika': jedinstveni_broj_osiguranika,
-                                                  'datum': datum, 'radno_mesto': radno_mesto, 'pozicija': pozicija})
+                                                  'datum': datum, 'radno_mesto': radno_mesto})
         else:
             return redirect('index')
 
@@ -614,8 +613,10 @@ def DodajTermin(request):
                                 if korinisk.email_adresa == email:
                                     klinika = korinisk.naziv_klinike
                             ter = Pregled.objects.create(id=id, klinika=klinika, zakazan="Prazno", lekar=lekar,
-                                                         sala=sala, tip_pregleda=tip_pregleda, vreme=vreme,
-                                                         sifra_bolesti="Prazno", diagnoza="Prazno", lekovi="Prazno")
+                                                         sala=sala, tip_pregleda=tip_pregleda,
+                                                         vreme=vreme.__str__().split(".")[0],
+                                                         sifra_bolesti="Prazno", diagnoza="Prazno", lekovi="Prazno",
+                                                         prihvacen='da')
                             ter.save()
                             storage = messages.get_messages(request)
                             storage.used = True
@@ -651,7 +652,8 @@ def DodajTermin(request):
             lekari = Lekar.objects.filter(radno_mesto=klinika)
             sale = Sala.objects.filter(id_klinike_kojoj_pripada=klinika)
             return render(request, "dodajTermin.html",
-                          {'klinika': klinika, 'mapa': mapa, 'lekari': lekari, 'sale': sale, 'uloga': uloga, 'lekar':email, 'vreme': date.today()})
+                          {'klinika': klinika, 'mapa': mapa, 'lekari': lekari, 'sale': sale, 'uloga': uloga,
+                           'lekar': email, 'vreme': date.today()})
     except:
         return HttpResponse('<h1>Error 400</h1>Bad request', status=400)
 
@@ -660,11 +662,13 @@ def proveriTermin(vreme, sala, lekar, idd=-9999):
     try:
         for termin in Pregled.objects.all():
             if termin.sala == sala and termin.id != idd:
-                if not (termin.vreme > vreme + datetime.timedelta(minutes=30) or termin.vreme + datetime.timedelta(minutes=30) < vreme):
+                if not (termin.vreme > vreme + datetime.timedelta(minutes=30) or termin.vreme + datetime.timedelta(
+                        minutes=30) < vreme):
                     return False
         for termin in Pregled.objects.all():
             if termin.lekar == lekar and termin.id != idd:
-                if not (termin.vreme > vreme + datetime.timedelta(minutes=30) or termin.vreme + datetime.timedelta(minutes=30) < vreme):
+                if not (termin.vreme > vreme + datetime.timedelta(minutes=30) or termin.vreme + datetime.timedelta(
+                        minutes=30) < vreme):
                     return False
         lekarOBJ = None
         for lekarr in Pregled.objects.all():
@@ -674,11 +678,14 @@ def proveriTermin(vreme, sala, lekar, idd=-9999):
 
         for odmor in Odmor.objects.all():
             if odmor.lekar == lekarOBJ.email_adresa:
-                if not (odmor.vreme > vreme + datetime.timedelta(minutes=30) or odmor.vreme + datetime.timedelta(days=odmor.duzina) < vreme):
+                if not (odmor.vreme > vreme + datetime.timedelta(minutes=30) or odmor.vreme + datetime.timedelta(
+                        days=odmor.duzina) < vreme):
                     return False
         return True
     except:
+        print('vreme')
         vreme = datetime.datetime.strptime(vreme, "%Y-%m-%d %H:%M:%S")
+        print('vreme?')
         for termin in Pregled.objects.all():
             if termin.sala == sala and termin.id != idd:
                 if not (termin.vreme > vreme + datetime.timedelta(minutes=30) or termin.vreme + datetime.timedelta(
@@ -765,8 +772,9 @@ def autoTermin(request):
                     print('iteracija ' + "za kliniku " + klinika.naziv)
                     sala = random.choice(Sala.objects.filter(id_klinike_kojoj_pripada=klinika.naziv))
                     lekar = random.choice(Lekar.objects.filter(radno_mesto=klinika.naziv))
-                    vreme = datetime.datetime.today().replace(hour=i, minute=0, second=0)
-                    manualTermin(lekar, sala.naziv, vreme, klinika.naziv, "Opsti Pregled", request)
+                    vreme = datetime.datetime.now().replace(hour=i, minute=0, second=0)
+                    print(sala.naziv + " - " + lekar.prezime)
+                    manualTermin(lekar.email_adresa, sala.naziv, vreme, klinika.naziv, "Opsti Pregled", request)
                 except:
                     print("nesto fali")
                     pass
@@ -780,17 +788,19 @@ def manualTermin(lekar, sala, vreme, klinika, tip_pregleda, request):
             id += 1
     print("dodeljen id " + id.__str__())
     if not Pregled.objects.filter(id=id).exists():
-        if proveriTermin(vreme, sala, lekar):
+        if proveriTermin(vreme.__str__().split(".")[0], sala, lekar):
             ii = 0
             while True:
                 ii += 1
                 if ii >= 100:
                     return
                 try:
+                    print("pravi")
                     ter = Pregled.objects.create(id=id, klinika=klinika, zakazan="Prazno", lekar=lekar, sala=sala,
-                                                 tip_pregleda=tip_pregleda, vreme=vreme, sifra_bolesti="Prazno",
-                                                 diagnoza="Prazno",
-                                                 lekovi="Prazno")
+                                                 tip_pregleda=tip_pregleda, vreme=vreme.__str__().split(".")[0],
+                                                 sifra_bolesti="Prazno",
+                                                 diagnoza="Prazno", lekovi="Prazno", prihvacen="da")
+                    print("cuva")
                     ter.save()
                     print("sacuvao :)")
                     return
@@ -805,7 +815,7 @@ def DodajOdmor(request):
         lekar = request.POST['koga']
         idd = 0
 
-        bdate = datetime.datetime.today()
+        bdate = datetime.datetime.now()
         bdate = bdate.replace(minute=0, hour=0, second=0, year=date.today().year, month=1, day=1)
         enddate = bdate.replace(minute=0, hour=0, second=0, year=date.today().year + 1, month=1, day=1)
 
@@ -820,7 +830,8 @@ def DodajOdmor(request):
             if idd > 100:
                 return HttpResponse('<h1>Error 400</h1>Bad request', status=400)
             try:
-                odmor = Odmor.objects.create(id=idd, klinika=lekar.radno_mesto, lekar=lekar.email_adresa, vreme=vreme,
+                odmor = Odmor.objects.create(id=idd, klinika=lekar.radno_mesto, lekar=lekar.email_adresa,
+                                             vreme=vreme.__str__().split(".")[0],
                                              duzina=duzina, aktiviran=0)
                 odmor.save()
                 storage = messages.get_messages(request)
@@ -842,11 +853,11 @@ def DodajOdmor(request):
 
         if uloga == 'LEKAR':
             request.session['koga'] = email_adresa
-            bdate = datetime.datetime.today()
+            bdate = datetime.datetime.now()
             bdate = bdate.replace(minute=0, hour=0, second=0, year=date.today().year, month=1, day=1)
             enddate = bdate.replace(minute=0, hour=0, second=0, year=date.today().year + 1, month=1, day=1)
             odobreno = not Odmor.objects.filter(lekar=email_adresa, vreme__range=[bdate, enddate]).exists()
-            vreme = datetime.datetime.today()
+            vreme = datetime.datetime.now()
             vreme = vreme.replace(minute=0, hour=0, second=0)
             return render(request, 'zakaziOdmor.html',
                           {'lekar': email_adresa, 'uloga': uloga, 'odobreno': odobreno, 'vreme': vreme})
@@ -901,14 +912,14 @@ def NapraviRadniKalendar(email):
     odmorb = -1
 
     try:
-        odmor = Odmor.objects.filter(lekar=email)[0]
-        if datetime.datetime.today().month == odmor.vreme.month and datetime.datetime.today().year == odmor.vreme.year:
+        odmor = Odmor.objects.filter(lekar=email, aktiviran=1)[0]
+        if datetime.datetime.now().month == odmor.vreme.month and datetime.datetime.now().year == odmor.vreme.year:
             odmora = odmor.vreme.day
             odmorb = odmora + odmor.duzina
     except:
         pass
 
-    pregledi = Pregled.objects.filter(lekar=email)
+    pregledi = Pregled.objects.filter(lekar=email, prihvacen="da")
 
     for i in range(1, monthrange(date.today().year, date.today().month)[1]):
         tekst = "Nemata Zakazanih Pregleda"
@@ -950,8 +961,11 @@ def NadjiPacijente(email):
     pacijentiOBJ = []
     pp = Pregled.objects.filter(lekar=email)
     for p in pp:
-        if p.zakazan != 'Prazno' and p.zakazan not in pacijenti:
-            pacijenti.extend(p.zakazan)
+        if p.zakazan != 'Prazno':
+            pacijenti.extend([p.zakazan])
+
+    for ppp in pacijenti:
+        print(ppp)
 
     for pacijent in Pacijent.objects.all():
         if pacijent.email_adresa in pacijenti:
@@ -963,10 +977,10 @@ def NadjiPacijente(email):
                    "Telefona</th><th class=\"th\">Jedinstveni Broj Osiguranika</th><th class=\"th\"></th></tr> "
 
         for pacijent in pacijentiOBJ:
-            odgovor += "<tr><tdclass=\"td\">" + pacijent.ime + "</td><tdclass=\"td\">" + pacijent.prezime + "</td" \
-                                                                                                            "><tdclass=\"td\">" + pacijent.adresa_prebivalista + "</td><tdclass=\"td\">" + pacijent.drzava + \
-                       "</td><tdclass=\"td\">" + pacijent.grad + "</td><tdclass=\"td\">" + pacijent.broja_telefona + \
-                       "</td><tdclass=\"td\">" + pacijent.jedinstveni_broj_osiguranika + "</td> "
+            odgovor += "<tr><td class=\"td\">" + pacijent.ime + "</td><td class=\"td\">" + pacijent.prezime + "</td>" \
+                       "<td class=\"td\">" + pacijent.adresa_prebivalista + "</td><td class=\"td\">" + pacijent.drzava + \
+                       "</td><td class=\"td\">" + pacijent.grad + "</td><td class=\"td\">" + pacijent.broja_telefona + \
+                       "</td><td class=\"td\">" + pacijent.jedinstveni_broj_osiguranika + "</td> "
         return odgovor + "</table>"
 
     return "<h2>Nemate Pacijenata</h2>"
@@ -989,29 +1003,30 @@ def VratiFinansije(email):
     klinika = admin = Admin.objects.filter(email_adresa=email)[0].naziv_klinike
     ukupno = 0
 
-    bdate = datetime.datetime.today()
+    bdate = datetime.datetime.now()
     sdate = bdate.replace(year=2000)
 
     odgovor += "<tr>" \
-                "<th>" + "Ko" + "</th>" \
-                "<th>" + "Kada" + "</th>" \
-                "<th>" + "Cena" + "</th>" \
-            "</tr>"
+               "<th>" + "Ko" + "</th>" \
+                               "<th>" + "Kada" + "</th>" \
+                                                 "<th>" + "Cena" + "</th>" \
+                                                                   "</tr>"
 
     for preg in Pregled.objects.filter(klinika=klinika, vreme__range=[sdate, bdate]):
         if preg.zakazan != "Prazno":
             odgovor += "<tr>" \
                        "<td>" + preg.zakazan + "</td>" \
-                       "<td>" + preg.vreme + "</td>" \
-                       "<td>" + (len(preg.tip_pregleda) * 100 + len(preg.sala) * 10).__str__() + " din</td>" \
-                       "</tr>"
+                                               "<td>" + preg.vreme + "</td>" \
+                                                                     "<td>" + (
+                                   len(preg.tip_pregleda) * 100 + len(preg.sala) * 10).__str__() + " din</td>" \
+                                                                                                   "</tr>"
             ukupno += len(preg.tip_pregleda) * 100 + len(preg.sala) * 10
 
     odgovor += "<tr>" \
-                "<td></td>" \
-                "<td style=\"text-align: right;\"><b>" + "Ukupno:" + "</b></td>" \
-                "<td><b>" + ukupno.__str__() + " din</b></td>" \
-            "</tr>"
+               "<td></td>" \
+               "<td style=\"text-align: right;\"><b>" + "Ukupno:" + "</b></td>" \
+                                                                    "<td><b>" + ukupno.__str__() + " din</b></td>" \
+                                                                                                   "</tr>"
 
     if ukupno == 0:
         return "<h2>Nemate jos ni jedan odradjen pregled</h2>"
@@ -1045,13 +1060,53 @@ def OdobriAkaunt(request):
             if uloga == 'ADMIN':
                 org = Admin.objects.filter(email_adresa=email)[0].naziv_klinike
                 niz = []
-                for k in Pacijent.objects.filter(aktiviran=-1, klinika=org):
+                for k in Pacijent.objects.filter(aktiviran=-1):
                     niz.extend([k])
                 return render(request, 'odobriOdmor.html', {'niz': niz})
             return HttpResponse('<h1>Error 400</h1>Bad request<br />Nemate pravo da pristupite ovoj stranici',
                                 status=400)
     except:
         return HttpResponse('<h1>Error 400</h1>Bad request<br />Pogresno ste uneli podatke', status=400)
+
+
+def OdobriPregled(request):
+    #try:
+        if request.method == 'POST':
+            id = request.POST['koga']
+            kako = request.POST['kako']
+
+            if Pregled.objects.filter(id=id).exists():
+                if kako == 'True':
+                    od = Pregled.objects.filter(id=id)[0]
+                    od.prihvacen = "da"
+                    od.save()
+                else:
+                    Pregled.objects.filter(id=id).delete()
+
+                return redirect('OdobriPregled')
+        else:
+            email = ''
+            if 'email' in request.session:
+                email = request.session['email']
+            uloga = ''
+            if 'uloga' in request.session:
+                uloga = request.session['uloga']
+
+            if uloga == 'ADMIN':
+                niz = []
+                for k in Pregled.objects.filter(prihvacen="ne"):
+                    niz.extend([k])
+
+                pregledi = []
+                for o in niz:
+                    for l in Pacijent.objects.all():
+                        if o.zakazan == l.email_adresa:
+                            pregledi.extend([{'pacijent': l, 'pregled': o}])
+                return render(request, 'odobriPregled.html', {'niz': pregledi})
+            return HttpResponse('<h1>Error 400</h1>Bad request<br />Nemate pravo da pristupite ovoj stranici',
+                                status=400)
+    #except:
+    #    return HttpResponse('<h1>Error 400</h1>Bad request<br />Pogresno ste uneli podatke', status=400)
 
 # -----------------------------------------------------------------------------------------------------------------------
 # nemoj ispod ove linije raditi
@@ -1523,6 +1578,7 @@ def otkaziPregledPacijent(request):
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'lokacija': request.session['lokacija'], 'pregledi': pregledi, 'lekari': lekari})
 
+
 def sveOperacijePacijent(request):
     if request.method == 'POST':
         operacije = Operacije.objects.filter(pacijent=request.session['email']).order_by('-vreme')
@@ -1538,6 +1594,7 @@ def sveOperacijePacijent(request):
         lekari = Lekar.objects.all()
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'lokacija': request.session['lokacija'], 'operacije': operacije, 'lekari': lekari})
+
 
 def sortiranjeSveOperacijePacijent(request):
     if request.method == 'POST':
@@ -1556,7 +1613,7 @@ def sortiranjeSveOperacijePacijent(request):
         lekari = Lekar.objects.all()
         request.session['lokacija'] = 5
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
-                      {'lokacija': request.session['lokacija'], 'operacije': operacije,'lekari': lekari})
+                      {'lokacija': request.session['lokacija'], 'operacije': operacije, 'lekari': lekari})
     else:
         if 'sortirajVreme' in request.POST:
             tip = 'vreme'
@@ -1575,16 +1632,18 @@ def sortiranjeSveOperacijePacijent(request):
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'lokacija': request.session['lokacija'], 'operacije': operacije, 'lekari': lekari})
 
+
 def zakazivanjePregledaPacijent(request):
     if request.method == 'POST':
         email = request.POST['kojiLekar']
         lekar = Lekar.objects.get(email_adresa=email)
         sale = Sala.objects.filter(id_klinike_kojoj_pripada=request.session['nazivKlinike'])
         return render(request, 'pacijent/zakazivanjePregledaPacijent.html',
-                      { 'lekar': lekar, 'sale':sale})
+                      {'lekar': lekar, 'sale': sale})
     else:
         return render(request, 'pacijent/zakazivanjePregledaPacijent.html',
                       )
+
 
 def posaljiPregledPacijent(request):
     if request.method == 'POST':
@@ -1596,17 +1655,17 @@ def posaljiPregledPacijent(request):
         max = -1
 
         for pregled in pregledi:
-            if(max<int(pregled.id)):
+            if (max < int(pregled.id)):
                 max = int(pregled.id)
 
-        if(max == -1):
+        if (max == -1):
             max = 1
         else:
             max = max + 1
 
         pregled = Pregled.objects.create(klinika=request.session['nazivKlinike'], zakazan=request.session['email'],
                                          lekar=kojiLekar, sala=kojaSala, tip_pregleda=zbog, vreme=vreme,
-                                         sifra_bolesti = "Prazno", diagnoza="Prazno", lekovi="Prazno",
+                                         sifra_bolesti="Prazno", diagnoza="Prazno", lekovi="Prazno",
                                          id=max, prihvacen="ne")
         pregled.save()
         lekari = Lekar.objects.filter(radno_mesto=request.session['nazivKlinike'])

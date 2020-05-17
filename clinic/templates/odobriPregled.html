@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+	<head>
+		<title>Odobravanje Pregleda</title>
+		<link rel="stylesheet" href="css/stil.css">
+	</head>
+	<body>
+	<form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
+		<div class="unos" style="margin-left:70px">
+		</div>
+    <table>
+		{% for o in niz %}
+            <tr>
+                <th>{{o.pacijent.ime}} {{o.pacijent.prezime}} ({{o.pacijent.email_adresa}}) zeli da zakaze pregled {{o.pregled.vreme|escape}} sa doktorom {{o.pregled.lekar}} u sali {{o.pregled.sala}}</th>
+                <th><form method="POST" action="OdobriPregled" >{% csrf_token %}<input type="hidden" name="koga" value="{{o.pregled.id}}"><input type="hidden" name="kako" value="True"><input type="submit" style="color:green" value="Odobri"></form></th>
+                <th><form method="POST" action="OdobriPregled" >{% csrf_token %}<input type="hidden" name="koga" value="{{o.pregled.id}}"><input type="hidden" name="kako" value="False"><input type="submit" style="color:red" value="Odbij"></form></th>
+            </tr>
+        {% endfor %}
+    </table>
+	</body>
+<style>
+        input[type=text], input[type=number]:not(.avs), input[type=password], select{
+          width: 100%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          font-weight: bold;
+        }
+        .sub {
+          background-color: #4CAF50;
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          cursor: pointer;
+          font-weight: bold;
+        }
+    </style>
+</html>

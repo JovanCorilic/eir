@@ -63,4 +63,5 @@ urlpatterns = [
     path('OdobriOdmor', views.OdobriOdmor, name='OdobriOdmor'),
     path('PogledajStanje', views.PogledajStanje, name='PogledajStanje'),
     path('OdobriAkaunt', views.OdobriAkaunt, name='OdobriAkaunt'),
+    path('OdobriPregled', views.OdobriPregled, name='OdobriPregled'),
 ]
