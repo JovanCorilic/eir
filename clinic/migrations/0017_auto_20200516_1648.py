@@ -9,10 +9,4 @@ class Migration(migrations.Migration):
         ('Model_Podataka', '0015_auto_20200515_1425'),
     ]
 
-    operations = [
-		migrations.AddField(
-            model_name='Pregled',
-            name='prihvacen',
-            field=models.CharField(default='da', max_length=500),
-        ),
-    ]
+    
