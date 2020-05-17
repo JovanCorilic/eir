@@ -2,7 +2,7 @@
 
 <html>
 	<head>
-		<title>Odobravanje Odmora</title>
+		<title>Odobravanje Akaunta</title>
 		<link rel="stylesheet" href="css/stil.css">
 	</head>
 	<body>
@@ -12,9 +12,9 @@
     <table>
 		{% for o in niz %}
             <tr>
-                <th>Dr. {{o.prezime}} zeli da napravi godisnji odmor {{o.o.vreme|escape}} duzine {{o.o.duzina}} dana</th>
-                <th><form method="POST" action="OdobriOdmor" >{% csrf_token %}<input type="hidden" name="koga" value="{{o.o.id}}"><input type="hidden" name="kako" value="True"><input type="submit" style="color:green" value="Odobri"></form></th>
-                <th><form method="POST" action="OdobriOdmor" >{% csrf_token %}<input type="hidden" name="koga" value="{{o.o.id}}"><input type="hidden" name="kako" value="False"><input type="submit" style="color:red" value="Odbij"></form></th>
+                <th>{{o.ime}} {{o.prezime}}(JMBG: {{o.jedinstveni_broj_osiguranika}}) iz {{o.grad}} ({{o.drzava}}) zeli da napravi akaunt (kontakt pacijenta na {{o.broja_telefona}})</th>
+                <th><form method="POST" action="OdobriAkaunt" >{% csrf_token %}<input type="hidden" name="koga" value="{{o.email_adresa}}"><input type="hidden" name="kako" value="True"><input type="submit" style="color:green" value="Odobri"></form></th>
+                <th><form method="POST" action="OdobriAkaunt" >{% csrf_token %}<input type="hidden" name="koga" value="{{o.email_adresa}}"><input type="hidden" name="kako" value="False"><input type="submit" style="color:red" value="Odbij"></form></th>
             </tr>
         {% endfor %}
     </table>

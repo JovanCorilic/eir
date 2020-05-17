@@ -925,7 +925,7 @@ def NapraviRadniKalendar(email):
         for pregled in pregledi:
             if pregled.vreme.day == i:
                 iterator += 1
-                tekst = "Imate " + i.__str__() + " Zakazanih Pregleda"
+                tekst = "Imate " + iterator.__str__() + " Zakazanih Pregleda"
 
         if tekst == "Nemata Zakazanih Pregleda":
             odgovor += "<td style=\"background-color:green; color:white;\"><div class=\"tooltip\">" + i.__str__() + "<span class=\"tooltiptext\">" + tekst + "</span></div></td>"
@@ -1017,6 +1017,41 @@ def VratiFinansije(email):
         return "<h2>Nemate jos ni jedan odradjen pregled</h2>"
 
     return odgovor + "</table>"
+
+
+def OdobriAkaunt(request):
+    try:
+        if request.method == 'POST':
+            id = request.POST['koga']
+            kako = request.POST['kako']
+
+            if Pacijent.objects.filter(email_adresa=id).exists():
+                if kako == 'True':
+                    od = Pacijent.objects.filter(email_adresa=id)[0]
+                    od.aktiviran = 1
+                    od.save()
+                else:
+                    Pacijent.objects.filter(email_adresa=id).delete()
+
+                return redirect('OdobriAkaunt')
+        else:
+            email = ''
+            if 'email' in request.session:
+                email = request.session['email']
+            uloga = ''
+            if 'uloga' in request.session:
+                uloga = request.session['uloga']
+
+            if uloga == 'ADMIN':
+                org = Admin.objects.filter(email_adresa=email)[0].naziv_klinike
+                niz = []
+                for k in Pacijent.objects.filter(aktiviran=-1, klinika=org):
+                    niz.extend([k])
+                return render(request, 'odobriOdmor.html', {'niz': niz})
+            return HttpResponse('<h1>Error 400</h1>Bad request<br />Nemate pravo da pristupite ovoj stranici',
+                                status=400)
+    except:
+        return HttpResponse('<h1>Error 400</h1>Bad request<br />Pogresno ste uneli podatke', status=400)
 
 # -----------------------------------------------------------------------------------------------------------------------
 # nemoj ispod ove linije raditi
