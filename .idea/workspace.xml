@@ -45,11 +45,15 @@
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/pacijent" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Kssbc\Documents\GitHub\eir\pacijent" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Kssbc\Documents\GitHub\eir\pacijent" />
       <recent name="C:\Users\User\Desktop\eir-master\clinic\templates" />
       <recent name="C:\Users\User\Desktop\projekat\clinic\templates" />
     </key>

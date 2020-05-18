@@ -1,7 +1,8 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import auth
-from clinic.models import Pacijent, Lekar, Admin
+from clinic.models import  Lekar, Admin
+from pacijent.models import Pacijent
 from django.contrib import messages
 from datetime import date
 
@@ -62,12 +63,14 @@ def loginKorisnik(request):
             temp = list(Pacijent.objects.filter(email_adresa=email_adresa).values())
             recnik = temp[0]
             request.session['lozinka'] = lozinka
-            # ime = recnik.get('ime')
 
             print(recnik.get('aktiviran'))
-            if not recnik.get('aktiviran') == 1:
-                messages.info(request, "Email koji ste uneli nije još verifikovan!")
-                return redirect('loginKorisnik')
+            if recnik.get('aktiviran') == -1:
+                return render(request, 'login.html',
+                              {'poruka': "Email koji ste uneli nije još verifikovan!"})
+            if recnik.get('aktiviran') == 0:
+                return render(request, 'login.html',
+                              {'poruka': "Email koji ste uneli nije još verifikovan od strane administratora!" })
 
             request.session['ime'] = recnik.get('ime')
             request.session['prezime'] = recnik.get('prezime')

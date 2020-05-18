@@ -28,6 +28,9 @@
 					{% if messages|length == 1 %}
                         Pogrešno korisničko ime ili lozinka
                     {% endif %}
+                        {% if poruka != "" %}
+                            <br> <h4 style="color: red;">{{poruka}}</h4>
+                        {% endif %}
 					</label></th>
 				</tr>
             </table>
