@@ -67,7 +67,9 @@
             </tbody>
         </table> 
     </form>
-
+    {% if poruka != "" %}
+        <h4 style="color: red;">{{poruka}}</h4>
+    {% endif %}
     <script>
         function logovanje() {
         var at = document.getElementById("email").value.indexOf("@");
@@ -113,6 +115,7 @@
         }
         }
     </script>
+    {{poruka}}
 </body>
 
 <style>

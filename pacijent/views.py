@@ -48,14 +48,11 @@ def registracijaPacijent(request):
 
             if Admin.objects.filter(email_adresa=email_adresa).exists() or Pacijent.objects.filter(
                     email_adresa=email_adresa).exists() or Lekar.objects.filter(email_adresa=email_adresa).exists():
-                # print("Email adresa je vec zauzeta")
-                messages.info(request, "Email adresa je vec zauzeta")
-                return render('registracijaPacijent')
+                return render(request, 'registracijaPacijent.html', {'poruka':"Email adresa je vec zauzeta!"})
 
             elif "[" in ime or "]" in ime or "[NPL]" in ime:
                 # print("ime ne sme da sadrzi [NPL]")
-                messages.info(request, "ime ne sme da sadrzi karaktere [ ili ]")
-                return redirect('registracijaPacijent')
+                return render(request, 'registracijaPacijent.html', {'poruka':"Ime ne sme da sadrzi karaktere [ ili ] !"})
 
             pacijent = Pacijent.objects.create(email_adresa=email_adresa, lozinka=lozinka, ime=ime, prezime=prezime,
                                                broja_telefona=broja_telefona,
@@ -84,6 +81,7 @@ def registracijaPacijent(request):
         else:
             return render(request, 'pacijent/registracijaPacijent.html')
     except:
+        print("Ovde je prosao!\n")
         return redirect('registracijaPacijent')
 
 
