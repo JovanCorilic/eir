@@ -124,8 +124,8 @@ USE_TZ = False
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'petrovicmarija268@gmail.com'
-EMAIL_HOST_PASSWORD = 'battlefield21'
+EMAIL_HOST_USER = 'aplikacijaklinika@gmail.com'
+EMAIL_HOST_PASSWORD = 'asdfgh12#'
 EMAIL_PORT = 587
 
 # Static files (CSS, JavaScript, Images)

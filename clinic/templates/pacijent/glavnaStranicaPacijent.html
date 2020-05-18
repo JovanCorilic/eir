@@ -37,11 +37,11 @@
           <tr>
             {% if lokacija == 1.5 %}
             <td colspan="3">
-            <div class="links"><form method="POST" action="promenaLicniPodaciPacijent" >{% csrf_token %}<input type="submit" value="Potvrdite promenu"></div>
+            <div class="links"><form method="POST" action="promenaLicniPodaciPacijent" >{% csrf_token %}<input type="submit" value="Potvrdite promenu" style="width:100%"></div>
             </td>
             {% else %}
             <td colspan="2">
-            <div class="links"><form method="POST" action="promenaLicniPodaciPacijent" >{% csrf_token %}<input type="submit" value="Promenite Informacije o Vama"></form></div>
+            <div class="links"><form method="POST" action="promenaLicniPodaciPacijent" >{% csrf_token %}<input type="submit" value="Promenite Informacije o Vama" style="width:100%"></form></div>
             </td>
             {% endif %}
           </tr>
@@ -143,7 +143,7 @@
         <td>{{sifra}}</td>
         </tr>
         <tr>
-        <td>Datum pregleda</td>
+        <td>Datum registracije</td>
         <td>{{datum}}</td>
         </tr>
         <tr>
