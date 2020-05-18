@@ -1128,7 +1128,7 @@ def activate(request, uidb64, token):
         user.aktiviran = 0
         user.save()
         # return redirect('home')
-        return HttpResponse('Hvala na vašoj email konfrmacije, sada možete da se ulogujete.')
+        return HttpResponse('Hvala na vašoj email konfrmacije, sada čekate potvrdu administratora.')
     else:
         return HttpResponse('Aktivacioni link nije validan')
 
