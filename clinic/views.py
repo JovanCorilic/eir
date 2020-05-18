@@ -974,7 +974,7 @@ def NadjiPacijente(email):
     if pacijentiOBJ.__len__() != 0:
         odgovor += "<tr class=\"tr\"><th class=\"th\">Ime</th><th class=\"th\">Prezime</th><th class=\"th\">Adresa " \
                    "Prebivališta</th><th class=\"th\">Država</th><th class=\"th\">Grad</th><th class=\"th\">Broja " \
-                   "Telefona</th><th class=\"th\">Jedinstveni Broj Osiguranika</th><th class=\"th\"></th></tr> "
+                   "Telefona</th><th class=\"th\">Jedinstveni Broj Osiguranika</th></tr> "
 
         for pacijent in pacijentiOBJ:
             odgovor += "<tr><td class=\"td\">" + pacijent.ime + "</td><td class=\"td\">" + pacijent.prezime + "</td>" \
@@ -987,14 +987,13 @@ def NadjiPacijente(email):
 
 
 def PogledajStanje(request):
-    try:
+
         email = ""
         if 'email' in request.session:
             email = request.session['email']
         map = VratiFinansije(email)
         return render(request, "pogledajStanje.html", {'map': map})
-    except:
-        return HttpResponse('<h1>Error 400</h1>Bad request', status=400)
+
 
 
 def VratiFinansije(email):
@@ -1014,9 +1013,9 @@ def VratiFinansije(email):
 
     for preg in Pregled.objects.filter(klinika=klinika, vreme__range=[sdate, bdate]):
         if preg.zakazan != "Prazno":
-            odgovor += "<tr>" \
-                       "<td>" + preg.zakazan + "</td>" \
-                                               "<td>" + preg.vreme + "</td>" \
+            odgovor += "<tr>" + \
+                       "<td>" + preg.zakazan.__str__() + "</td>" \
+                                               "<td>" + preg.vreme.__str__() + "</td>" \
                                                                      "<td>" + (
                                    len(preg.tip_pregleda) * 100 + len(preg.sala) * 10).__str__() + " din</td>" \
                                                                                                    "</tr>"
@@ -1031,7 +1030,15 @@ def VratiFinansije(email):
     if ukupno == 0:
         return "<h2>Nemate jos ni jedan odradjen pregled</h2>"
 
-    return odgovor + "</table>"
+    return odgovor + "</table>" + "</tr></table>" + \
+           "<style>.tooltip {position: relative;display: inline-block;border-bottom: 1px dotted black;}.tooltip " \
+           ".tooltiptext {visibility: hidden;width: 120px;background-color: black;color: #fff;text-align: " \
+           "center;border-radius: 6px;padding: 5px 0;position: absolute;z-index: 1;}.tooltip:hover .tooltiptext {  " \
+           "visibility: visible;} .table { font-family: arial, sans-serif; border-collapse: collapse; } " \
+           ".td { border: 1px solid #dddddd; text-align: left; padding: 8px; } .th { border: 1px solid #dddddd; " \
+           "text-align: left; padding: 8px; } .even { background-color: #4CAa50; } .tr{ " \
+           "padding:5px; background-color: #60b060; } .th{ padding:5px; } input[type=submit]:hover { " \
+           "background-color: #111; } input[type=submit]:hover:not(.meni) { background-color: #01b601; }</style> "
 
 
 def OdobriAkaunt(request):
@@ -1060,9 +1067,9 @@ def OdobriAkaunt(request):
             if uloga == 'ADMIN':
                 org = Admin.objects.filter(email_adresa=email)[0].naziv_klinike
                 niz = []
-                for k in Pacijent.objects.filter(aktiviran=-1):
+                for k in Pacijent.objects.filter(aktiviran=0):
                     niz.extend([k])
-                return render(request, 'odobriOdmor.html', {'niz': niz})
+                return render(request, 'odobriAkaunt.html', {'niz': niz})
             return HttpResponse('<h1>Error 400</h1>Bad request<br />Nemate pravo da pristupite ovoj stranici',
                                 status=400)
     except:
