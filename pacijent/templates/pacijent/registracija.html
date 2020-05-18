@@ -18,6 +18,9 @@
         Jedinstveni broj osiguranika: <input type="text" id="jedinstveni" name="jedinstveni"><br>
         <br>
         <input type="submit" value="Registruj se"> 
+        {% if poruka != "" %}
+        <h4 style="color: red;">{{poruka}}</h4>
+        {% endif %}
     </form>
 
     <script>

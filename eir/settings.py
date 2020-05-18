@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'clinic.apps.ClinicConfig',
     'korisnik.apps.KorisnikConfig',
+    'pacijent.apps.PacijentConfig',
 ]
 
 # AUTH_USER_MODEL = 'clinic.Pacijent'
