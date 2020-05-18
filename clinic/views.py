@@ -1060,9 +1060,9 @@ def OdobriAkaunt(request):
             if uloga == 'ADMIN':
                 org = Admin.objects.filter(email_adresa=email)[0].naziv_klinike
                 niz = []
-                for k in Pacijent.objects.filter(aktiviran=-1):
+                for k in Pacijent.objects.filter(aktiviran=0):
                     niz.extend([k])
-                return render(request, 'odobriOdmor.html', {'niz': niz})
+                return render(request, 'odobriAkaunt.html', {'niz': niz})
             return HttpResponse('<h1>Error 400</h1>Bad request<br />Nemate pravo da pristupite ovoj stranici',
                                 status=400)
     except:
