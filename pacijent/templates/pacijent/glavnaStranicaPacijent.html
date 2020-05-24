@@ -13,7 +13,8 @@
           <li><form method="POST" action="licniPodaciPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Informacije of vama"></form></li>
           <li><form method="POST" action="zdravstveniKartonPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Zdravstveni karton"></form></li>
           <li><form method="POST" action="prikazKlinikaPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Prikaži klinike"></form></li>
-          <li><form method="POST" action="sviPreglediPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Prikaži sve moje preglede"></form></li>
+          <li><form method="POST" action="sviPreglediPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Prikaži nadolazeće preglede"></form></li>
+          <li><form method="POST" action="prosliPreglediPacijent" >{% csrf_token %}<input type="submit" class="meni" value="Prikaži preglede koji su prošli"></form></li>
           <li><form method="POST" action="sveOperacijePacijent" >{% csrf_token %}<input type="submit" class="meni" value="Prikaži sve moje operacije"></form></li>
           <li><form method="POST" action="../IzlogujSe" >{% csrf_token %}<input type="submit" class="meni" value="Izloguj se" ></form></li>
       </ul>
@@ -376,6 +377,77 @@
         </td>
         <td>{{operacija.tip_operacije}}</td>
         </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+
+        {% elif lokacija == 6 %}
+      <table class="minimalistBlack">
+        <thead>
+        <tr>
+        <th>Vreme</th>
+        <th>Klinika</th>
+        <th>Sala</th>
+        <th>Lekar</th>
+        <th>Tip pregleda</th>
+        <th>Diagnoza</th>
+        <th>Lekovi</th>
+        <th>Ocena lekara</th>
+        <th>Ocena klinike</th>
+        <th>Ocena</th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        </tfoot>
+        <tbody>
+        {% for pregled in pregledi %}
+        {% if pregled.prihvacen == "da" %}
+          <tr>
+          <td>{{pregled.vreme}}</td>
+          <td>{{pregled.klinika}}</td>
+          <td>{{pregled.sala}}</td>
+          <td>
+            {% for lekar in lekari %}
+            {% if lekar.email_adresa == pregled.lekar %}
+            {{lekar.ime}} {{lekar.prezime}}
+            {% endif %}
+            {% endfor %}
+          </td>
+          <td>{{pregled.tip_pregleda}}</td>
+          <td>{{pregled.diagnoza}}</td>
+          <td>{{pregled.lekovi}}</td>
+
+          {% if pregled.ocenaLekara == -1 %}
+          <td>Niste još ocenili</td>
+          {% else %}
+          <td>{{pregled.ocenaLekara}}</td>
+          {% endif %}
+
+          {% if pregled.ocenaKlinike == -1 %}
+          <td>Niste još ocenili</td>
+          {% else %}
+          <td>{{pregled.ocenaKlinike}}</td>
+          {% endif %}
+          
+          <td>
+            {% if pregled.temp == "da" %}
+            <form method="POST" action="oceniPregledPacijent" >{% csrf_token %}<div id="myDIV"><button id = "id123" name="id123" value = "{{pregled.id}}" style="width:100%">Ocenite</button></div></form>
+            {% endif %}
+          </td>
+          </tr>
+        {% endif %}
         {% endfor %}
         </tbody>
         </table>

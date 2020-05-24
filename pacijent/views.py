@@ -563,3 +563,90 @@ def posaljiPregledPacijent(request):
     else:
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'lokacija': request.session['lokacija']})
+
+def prosliPreglediPacijent(request):
+    if request.method == 'POST':
+        pregledi = Pregled.objects.filter(zakazan=request.session['email'], vreme__lte=datetime.datetime.now()).order_by('-vreme')
+        request.session['lokacija'] = 6
+        lekari = Lekar.objects.all()
+
+        for i in range(len(pregledi)):
+            if pregledi[i].ocenaLekara != -1 and pregledi[i].ocenaKlinike != -1:
+                pregledi[i].temp = "ne"
+            else:
+                pregledi[i].temp = "da"
+
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija'], 'pregledi': pregledi, 'lekari': lekari})
+    else:
+        pregledi = Pregled.objects.filter(zakazan=request.session['email'],
+                                          vreme__lte=datetime.datetime.now()).order_by('-vreme')
+        request.session['lokacija'] = 6
+        lekari = Lekar.objects.all()
+
+        for i in range(len(pregledi)):
+            if pregledi[i].ocenaLekara != -1 and pregledi[i].ocenaKlinike != -1:
+                pregledi[i].temp = "ne"
+            else:
+                pregledi[i].temp = "da"
+
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija'], 'pregledi': pregledi, 'lekari': lekari})
+
+def oceniPregledPacijent(request):
+    if request.method == 'POST':
+        idPregled = request.POST['id123']
+        pregled = Pregled.objects.get(id=idPregled)
+        lekar = Lekar.objects.get(email_adresa=pregled.lekar)
+
+        return render(request, 'pacijent/oceniPregledPacijent.html',
+                      {'pregled': pregled, 'lekar': lekar})
+    else:
+        return render(request, 'pacijent/oceniPregledPacijent.html',
+                      )
+
+def posaljiOcenuPacijent(request):
+    if request.method == 'POST':
+        ocenaLekar = request.POST['kojaOcenaLekar']
+        ocenaKlinike = request.POST['kojaOcenaKlinika']
+        idPregled = request.POST['idPregled']
+        pregled = Pregled.objects.get(id=idPregled)
+        lekar = Lekar.objects.get(email_adresa=pregled.lekar)
+        if ocenaKlinike=="Nema ocenu" or ocenaLekar=="Nema ocenu":
+            return render(request, 'pacijent/oceniPregledPacijent.html',
+                          {'pregled': pregled, 'lekar': lekar, 'poruka':"Mora i klinika i lekar biti ocenjen!"})
+
+        klinika = Klinika.objects.get(naziv=pregled.klinika)
+
+        if(lekar.ocena==-1):
+            lekar.ocena = float(ocenaLekar)
+        else:
+            lekar.ocena = (lekar.ocena + float(ocenaLekar))/2
+        pregled.ocenaLekara = float(ocenaLekar)
+
+        if(klinika.ocena==-1):
+            klinika.ocena = float(ocenaKlinike)
+        else:
+            klinika.ocena = (lekar.ocena + float(ocenaKlinike))/2
+        pregled.ocenaKlinike = float(ocenaKlinike)
+
+        pregled.save()
+        lekar.save()
+        klinika.save()
+
+        #-----------------
+        pregledi = Pregled.objects.filter(zakazan=request.session['email'],
+                                          vreme__lte=datetime.datetime.now()).order_by('-vreme')
+        request.session['lokacija'] = 6
+        lekari = Lekar.objects.all()
+
+        for i in range(len(pregledi)):
+            if pregledi[i].ocenaLekara != -1 and pregledi[i].ocenaKlinike != -1:
+                pregledi[i].temp = "ne"
+            else:
+                pregledi[i].temp = "da"
+
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija'], 'pregledi': pregledi, 'lekari': lekari})
+    else:
+        return redirect('posaljiOcenuPacijent')

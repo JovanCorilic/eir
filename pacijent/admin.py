@@ -7,7 +7,7 @@ class PacijentAdmin(admin.ModelAdmin):
     search_fields = ("ime", "prezime")
 
 class PregledAdmin(admin.ModelAdmin):
-    list_display = ("id", "klinika", "zakazan", "lekar", "sala", "tip_pregleda", "vreme", "sifra_bolesti", "lekovi", "diagnoza", "temp", "prihvacen")
+    list_display = ("id", "klinika", "zakazan", "lekar", "sala", "tip_pregleda", "vreme", "sifra_bolesti", "lekovi", "diagnoza", "temp", "prihvacen", "ocenaLekara", "ocenaKlinike")
     list_filter = ("id", "klinika", "lekar", "tip_pregleda", "sala")
     search_fields = ("id", "klinika", "lekar", "tip_pregleda", "sala")
 

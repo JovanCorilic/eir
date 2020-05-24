@@ -27,5 +27,8 @@ urlpatterns = [
          name='sortiranjeSveOperacijePacijent'),
     path('pacijent/zakazivanjePregledaPacijent', views.zakazivanjePregledaPacijent, name='zakazivanjePregledaPacijent'),
     path('pacijent/posaljiPregledPacijent', views.posaljiPregledPacijent, name='posaljiPregledPacijent'),
+    path('pacijent/prosliPreglediPacijent', views.prosliPreglediPacijent, name='prosliPreglediPacijent'),
+    path('pacijent/oceniPregledPacijent', views.oceniPregledPacijent, name='oceniPregledPacijent'),
+    path('pacijent/posaljiOcenuPacijent', views.posaljiOcenuPacijent, name='posaljiOcenuPacijent'),
 
 ]
