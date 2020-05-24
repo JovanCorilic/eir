@@ -42,6 +42,8 @@ class Pregled(models.Model):
     lekovi = models.CharField(max_length=500, default=None)
     temp = "da"
     prihvacen = models.CharField(max_length=500, default="da")
+    ocenaLekara = models.FloatField(default=-1)
+    ocenaKlinike = models.FloatField(default=-1)
 
     objects = UserManager()
 

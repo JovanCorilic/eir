@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Eir - Registracija pacijent</title>   
+        <link rel="stylesheet" type="text/css" href="minimalistBlack.css" class="minimalistBlack">
+         
+    </head>
+<body>
+    <form method="POST" action="posaljiOcenuPacijent">
+        {% csrf_token %}
+        <table class="minimalistBlack">
+            <thead>
+            <tr>
+            <th>Atribut</th>
+            <th>Ocena</th>
+            </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                  <td colspan="2">
+                    <button id="idPregled" name="idPregled" value="{{pregled.id}}" style="width:100%">Pošalji ocenu</button>
+                  </td>
+                </tr>
+            </tfoot>
+            <tbody>
+            <tr>
+            <td>Lekar {{lekar.ime}} {{lekar.prezime}}</td>
+            <td>
+                <select id="kojaOcenaLekar" name="kojaOcenaLekar">
+                    <option value="Nema ocenu">Nema ocenu</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </td>
+            </tr>
+            <tr>
+            <td>Klinika {{pregled.klinika}}</td>
+            <td>
+                <select id="kojaOcenaKlinika" name="kojaOcenaKlinika">
+                    <option value="Nema ocenu">Nema ocenu</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </td>
+            </tr>
+            </tbody>
+        </table> 
+    </form>
+    <h4 style="color: red;">{{poruka}}</h4>
+</body>
+
+<style>
+    table.minimalistBlack {
+    font-family: "Times New Roman", Times, serif;
+    border: 3px solid #2EF259;
+    text-align: left;
+    border-collapse: collapse;
+    }
+    table.minimalistBlack td, table.minimalistBlack th {
+    border: 1px solid #000000;
+    padding: 5px 4px;
+    }
+    table.minimalistBlack tbody td {
+    font-size: 18px;
+    }
+    table.minimalistBlack thead {
+    background: #69FF5C;
+    background: -moz-linear-gradient(top, #8eff85 0%, #78ff6c 66%, #69FF5C 100%);
+    background: -webkit-linear-gradient(top, #8eff85 0%, #78ff6c 66%, #69FF5C 100%);
+    background: linear-gradient(to bottom, #8eff85 0%, #78ff6c 66%, #69FF5C 100%);
+    border-bottom: 3px solid #1FD87F;
+    }
+    table.minimalistBlack thead th {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000;
+    text-align: left;
+    }
+    table.minimalistBlack tfoot td {
+        font-size: 18px;
+        font-weight: bold;
+        color: #000000;
+        }
+</style>
+
+</html>

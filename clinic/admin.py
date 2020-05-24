@@ -17,7 +17,7 @@ class SnippetAdmin(admin.ModelAdmin):
 
 
 class LekarAdmin(admin.ModelAdmin):
-    list_display = ("email_adresa","lozinka", "ime", "prezime", "broja_telefona", "jedinstveni_broj_osiguranika", "radno_mesto", "pozicija")
+    list_display = ("email_adresa","lozinka", "ime", "prezime", "broja_telefona", "jedinstveni_broj_osiguranika", "radno_mesto", "pozicija", "ocena")
     list_filter = ("ime", "prezime", "pozicija", "radno_mesto","email_adresa","lozinka")
     search_fields = ("ime", "prezime", "pozicija", "radno_mesto")
 
@@ -29,7 +29,7 @@ class SalaAdmin(admin.ModelAdmin):
 
 
 class KlinikaAdmin(admin.ModelAdmin):
-    list_display = ("naziv", "adresa", "opis")
+    list_display = ("naziv", "adresa", "opis", "ocena")
     list_filter = ("naziv", "opis")
     search_fields = ("ime", "adresa", "opis")
 
