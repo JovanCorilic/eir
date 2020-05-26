@@ -55,5 +55,7 @@ class Operacije(models.Model):
     sala = models.CharField(max_length=500, default=None)
     tip_operacije = models.CharField(max_length=500, default=None)
     vreme = models.DateTimeField(max_length=500, default=None)
+    ocenaLekara = models.CharField(max_length=500,default="-1")
+    ocenaKlinike = models.FloatField(default=-1)
 
     objects = UserManager()

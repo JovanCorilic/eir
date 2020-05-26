@@ -13,7 +13,7 @@ class PregledAdmin(admin.ModelAdmin):
 
 
 class OperacijeAdmin(admin.ModelAdmin):
-    list_display = ("id", "klinika", "pacijent", "lekari", "sala", "tip_operacije", "vreme")
+    list_display = ("id", "klinika", "pacijent", "lekari", "sala", "tip_operacije", "vreme", "ocenaLekara", "ocenaKlinike")
     list_filter = ("id", "klinika", "tip_operacije", "sala")
     search_fields = ("id", "klinika", "tip_operacije", "sala")
 

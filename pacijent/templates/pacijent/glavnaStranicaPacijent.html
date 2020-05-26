@@ -345,6 +345,9 @@
         <th>Sala</th>
         <th>Lekari</th>
         <th>Tip operacije</th>
+        <th>Ocena lekara</th>
+        <th>Ocena klinike</th>
+        <th>Ocenite</th>
         </tr>
         </thead>
         <tfoot>
@@ -376,6 +379,23 @@
           {% endwith %}
         </td>
         <td>{{operacija.tip_operacije}}</td>
+        {% if operacija.ocenaLekara == "-1" %}
+          <td>Niste još ocenili</td>
+          {% else %}
+          <td>{{operacija.ocenaLekara}}</td>
+          {% endif %}
+
+          {% if operacija.ocenaKlinike == -1 %}
+          <td>Niste još ocenili</td>
+          {% else %}
+          <td>{{operacija.ocenaKlinike}}</td>
+          {% endif %}
+        <td>
+          {% if operacija.ocenaKlinike == -1 and operacija.ocenaLekara == "-1" %}
+          <form method="POST" action="oceniOperacijuPAcijent" >{% csrf_token %}
+            <button id="idOperacije" name="idOperacije" value="{{operacija.id}}" style="width:100%">Ocenite</button>
+            {% endif %}
+        </td>
         </tr>
         {% endfor %}
         </tbody>
