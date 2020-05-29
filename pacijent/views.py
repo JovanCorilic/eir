@@ -299,6 +299,27 @@ def pretragaKlinikaPacijent(request):
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'lokacija': request.session['lokacija'], 'klinike': klinike})
 
+def pretragaKlinikaDatumPacijent(request):
+    if request.method == 'POST':
+        datum = request.POST['unosDatum']
+        try:
+            pregledi = Pregled.objects.filter(vreme__date=datum, prihvacen="da", vreme__gte=datetime.datetime.now())
+        except :
+            klinike = Klinika.objects.all()
+            return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                          {'lokacija': request.session['lokacija'], 'klinike': klinike})
+        klinike = []
+        for pregled in pregledi:
+            if Klinika.objects.get(naziv=pregled.klinika) in klinike:
+                continue
+            klinike.append(Klinika.objects.get(naziv=pregled.klinika))
+        request.session['lokacija'] = 3
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      {'lokacija': request.session['lokacija'], 'klinike': klinike})
+    else:
+        return render(request, 'pacijent/glavnaStranicaPacijent.html',
+                      )
+
 
 def prikazLekaraKlinikePacijent(request):
     if request.method == 'POST':
@@ -445,7 +466,7 @@ def otkaziPregledPacijent(request):
         pregled.zakazan = "Prazno"
         pregled.save()
         provera = datetime.datetime.now() - datetime.timedelta(days=1)
-        pregledi = Pregled.objects.filter(zakazan=request.session['email']).order_by('-vreme')
+        pregledi = Pregled.objects.filter(zakazan=request.session['email'], vreme__gte=datetime.datetime.now()).order_by('-vreme')
         request.session['lokacija'] = 4
         lekari = Lekar.objects.all()
         sada = datetime.datetime.now()

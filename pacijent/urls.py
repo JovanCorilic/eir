@@ -32,5 +32,6 @@ urlpatterns = [
     path('pacijent/posaljiOcenuPacijent', views.posaljiOcenuPacijent, name='posaljiOcenuPacijent'),
     path('pacijent/oceniOperacijuPAcijent', views.oceniOperacijuPAcijent, name='oceniOperacijuPAcijent'),
     path('pacijent/posaljiOcenuOperacijaPacijent', views.posaljiOcenuOperacijaPacijent, name='posaljiOcenuOperacijaPacijent'),
+    path('pacijent/pretragaKlinikaDatumPacijent', views.pretragaKlinikaDatumPacijent, name='pretragaKlinikaDatumPacijent'),
 
 ]
