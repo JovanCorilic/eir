@@ -255,6 +255,8 @@ def prikazKlinikaPacijentSortirano(request):
             poCemu = "naziv"
         elif temp == "Sortiraj po adresi":
             poCemu = "adresa"
+        elif temp == "Sortiraj po oceni":
+            poCemu = "-ocena"
         else:
             poCemu = "opis"
         klinike = Klinika.objects.order_by(poCemu)
@@ -267,6 +269,8 @@ def prikazKlinikaPacijentSortirano(request):
             poCemu = "naziv"
         elif temp == "Sortiraj po adresi":
             poCemu = "adresa"
+        elif temp == "Sortiraj po oceni":
+            poCemu = "ocena"
         else:
             poCemu = "opis"
         klinike = Klinika.objects.order_by(poCemu)
@@ -320,6 +324,8 @@ def sortiranjeLekaraPacijent(request):
             tip = 'prezime'
         elif 'sortirajEmail' in request.POST:
             tip = 'email_adresa'
+        elif 'sortirajOcena' in request.POST:
+            tip = '-ocena'
         else:
             tip = 'pozicija'
 
@@ -338,14 +344,18 @@ def pretragaLekaraPacijent(request):
     if request.method == 'POST':
         if 'pretragaIme' in request.POST:
             pretrazuje = "ime"
-        else:
+        elif 'pretragaPrezime' in request.POST:
             pretrazuje = "prezime"
+        else:
+            pretrazuje = "ocena"
         sadrzaj = request.POST['unosPretraga']
 
         if (pretrazuje == "ime"):
             lekari = Lekar.objects.filter(radno_mesto=request.session['nazivKlinike'], ime__icontains=sadrzaj)
-        else:
+        elif pretrazuje == "prezime":
             lekari = Lekar.objects.filter(radno_mesto=request.session['nazivKlinike'], prezime__icontains=sadrzaj)
+        else:
+            lekari = Lekar.objects.filter(radno_mesto=request.session['nazivKlinike'], ocena__icontains=sadrzaj)
         request.session['lokacija'] = 3.5
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'lokacija': request.session['lokacija'], 'lekari': lekari})
