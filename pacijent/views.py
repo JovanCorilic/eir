@@ -746,3 +746,14 @@ def posaljiOcenuOperacijaPacijent(request):
                       {'lokacija': request.session['lokacija'], 'operacije': operacije, 'lekari': lekari})
     else:
         redirect('posaljiOcenuOperacijaPacijent')
+
+def vecZakazaniLekarPacijent(request):
+    if request.method == 'POST':
+        request.session['lokacija'] = 7
+        idLekara = request.POST['kojiLekar2']
+        pregledi = Pregled.objects.filter(lekar=idLekara, vreme__gte=datetime.datetime.now())
+        lekar = Lekar.objects.get(email_adresa=idLekara)
+        return render(request, 'pacijent/glavnaStranicaPacijent.html', {'lokacija': request.session['lokacija'],
+                                                                        'pregledi': pregledi, 'lekar': lekar})
+    else:
+        redirect('vecZakazaniLekarPacijent')

@@ -263,6 +263,9 @@
         <td><form method="POST" action="zakazivanjePregledaPacijent" >{% csrf_token %}
           <button id = "kojiLekar" name="kojiLekar" value="{{lekar.email_adresa}}" style="width:100%">Zakaži</button>
         </form>
+        <form method="POST" action="vecZakazaniLekarPacijent">{% csrf_token %}
+          <button id = "kojiLekar2" name="kojiLekar2" value="{{lekar.email_adresa}}" style="width:100%">Već zakazani pregledi</button>
+        </form>
           </td>
       </tr>
         {% endfor %}
@@ -480,6 +483,39 @@
         {% endfor %}
         </tbody>
         </table>
+        
+        {% elif lokacija == 7 %}
+        <h4 style="color: royalblue;">Naziv: {{lekar.ime}} {{lekar.prezime}} Pozicija: {{lekar.pozicija}}</h4>
+        <table class="minimalistBlack">
+          <thead>
+          <tr>
+          <th>Vreme</th>
+          <th>Klinika</th>
+          <th>Sala</th>
+          <th>Tip pregleda</th>
+          </tr>
+          </thead>
+          <tfoot>
+          <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          </tr>
+          </tfoot>
+          <tbody>
+          {% for pregled in pregledi %}
+          {% if pregled.prihvacen == "da" and pregled.zakazan != "Prazno" %}
+            <tr>
+            <td>{{pregled.vreme}}</td>
+            <td>{{pregled.klinika}}</td>
+            <td>{{pregled.sala}}</td>
+            <td>{{pregled.tip_pregleda}}</td>
+            </tr>
+          {% endif %}
+          {% endfor %}
+          </tbody>
+          </table>
 
       {% endif %}
       
