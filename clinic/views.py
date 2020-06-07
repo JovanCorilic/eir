@@ -44,6 +44,8 @@ def index(req):
 
 
 def IzlogujSe(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     ime = ""  # ako ne postoji
     email = ""
     uloga = ""
@@ -55,6 +57,8 @@ def IzlogujSe(request):
 
 
 def register_clinic_admin(req):
+    if 'uloga' not in req.session or req.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     return render(req, 'superadmin/register.html')
 
 
@@ -70,14 +74,20 @@ def login_pacijent(req):
 
 
 def izmeni_lekara(req):
+    if 'uloga' not in req.session or req.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     return render(req, 'lekar/izmeniInformacijeLekara.html')
 
 
 def izmeni_kliniku(req):
+    if 'uloga' not in req.session or req.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     return render(req, 'klinika/izmeniInformacijeKlinike.html')
 
 
 def izmeni_salu(req):
+    if 'uloga' not in req.session or req.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     return render(req, 'sala/izmeniInformacijeSale.html')
 
 
@@ -85,6 +95,8 @@ def izmeni_salu(req):
 
 
 def registerLekara(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     if request.method == 'POST':
         email_adresa = request.POST['email']
         lozinka = 'password'
@@ -124,6 +136,8 @@ def registerLekara(request):
 
 
 def registerAdmina(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     if request.method == 'POST':
         email_adresa = request.POST['email']
         lozinka = 'password'
@@ -162,6 +176,8 @@ def registerAdmina(request):
 
 
 def promeniLozinku(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     if request.method == 'POST':
         lozinka = request.POST['password']
         email_adresa = request.POST['email']
@@ -189,6 +205,8 @@ def promeniLozinku(request):
 
 
 def Omeni(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     if request.method == 'POST':
         email_adresa = ""
         uloga = ""
@@ -236,6 +254,8 @@ def Omeni(request):
 
 
 def IzmeniKorisnika(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     if request.method == 'POST':
         # email_adresa = request.POST['email'] #ne jos
         lozinka = request.POST['password']
@@ -282,12 +302,15 @@ def IzmeniKorisnika(request):
 
 
 def pogledajPacijente(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     pacijenti = Pacijent.objects.all()
     return render(request, 'pogledajPacijente.html', {'pacijenti': pacijenti})
 
 
 def PogledajPacijenta(request):
-    odabrani = None
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
 
     for pacijent in Pacijent.objects.all():
         try:
@@ -299,8 +322,9 @@ def PogledajPacijenta(request):
 
 
 def pogledajSale(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     uloga = ""
-    prezime = ""
     if 'uloga' in request.session:
         uloga = request.session['uloga']
 
@@ -309,6 +333,8 @@ def pogledajSale(request):
 
 
 def pogledajSalu(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     odabrani = None
     for salaa in Sala.objects.all():
         try:
@@ -321,6 +347,8 @@ def pogledajSalu(request):
 
 
 def IzmeniSalu(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     if request.method == 'POST':
         naziv = request.POST['naziv']
         opis = request.POST['opis']
@@ -338,6 +366,8 @@ def IzmeniSalu(request):
 
 
 def ObrisiSalu(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     try:
         Sala.objects.filter(naziv=request.POST['koga']).delete()
         return redirect('index')
@@ -346,6 +376,8 @@ def ObrisiSalu(request):
 
 
 def DodajSalu(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     if request.method == 'POST':
         broj = request.POST['broj']
         naziv = request.POST['naziv']
@@ -373,6 +405,8 @@ def DodajSalu(request):
 
 
 def pogledajKlinike(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     uloga = ""
     if 'uloga' in request.session:
         uloga = request.session['uloga']
@@ -382,6 +416,8 @@ def pogledajKlinike(request):
 
 
 def pogledajKliniku(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     odabrani = None
     for kli in Klinika.objects.all():
         try:
@@ -394,6 +430,8 @@ def pogledajKliniku(request):
 
 
 def IzmeniKliniku(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     if request.method == 'POST':
         naziv = request.POST['naziv']
         opis = request.POST['opis']
@@ -411,11 +449,15 @@ def IzmeniKliniku(request):
 
 
 def pogledajLekare(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     kk = Lekar.objects.all()
     return render(request, 'pogledajLekare.html', {'lekari': kk})
 
 
 def PogledajLekara(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     odabrani = None
     for kli in Lekar.objects.all():
         try:
@@ -428,6 +470,8 @@ def PogledajLekara(request):
 
 
 def IzmeniLekara(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     if request.method == 'POST':
         ime = request.POST['ime']
         prezime = request.POST['prezime']
@@ -451,6 +495,8 @@ def IzmeniLekara(request):
 
 
 def ObrisiLekara(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     try:
         Lekar.objects.filter(email_adresa=request.POST['koga']).delete()
         return redirect('index')
@@ -459,6 +505,8 @@ def ObrisiLekara(request):
 
 
 def PogledajTermine(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     uloga = ""
     if 'uloga' in request.session:
         uloga = request.session['uloga']
@@ -487,6 +535,8 @@ def PogledajTermine(request):
 
 
 def PogledajTermin(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     uloga = ""
     if 'uloga' in request.session:
         uloga = request.session['uloga']
@@ -545,6 +595,8 @@ def PogledajTermin(request):
 
 
 def ObrisiTermin(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     try:
         Pregled.objects.filter(id=request.POST['koga']).delete()
         return redirect('index')
@@ -553,6 +605,8 @@ def ObrisiTermin(request):
 
 
 def IzmeniTermin(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     if request.method == 'POST':
         id = request.POST['broj']
         lekar = request.POST['lekar']
@@ -579,6 +633,8 @@ def IzmeniTermin(request):
 
 
 def DodajTermin(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     try:
         if request.method == 'POST':
             id = request.POST['broj']
@@ -756,6 +812,8 @@ def napraviMapu2(pregledi, sale):
 
 
 def autoTermin(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     for klinika in Klinika.objects.all():
         kk = Pregled.objects.filter(vreme__range=[date.today(), date.today() + datetime.timedelta(days=1)],
                                     klinika=klinika.naziv)
@@ -802,6 +860,8 @@ def manualTermin(lekar, sala, vreme, klinika, tip_pregleda, request):
 
 
 def DodajOdmor(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     if request.method == 'POST':
         vreme = request.POST['vreme']
         duzina = request.POST['duzina']
@@ -859,6 +919,8 @@ def DodajOdmor(request):
 
 
 def OdobriOdmor(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     try:
         if request.method == 'POST':
             id = request.POST['koga']
@@ -905,6 +967,13 @@ def DaLiImamPregled(email):
     for preg in pregledi:
         if preg.vreme <= datetime.datetime.now() <= preg.vreme + datetime.timedelta(minutes=30):
             if preg.zakazan != "Prazno" and preg.id not in pregledani:
+                print("--------------------")
+                print(preg.id)
+                print("se nalazi?")
+                print(preg.id in pregledani)
+                for sas in pregledani:
+                    print(sas)
+                print("--------------------")
                 return preg
     return None
 
@@ -1002,6 +1071,8 @@ def NadjiPacijente(email):
 
 
 def PogledajStanje(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     email = ""
     if 'email' in request.session:
         email = request.session['email']
@@ -1055,6 +1126,8 @@ def VratiFinansije(email):
 
 
 def OdobriAkaunt(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     try:
         if request.method == 'POST':
             id = request.POST['koga']
@@ -1090,6 +1163,8 @@ def OdobriAkaunt(request):
 
 
 def OdobriPregled(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     # try:
     if request.method == 'POST':
         id = request.POST['koga']
@@ -1128,6 +1203,8 @@ def OdobriPregled(request):
 
 
 def Pregledaj(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     if request.method == 'POST':
         ko = request.POST['ko']
         koga = request.POST['koga']
@@ -1156,7 +1233,7 @@ def Pregledaj(request):
             print("krvna grupa vec postavljena")
         pac.save()
 
-        pregledani.extend(kako)
+        pregledani.append(kako)
         return render(request, 'zakaziOpet.html',
                       {'ko': ko, 'koga': koga, 'kako': kako, 'klinika': lek.radno_mesto, 'lekar': lek.email_adresa,
                        'sala': preg.sala, 'tip_pregleda': preg.tip_pregleda,
@@ -1184,6 +1261,8 @@ def Pregledaj(request):
 
 
 def ZakaziOpet(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
     vr = datetime.datetime.strptime(request.POST['vreme'], '%Y-%m-%d %H:%M:%S')
     i = Pregled.objects.count()
     while Pregled.objects.count() == i:
