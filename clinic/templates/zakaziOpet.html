@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ponovo Zakaži Pregled</title>
+</head>
+<body>
+    <form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
+    <br />
+    <h3>Da li bi ste zeleli da ponovo zakažete pregled ovom pacijentu?</h3>
+    <br />
+        <div class="unos">
+            <table>
+                <tr>
+                    <form method="POST" action="ZakaziOpet" onSubmit="return proveri();">{% csrf_token %}
+                        <input type="hidden" name="koga" value="{{koga}}">
+                        <input type="hidden" name="klinika" value="{{klinika}}">
+                        <input type="hidden" name="lekar" value="{{lekar}}">
+                        <input type="hidden" name="sala" value="{{sala}}">
+                        <input type="hidden" name="tip_pregleda" value="{{tip_pregleda}}">
+                        <input type="hidden" name="vreme" value="{{vreme}}">
+                        <input type="submit" class="sub"  value="DA">
+                    </form>
+				</tr>
+
+				<tr>
+                    <form method="POST" action="index" >{% csrf_token %}<input style="background-color:red"  type="submit" class="sub" value="NE"></form>
+				</tr>
+            </table>
+        </div>
+</body>
+<style>
+        .sub {
+          background-color: #4CAF50;
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          cursor: pointer;
+          font-weight: bold;
+        }
+    </style>
+</html>

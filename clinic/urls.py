@@ -1,7 +1,5 @@
 from django.contrib import admin
-from django.urls import path, include
-from . import views
-from django.conf.urls import url
+from django.urls import path
 from . import views
 
 urlpatterns = [
@@ -10,7 +8,6 @@ urlpatterns = [
     path('', views.index),
     path('superadmin/register', views.register_clinic_admin),
     path('login', views.login_pacijent),
-
     path('lekar/izmeni', views.izmeni_lekara),
     path('sala/izmeni', views.izmeni_salu),
     path('klinika/izmeni', views.izmeni_kliniku),
@@ -45,4 +42,6 @@ urlpatterns = [
     path('PogledajStanje', views.PogledajStanje, name='PogledajStanje'),
     path('OdobriAkaunt', views.OdobriAkaunt, name='OdobriAkaunt'),
     path('OdobriPregled', views.OdobriPregled, name='OdobriPregled'),
+    path('Pregledaj', views.Pregledaj, name='Pregledaj'),
+    path('ZakaziOpet', views.ZakaziOpet, name='ZakaziOpet'),
 ]

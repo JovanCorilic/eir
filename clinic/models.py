@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, UserManager
 import datetime
 
+
 class Snippet(models.Model):
     title = models.CharField(max_length=50)
     body = models.TextField()
@@ -13,9 +14,6 @@ class Snippet(models.Model):
 
     def body_preview(self):
         return self.body[:50]
-
-
-
 
 
 class Lekar(models.Model):
@@ -76,14 +74,8 @@ class Klinika(models.Model):
         return self.adresa
 
 
-
-
-
-
-
-
 class Odmor(models.Model):
-    id = models.CharField(max_length=500, primary_key=True,  default=None)
+    id = models.CharField(max_length=500, primary_key=True, default=None)
     klinika = models.CharField(max_length=500, default=None)
     lekar = models.CharField(max_length=500, default=None)
     vreme = models.DateTimeField(max_length=500, default=None)
@@ -94,4 +86,3 @@ class Odmor(models.Model):
 
     def __str__(self):
         return self.lekar.__str__() + " ima odmor " + self.vreme.__str__() + " od " + self.duzina.__str__() + " dana"
-

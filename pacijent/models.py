@@ -1,8 +1,10 @@
 from django.db import models
-from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, UserManager
 import datetime
+
+
 # Create your models here.
+
 class Pacijent(models.Model):
     email_adresa = models.CharField(max_length=500, primary_key=True, default=None)
     lozinka = models.CharField(max_length=500, default=None)
@@ -29,8 +31,9 @@ class Pacijent(models.Model):
     def __str__(self):
         return self.email_adresa
 
+
 class Pregled(models.Model):
-    id = models.CharField(max_length=500, primary_key=True,  default=None)
+    id = models.CharField(max_length=500, primary_key=True, default=None)
     klinika = models.CharField(max_length=500, default=None)
     zakazan = models.CharField(max_length=500, default=None)
     lekar = models.CharField(max_length=500, default=None)
@@ -47,15 +50,16 @@ class Pregled(models.Model):
 
     objects = UserManager()
 
+
 class Operacije(models.Model):
-    id = models.CharField(max_length=500, primary_key=True,  default=None)
+    id = models.CharField(max_length=500, primary_key=True, default=None)
     klinika = models.CharField(max_length=500, default=None)
     pacijent = models.CharField(max_length=500, default=None)
     lekari = models.CharField(max_length=500, default=None)
     sala = models.CharField(max_length=500, default=None)
     tip_operacije = models.CharField(max_length=500, default=None)
     vreme = models.DateTimeField(max_length=500, default=None)
-    ocenaLekara = models.CharField(max_length=500,default="-1")
+    ocenaLekara = models.CharField(max_length=500, default="-1")
     ocenaKlinike = models.FloatField(default=-1)
 
     objects = UserManager()

@@ -1,5 +1,7 @@
 from calendar import monthrange
-from clinic.models import  Admin, Klinika,  Odmor
+from time import strptime
+
+from clinic.models import Admin, Klinika, Odmor
 from pacijent.models import Pacijent, Pregled
 from django.contrib import messages
 from datetime import date
@@ -9,6 +11,9 @@ import datetime
 import random
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+
+pregledani = []
+
 
 def index(req):
     ime = ""  # ako ne postoji
@@ -26,14 +31,16 @@ def index(req):
 
     radniKalendar = ''
     pacijenti = ''
+    preg = ''
     try:
+        preg = NapraviPregled(email)
         radniKalendar = NapraviRadniKalendar(email)
         pacijenti = NadjiPacijente(email)
     except:
         pass
     return render(req, 'index.html',
                   {'ime': ime, 'email': email, 'uloga': uloga, 'prezime': prezime, 'radniKalendar': radniKalendar,
-                   'pacijenti': pacijenti})
+                   'pacijenti': pacijenti, 'preg': preg})
 
 
 def IzlogujSe(request):
@@ -891,8 +898,30 @@ def OdobriOdmor(request):
         return HttpResponse('<h1>Error 400</h1>Bad request<br />Pogresno ste uneli podatke', status=400)
 
 
+def DaLiImamPregled(email):
+    pregledi = Pregled.objects.filter(lekar=email)
+    if pregledi.__len__() == 0:
+        return None
+    for preg in pregledi:
+        if preg.vreme <= datetime.datetime.now() <= preg.vreme + datetime.timedelta(minutes=30):
+            if preg.zakazan != "Prazno" and preg.id not in pregledani:
+                return preg
+    return None
+
+
+def NapraviPregled(email):
+    if DaLiImamPregled(email) is not None:
+        return "<div class=\"square\"><label style=\"color:white\"><b>IMATE AKTIVAN PREGLED</b></label><form method=\"GET\" action=\"Pregledaj\" >"
+    return " "
+
+
 def NapraviRadniKalendar(email):
-    odgovor = "<h2>Radni Kalendar</h2> <table border=\"1\" class=\"table\" id=\"tabb1\"><tr><td></td>"
+    odgovor = " "
+
+    if DaLiImamPregled(email) is not None:
+        odgovor += "<input type=\"submit\" class=\"meni\" value=\"ZAPOCNI\" ></form>" + "</div>"
+
+    odgovor += "<h2>Radni Kalendar</h2> <table border=\"1\" class=\"table\" id=\"tabb1\"><tr><td></td>"
 
     odmora = -1
     odmorb = -1
@@ -907,7 +936,7 @@ def NapraviRadniKalendar(email):
 
     pregledi = Pregled.objects.filter(lekar=email, prihvacen="da")
 
-    for i in range(1, monthrange(date.today().year, date.today().month)[1]):
+    for i in range(1, monthrange(date.today().year, date.today().month)[1] + 1):
         tekst = "Nemata Zakazanih Pregleda"
 
         if i == 10 or i == 20 or i == 30:
@@ -964,7 +993,7 @@ def NadjiPacijente(email):
 
         for pacijent in pacijentiOBJ:
             odgovor += "<tr><td class=\"td\">" + pacijent.ime + "</td><td class=\"td\">" + pacijent.prezime + "</td>" \
-                       "<td class=\"td\">" + pacijent.adresa_prebivalista + "</td><td class=\"td\">" + pacijent.drzava + \
+                                                                                                              "<td class=\"td\">" + pacijent.adresa_prebivalista + "</td><td class=\"td\">" + pacijent.drzava + \
                        "</td><td class=\"td\">" + pacijent.grad + "</td><td class=\"td\">" + pacijent.broja_telefona + \
                        "</td><td class=\"td\">" + pacijent.jedinstveni_broj_osiguranika + "</td> "
         return odgovor + "</table>"
@@ -973,13 +1002,11 @@ def NadjiPacijente(email):
 
 
 def PogledajStanje(request):
-
-        email = ""
-        if 'email' in request.session:
-            email = request.session['email']
-        map = VratiFinansije(email)
-        return render(request, "pogledajStanje.html", {'map': map})
-
+    email = ""
+    if 'email' in request.session:
+        email = request.session['email']
+    map = VratiFinansije(email)
+    return render(request, "pogledajStanje.html", {'map': map})
 
 
 def VratiFinansije(email):
@@ -1001,10 +1028,10 @@ def VratiFinansije(email):
         if preg.zakazan != "Prazno":
             odgovor += "<tr>" + \
                        "<td>" + preg.zakazan.__str__() + "</td>" \
-                                               "<td>" + preg.vreme.__str__() + "</td>" \
-                                                                     "<td>" + (
-                                   len(preg.tip_pregleda) * 100 + len(preg.sala) * 10).__str__() + " din</td>" \
-                                                                                                   "</tr>"
+                                                         "<td>" + preg.vreme.__str__() + "</td>" \
+                                                                                         "<td>" + (
+                               len(preg.tip_pregleda) * 100 + len(preg.sala) * 10).__str__() + " din</td>" \
+                                                                                               "</tr>"
             ukupno += len(preg.tip_pregleda) * 100 + len(preg.sala) * 10
 
     odgovor += "<tr>" \
@@ -1063,45 +1090,104 @@ def OdobriAkaunt(request):
 
 
 def OdobriPregled(request):
-    #try:
-        if request.method == 'POST':
-            id = request.POST['koga']
-            kako = request.POST['kako']
+    # try:
+    if request.method == 'POST':
+        id = request.POST['koga']
+        kako = request.POST['kako']
 
-            if Pregled.objects.filter(id=id).exists():
-                if kako == 'True':
-                    od = Pregled.objects.filter(id=id)[0]
-                    od.prihvacen = "da"
-                    od.save()
-                else:
-                    Pregled.objects.filter(id=id).delete()
+        if Pregled.objects.filter(id=id).exists():
+            if kako == 'True':
+                od = Pregled.objects.filter(id=id)[0]
+                od.prihvacen = "da"
+                od.save()
+            else:
+                Pregled.objects.filter(id=id).delete()
 
-                return redirect('OdobriPregled')
-        else:
-            email = ''
-            if 'email' in request.session:
-                email = request.session['email']
-            uloga = ''
-            if 'uloga' in request.session:
-                uloga = request.session['uloga']
+            return redirect('OdobriPregled')
+    else:
+        email = ''
+        if 'email' in request.session:
+            email = request.session['email']
+        uloga = ''
+        if 'uloga' in request.session:
+            uloga = request.session['uloga']
 
-            if uloga == 'ADMIN':
-                niz = []
-                for k in Pregled.objects.filter(prihvacen="ne"):
-                    niz.extend([k])
+        if uloga == 'ADMIN':
+            niz = []
+            for k in Pregled.objects.filter(prihvacen="ne"):
+                niz.extend([k])
 
-                pregledi = []
-                for o in niz:
-                    for l in Pacijent.objects.all():
-                        if o.zakazan == l.email_adresa:
-                            pregledi.extend([{'pacijent': l, 'pregled': o}])
-                return render(request, 'odobriPregled.html', {'niz': pregledi})
-            return HttpResponse('<h1>Error 400</h1>Bad request<br />Nemate pravo da pristupite ovoj stranici',
-                                status=400)
-    #except:
-    #    return HttpResponse('<h1>Error 400</h1>Bad request<br />Pogresno ste uneli podatke', status=400)
-
-# -----------------------------------------------------------------------------------------------------------------------
-# nemoj ispod ove linije raditi
+            pregledi = []
+            for o in niz:
+                for l in Pacijent.objects.all():
+                    if o.zakazan == l.email_adresa:
+                        pregledi.extend([{'pacijent': l, 'pregled': o}])
+            return render(request, 'odobriPregled.html', {'niz': pregledi})
+        return HttpResponse('<h1>Error 400</h1>Bad request<br />Nemate pravo da pristupite ovoj stranici',
+                            status=400)
 
 
+def Pregledaj(request):
+    if request.method == 'POST':
+        ko = request.POST['ko']
+        koga = request.POST['koga']
+        kako = request.POST['kako']
+
+        lek = Lekar.objects.filter(email_adresa=ko)[0]
+
+        preg = Pregled.objects.filter(id=kako)[0]
+        preg.prihvacen = "ne"
+        preg.save()
+
+        pac = Pacijent.objects.filter(email_adresa=koga)[0]
+        pac.sifra_bolesti = request.POST['sifra_bolesti']
+        pac.diagnoza += "\n" + datetime.datetime.now().__str__() + " :\n\t" + request.POST['diagnoza']
+        pac.lekovi = request.POST['lekovi']
+        pac.dioptrija = request.POST['dioptrija']
+        pac.alergije_na_lek = request.POST['alergije_na_lek']
+        if request.POST['visina'] != "Nema" and request.POST['visina'] != '':
+            pac.visina = request.POST['visina']
+        if request.POST['tezina'] != "Nema" and request.POST['tezina'] != '':
+            pac.tezina = request.POST['tezina']
+        try:
+            if pac.krvna_grupa == "Nema":
+                pac.krvna_grupa = request.POST['krvna_grupa']
+        except:
+            print("krvna grupa vec postavljena")
+        pac.save()
+
+        pregledani.extend(kako)
+        return render(request, 'zakaziOpet.html',
+                      {'ko': ko, 'koga': koga, 'kako': kako, 'klinika': lek.radno_mesto, 'lekar': lek.email_adresa,
+                       'sala': preg.sala, 'tip_pregleda': preg.tip_pregleda,
+                       'vreme': (preg.vreme + datetime.timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')})
+    else:
+        email = ''
+        if 'email' in request.session:
+            email = request.session['email']
+        uloga = ''
+        if 'uloga' in request.session:
+            uloga = request.session['uloga']
+
+        if uloga == 'LEKAR':
+            pregled = DaLiImamPregled(email)
+            pacijent = None
+            for pac in Pacijent.objects.all():
+                if pregled.zakazan == pac.email_adresa:
+                    pacijent = pac
+
+            if pacijent is None or pregled is None:
+                return HttpResponse('<h1>Error 400</h1>Bad request<br />Doslo je do greske', status=400)
+            return render(request, 'pregledaj.html', {'pregled': pregled, 'pacijent': pacijent, 'email': email})
+        return HttpResponse('<h1>Error 400</h1>Bad request<br />Nemate pravo da pristupite ovoj stranici',
+                            status=400)
+
+
+def ZakaziOpet(request):
+    vr = datetime.datetime.strptime(request.POST['vreme'], '%Y-%m-%d %H:%M:%S')
+    i = Pregled.objects.count()
+    while Pregled.objects.count() == i:
+        manualTermin(klinika=request.POST['klinika'], lekar=request.POST['lekar'], sala=request.POST['sala'],
+                     tip_pregleda=request.POST['tip_pregleda'], vreme=vr.strftime('%Y-%m-%d %H:%M:%S'), request=request)
+        vr = vr + datetime.timedelta(hours=1)
+    return redirect('index')

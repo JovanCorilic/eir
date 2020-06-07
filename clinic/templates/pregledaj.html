@@ -1,0 +1,102 @@
+<html>
+	<head>
+		<title>Pregled {{pacijent.ime}} {{pacijent.prezime}}</title>
+		<link rel="stylesheet" href="css/stil.css">
+	</head>
+	<body>
+<form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
+		<div class="unos" style="margin-left:70px">
+			<h1>{{pacijent.ime}} {{pacijent.prezime}}</h1>
+		</div>
+		<form method="POST" action="Pregledaj">{% csrf_token %}
+            <input type="hidden" name="ko" value="{{email}}">
+            <input type="hidden" name="koga" value="{{pacijent.email_adresa}}">
+            <input type="hidden" name="kako" value="{{pregled.id}}">
+			<div class="unos2">
+				<table>
+					<tr>
+						<th align="right">Šifra Bolesti </th>
+						<th><input type="text" name="sifra_bolesti" id="sifra_bolesti"></th>
+						<th></th>
+					</tr>
+					<tr>
+						<th align="right">Diagnoza </th>
+						<th><input type="text" name="diagnoza" id="diagnoza"></th>
+						<th></th>
+					</tr>
+					<tr>
+						<th align="right">Lekovi </th>
+						<th><input type="text" name="lekovi" id="lekovi" value="{{pacijent.lekovi}}"></th>
+						<th align="left"><label id="llekovi" style="color: red;"></label></th>
+					</tr>
+					<tr>
+						<th align="right">Dioptrija</th>
+                        <th><input type="text" name="dioptrija" id="dioptrija" value="{{pacijent.dioptrija}}"></th>
+						<th align="left"><label id="ldioptrija" style="color: red;"></label></th>
+					</tr>
+					<tr>
+						<th align="right">Alergije na Lek </th>
+						<th><input type="text" name="alergije_na_lek" id="alergije_na_lek" value="{{pacijent.alergije_na_lek}}"></th>
+						<th align="left"><label id="lalergije_na_lek" style="color: red;"></label></th>
+					</tr>
+
+                    <tr>
+						<th align="right">Visina </th>
+						<th><input type="number" name="visina" id="visina" value="{{pacijent.visina}}"></th>
+						<th align="left"><label id="lvisina" style="color: red;"></label></th>
+					</tr>
+                    <tr>
+						<th align="right">Težina </th>
+						<th><input type="number" name="tezina" id="tezina" value="{{pacijent.tezina}}"></th>
+						<th align="left"><label id="ltezina" style="color: red;"></label></th>
+					</tr>
+                    <tr>
+						<th align="right">Krvna Grupa </th>
+                        {% if pacijent.krvna_grupa != "Prazno" %}
+						<th><input type="text" name="krvna_grupa" id="krvna_grupa" disabled value="{{pacijent.krvna_grupa}}"></th>
+                        {% else %}
+                        <th><input type="text" name="krvna_grupa" id="krvna_grupa" value="{{pacijent.krvna_grupa}}"></th>
+                        {% endif %}
+						<th align="left"><label id="lkrvna_grupa" style="color: red;"></label></th>
+					</tr>
+
+                    <tr>
+						<th></th>
+						<th align="left"><input type="submit" class="sub" value="Završi Pregled"></th>
+						<th align="left"><label style="color: red;">
+						</label></th>
+					</tr>
+				</table>
+			</div>
+		</form>
+	</body>
+<style>
+        input[type=text], input[type=number]:not(.avs), input[type=password], select{
+          width: 100%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          font-weight: bold;
+        }
+        .sub {
+          background-color: #4CAF50;
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          cursor: pointer;
+          font-weight: bold;
+        }
+    </style>
+</html>
