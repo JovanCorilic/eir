@@ -35,6 +35,15 @@
         {% else %}
             {% if uloga != "" and uloga != "NEULOGOVAN" %}
                 {% if uloga == 'PACIJENT' %}<!--------------------------------------- POCETNA STRANA PACIJENTA ------------------------------------->
+                <ul>
+                    <li><form method="POST" action="index" >{% csrf_token %}<input type="submit" value="Pocetna Strana"></form></li>
+                    <li><form method="POST" action="login" >{% csrf_token %}<input type="submit" class="meni" value="Uloguj se" ></form></li>
+                    <li>
+                        <form method="POST" action="pacijent/registracijaPacijent" >{% csrf_token %}
+                            <input type="submit" class="meni" value="Registruj se" >
+                        </form>
+                    </li>
+            </ul>
 
                 {% elif uloga == 'LEKAR' %}<!--------------------------------------- POCETNA STRANA LEKARA ------------------------------------->
                     <ul>

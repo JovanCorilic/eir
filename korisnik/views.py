@@ -90,6 +90,7 @@ def loginKorisnik(request):
             request.session['krvna_grupa'] = recnik.get('krvna_grupa')
             request.session['ulogovan'] = 'true'
             request.session['lokacija'] = 0
+            request.session['uloga'] = "PACIJENT"
             return render(request, 'glavnaStranicaPacijent.html',
                           {'email': request.session['email'], 'ime': request.session['ime'],
                            'prezime': request.session['prezime'],

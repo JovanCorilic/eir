@@ -21,8 +21,6 @@ from clinic.views import autoTermin
 
 
 def activate(request, uidb64, token):
-    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
-        return redirect('index')
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = Pacijent.objects.get(pk=uid)
