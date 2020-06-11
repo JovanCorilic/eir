@@ -43,6 +43,10 @@ Za skriptu je potrebno instalirati:
 ```
 pip install django-extensions
 ```
+Skripta se pokreće preko:
+```
+python manage.py runscript ucitajSkriptu
+```
 Aplikacija se onda može pokrenuti jednim jednostavnim
 ```
 python manage.py runserver
