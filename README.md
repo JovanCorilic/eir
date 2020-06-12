@@ -23,33 +23,48 @@ ili pak na svojoj Windows mašini:
 venv\Scripts\activate.ps1
 ```
 Ako vam ne daje da pokrenete script onda u powershell kao admin:
-```
+```powershell
 set-executionpolicy remotesigned
 ```
 Sa aktiviranim virtualnim okruženjem konačno možemo da instaliramo potrebne pakete
 (ovde instaliramo Django!):
-```sh
+```powershell
 pip install -r requirements.txt
 ```
-I za bazu PostgresSQL mora:
-```
-pip install psycopg2
-```
 Mora i:
-```
+```powershell
 pip install six
 ```
-Za skriptu je potrebno instalirati:
+Za bazu PostgresSQL mora:
+```powershell
+pip install psycopg2
 ```
+Mora da se ako nemate, napraviti database tj. baza podataka gde će se čuvati informacije. Bazu podataka možete napraviti preko PostgesSQL programa (https://www.enterprisedb.com/downloads/postgres-postgresql-downloads).
+Stavljeno je u programu da naziv baze, naziv korisnika kao i šifra sve bude "postgres", ako vam to ne odgovara možete jednostavno promeniti u settings.py koji se nalazi u eir/eir. Posle toga važno je da se ove komande izvrše:
+```powershell
+python manage.py makemigrations
+```
+pa:
+```powershell
+python manage.py migrate
+```
+Ako ima nekih problema kod migrate možete da ovo stavite:
+```powershell
+python manage.py showmigrations
+```
+Preko nje ćete videti koja je migracija prošla a koja nije.
+
+Za skriptu je potrebno instalirati:
+```powershell
 pip install django-extensions
 ```
-Skripta se pokreće preko:
-```
-python manage.py runscript ucitajSkriptu
-```
 Aplikacija se onda može pokrenuti jednim jednostavnim
-```
+```powershell
 python manage.py runserver
+```
+Skripta se pokreće preko:
+```powershell
+python manage.py runscript ucitajSkriptu
 ```
 
 # Autori
