@@ -10,7 +10,7 @@ hiljadu devet
 
 Django je divan! Stoga, korišćen je Django. Python verzija potrebna za pokretanje
 i razvoj je 3.6. Poželjno je koristiti virtualno okruženje jer stvari inače lako
-mogu krenuti po zlu. To bismo ovako nekako uradili:
+mogu krenuti po zlu (koristili smo Powershell sa administatorskim privilegijama za izvršavanje ovih komandi). To bismo ovako nekako uradili:
 ```sh
 python -m venv venv
 ```
