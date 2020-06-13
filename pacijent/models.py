@@ -45,8 +45,8 @@ class Pregled(models.Model):
     lekovi = models.CharField(max_length=500, default=None)
     temp = "da"
     prihvacen = models.CharField(max_length=500, default="da")
-    ocenaLekara = models.FloatField(default=-1)
-    ocenaKlinike = models.FloatField(default=-1)
+    ocenaLekara = models.FloatField(default=-1.0)
+    ocenaKlinike = models.FloatField(default=-1.0)
 
     objects = UserManager()
 
@@ -60,6 +60,6 @@ class Operacije(models.Model):
     tip_operacije = models.CharField(max_length=500, default=None)
     vreme = models.DateTimeField(max_length=500, default=None)
     ocenaLekara = models.CharField(max_length=500, default="-1")
-    ocenaKlinike = models.FloatField(default=-1)
+    ocenaKlinike = models.FloatField(default=-1.0)
 
     objects = UserManager()

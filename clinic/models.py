@@ -26,7 +26,7 @@ class Lekar(models.Model):
     datum = models.DateTimeField(max_length=500, default=None)
     radno_mesto = models.TextField(max_length=500, default=None)
     pozicija = models.TextField(max_length=500, default=None)
-    ocena = models.FloatField(default=-1)
+    ocena = models.FloatField(default=-1.0)
 
     objects = UserManager()
 
@@ -66,7 +66,8 @@ class Klinika(models.Model):
     naziv = models.TextField(max_length=500, default=None)
     adresa = models.TextField(max_length=500, default=None)
     opis = models.TextField(max_length=500, default=None)
-    ocena = models.FloatField(default=-1)
+    ocena = models.FloatField(default=-1.0)
+    cena = models.FloatField(default=500)
 
     objects = UserManager()
 

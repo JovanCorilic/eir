@@ -202,17 +202,27 @@
       {% elif lokacija == 3 or lokacija == 3.5 or lokacija == 3.6 %}
       
       {% if lokacija == 3 %}
+      
       <form method="POST" action="pretragaKlinikaPacijent" >{% csrf_token %}
       <input type="text" id="unosPretraga" name="unosPretraga" value="">
       <input type="submit" id = "pretragaNaziv" name="pretragaNaziv" value="Pretraga u koloni naziv">
+      <t />
+      <input type="text" id="unosAdresa" name="unosAdresa" value="">
+      <input type="submit" id="pretragaAdresa" name="pretragaAdresa" value="Pretraga u koloni adresa">
+      <t />
+      <input type="text" id="unosOpis" name="unosOpis" value="">
       <input type="submit" id = "pretragaOpis" name="pretragaOpis" value="Pretraga u koloni tip pregleda">
-      </form>
-      <br>
-      <form method="POST" action="pretragaKlinikaDatumPacijent">{% csrf_token %}
-        <input type="date" id="unosDatum" name="unosDatum">
-        <input type="submit" value="Pretraži po datumu">
-      </form>
+      <t />
+      <input type="text" id="unosOcena" name="unosOcena" value="">
+      <input type="submit" id = "pretragaOcena" name="pretragaOcena" value="Pretraga klinike po oceni"> <t />
     
+      
+        <input type="date" id="unosDatum" name="unosDatum">
+        <input type="submit" id ="pretragaDatum" name="pretragaDatum" value="Pretraži po datumu">
+      
+      
+      <input type="submit" id = "pretragaSvega" name="pretragaSvega" value="Pretraži sve osim naziva" onsubmit="return pretragaSvih()">
+      </form>
       {% elif lokacija == 3.5 %}
       <form method="POST" action="pretragaLekaraPacijent" >{% csrf_token %}
         <input type="text" id="unosPretraga" name="unosPretraga" value="">
@@ -231,6 +241,7 @@
         <th>Adresa</th>
         <th>Tip pregleda</th>
         <th>Ocena</th>
+        <th>Cena pregleda</th>
         <th>Uđi u kliniku</th>
         {% elif lokacija == 3.5 %}
         <th>Ime</th>
@@ -257,6 +268,7 @@
         <td><form method="POST" action="prikazKlinikaPacijentSortirano" >{% csrf_token %}<input type="submit" id = "sortiraj" name="sortiraj" value="Sortiraj po opisu" style="width:100%"></form></td>
         <td><form method="POST" action="prikazKlinikaPacijentSortirano" >{% csrf_token %}<input type="submit" id = "sortiraj" name="sortiraj" value="Sortiraj po oceni" style="width:100%"></form></td>
         <td></td>
+        <td></td>
         {% elif lokacija == 3.5 %}
         <form method="POST" action="sortiranjeLekaraPacijent" >{% csrf_token %}
         <td><input type="submit" id = "sortirajIme" name="sortirajIme" value="Sortiraj po imenu" style="width:100%"></td>
@@ -272,7 +284,13 @@
         <tr>
         {% if lokacija == 3 %}
         {% for klinika in klinike %}
-        <td>{{klinika.naziv}}</td><td>{{klinika.adresa}}</td><td>{{klinika.opis}}</td><td>{{klinika.ocena}}</td>
+        <td>{{klinika.naziv}}</td><td>{{klinika.adresa}}</td><td>{{klinika.opis}}</td>
+        <td>{% if klinika.ocena == -1.0 %}
+          Nije još ocenjen
+          {% else %}
+          {{klinika.ocena}}
+          {% endif %}
+        </td><td>{{klinika.cena}} $</td>
         <td><form method="POST" action="prikazLekaraKlinikePacijent" >{% csrf_token %}<input type="submit" id = "nazivKlinike" name="nazivKlinike" value="Uđi u kliniku {{klinika.naziv}}" style="width:100%"></form>
         <form method="POST" action="prikaziBrzePreglede" >{% csrf_token %}<input type="submit" id = "nazivKlinike" name="nazivKlinike" value="Prikaži brze preglede iz {{klinika.naziv}}" style="width:100%"></form>
         </td>
@@ -280,7 +298,14 @@
         {% endfor %}
         {% elif lokacija == 3.5 %}
         {% for lekar in lekari %}
-        <td>{{lekar.ime}}</td><td>{{lekar.prezime}}</td><td>{{lekar.email_adresa}}</td><td>{{lekar.pozicija}}</td><td>{{lekar.ocena}}</td>
+        <td>{{lekar.ime}}</td><td>{{lekar.prezime}}</td><td>{{lekar.email_adresa}}</td><td>{{lekar.pozicija}}</td>
+        <td>
+          {% if lekar.ocena == -1.0 %}
+          Nije još ocenjen
+          {% else %}
+          {{lekar.ocena}}
+          {% endif %}
+        </td>
         <td><form method="POST" action="zakazivanjePregledaPacijent" >{% csrf_token %}
           <button id = "kojiLekar" name="kojiLekar" value="{{lekar.email_adresa}}" style="width:100%">Zakaži</button>
         </form>
@@ -683,4 +708,36 @@
           background-color: #4CAF50;
         }
     </style>
+
+    <script>
+      function pretragaSvih() {
+        var unosPretraga = document.getElementById("unosPretraga").value;
+        var unosAdresa = document.getElementById("sifra").value;
+        var unosOpis = document.getElementById("sifra2").value;
+        var unosDatum = document.getElementById("unosDatum").value;
+        submitOK = "true";
+
+        if (unosPretraga == "") {
+            alert("Mora sve biti popunjeno!");
+            submitOK = "false";
+        }
+
+        
+
+        if(unosOpis == ""){
+          alert("Mora sve biti popunjeno!");
+          submitOK = "false";
+        }
+
+        if(unosDatum == null){
+          alert("Mora sve biti popunjeno!");
+          submitOK = "false";
+        }
+
+        if (submitOK == "false") {
+            return false;
+        }
+
+      }
+  </script>
 </html>
