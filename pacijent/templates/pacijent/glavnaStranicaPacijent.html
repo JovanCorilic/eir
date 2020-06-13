@@ -21,6 +21,8 @@
       {% if lokacija == 0 %}
         <h1>Ulogovani ste kao {{ime}} {{prezime}} a vas e-mail je: {{email}}</h1>
         <br /><br />
+
+      <!--LICNI PODACI PACIJENT, KAO I IZMENA TIH LICNIH PODATAKA-->
       {% elif lokacija == 1 or lokacija == 1.5 %}
       <table class="minimalistBlack" align="center">
           <thead>
@@ -118,6 +120,7 @@
         <h2 align = "center">Ostaviti prazno ako nećete da se promeni!</h2>
       {% endif %}
 
+      <!--ZDRAVSTVENI KARTON-->
       {% elif lokacija == 2 %}
       <table class="minimalistBlack" align="center">
         <thead>
@@ -177,7 +180,25 @@
         </tr>
         </tbody>
       </table>
+      <!--ISTORIJA BOLESTI-->
+      <table class="minimalistBlack" align="center">
+        <thead>
+        <tr>
+        <th align="center">Istorija vaših bolesti</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for pregled in pregledi %}
+        {% if pregled.diagnoza != "Prazno" %}
+        <tr>
+        <td align="center">{{pregled.diagnoza}}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+        </tbody>
+      </table>
 
+      <!--LISTA KLINIKA, LISTA LEKARA, BRZI PREGLEDI-->
       {% elif lokacija == 3 or lokacija == 3.5 or lokacija == 3.6 %}
       
       {% if lokacija == 3 %}
@@ -293,6 +314,7 @@
         </tr>
       </table>
 
+      <!--PREGLEDI KOJI NADOLAZE-->
       {% elif lokacija == 4 %}
       <table class="minimalistBlack">
         <thead>
@@ -347,6 +369,7 @@
         </tbody>
         </table>
 
+      <!--OPERACIJE KOJE SU PROSLI-->
       {% elif lokacija == 5 %}
       {% load split_as_option %}
       <table class="minimalistBlack">
@@ -413,6 +436,7 @@
         </tbody>
         </table>
 
+        <!--PREGLEDI KOJI SU PROSLI-->
         {% elif lokacija == 6 %}
       <table class="minimalistBlack">
         <thead>
@@ -484,6 +508,7 @@
         </tbody>
         </table>
         
+        <!--PRAVLJENJE CUSTOM PREGLEDA -->
         {% elif lokacija == 7 %}
         <h4 style="color: royalblue;">Naziv: {{lekar.ime}} {{lekar.prezime}} Pozicija: {{lekar.pozicija}}</h4>
         <table class="minimalistBlack">

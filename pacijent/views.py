@@ -210,6 +210,7 @@ def zdravstveniKartonPacijent(request):
         request.session['visina'] = pacijent.visina
         request.session['tezina'] = pacijent.tezina
         request.session['krvna_grupa'] = pacijent.krvna_grupa
+        pregledi = Pregled.objects.filter(zakazan=request.session['email']).order_by('-vreme')
 
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'ime': request.session['ime'], 'prezime': request.session['prezime'],
@@ -220,7 +221,7 @@ def zdravstveniKartonPacijent(request):
                        'alergije': request.session['alergije_na_lek'],
                        'visina': request.session['visina'], 'tezina': request.session['tezina'],
                        'krvna': request.session['krvna_grupa'],
-                       'lokacija': request.session['lokacija']
+                       'lokacija': request.session['lokacija'], 'pregledi': pregledi
                        })
     else:
         request.session['lokacija'] = 2
