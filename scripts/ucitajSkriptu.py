@@ -49,3 +49,8 @@ def run():
             admin = Admin.objects.create(email_adresa=row[1], lozinka=row[2], ime=row[3], prezime=row[4], broja_telefona=row[5], jedinstveni_broj_osiguranika=row[6],
                                          datum=datetime.strptime(row[7], "%d/%m/%Y %I:%M%p"), naziv_klinike = row[8])
             admin.save()
+        elif("Pregled"in row[0]):
+            pregled = Pregled.objects.create(id=row[1], klinika=row[2], zakazan=row[3], lekar=row[4], sala=row[5],
+                                             tip_pregleda = row[6], vreme= datetime.strptime(row[7], "%d/%m/%Y %I:%M%p"), sifra_bolesti= row[8], diagnoza = row[9],
+                                             lekovi=row[10])
+            pregled.save()
