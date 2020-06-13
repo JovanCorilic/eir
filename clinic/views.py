@@ -11,6 +11,14 @@ import datetime
 import random
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from pacijent.tokens import account_activation_token
+from django.contrib.auth.models import User
+from django.core.mail import EmailMessage
+
 
 pregledani = []
 
@@ -820,11 +828,11 @@ def autoTermin(request):
         if len(kk) == 0:
             for i in (6, 8, 10, 12, 14, 16, 18, 20):
                 try:
-                    print('iteracija ' + "za kliniku " + klinika.naziv)
+
                     sala = random.choice(Sala.objects.filter(id_klinike_kojoj_pripada=klinika.naziv))
                     lekar = random.choice(Lekar.objects.filter(radno_mesto=klinika.naziv))
                     vreme = datetime.datetime.now().replace(hour=i, minute=0, second=0)
-                    print(sala.naziv + " - " + lekar.prezime)
+
                     manualTermin(lekar.email_adresa, sala.naziv, vreme, klinika.naziv, "Opsti Pregled", request)
                 except:
                     print("nesto fali")
@@ -832,12 +840,12 @@ def autoTermin(request):
 
 
 def manualTermin(lekar, sala, vreme, klinika, tip_pregleda, request):
-    print("usao")
+
     id = 1
     if Pregled.objects.filter(id=id).exists():
         while Pregled.objects.filter(id=id).exists():
             id += 1
-    print("dodeljen id " + id.__str__())
+
     if not Pregled.objects.filter(id=id).exists():
         if proveriTermin(vreme.__str__().split(".")[0], sala, lekar):
             ii = 0
@@ -846,14 +854,14 @@ def manualTermin(lekar, sala, vreme, klinika, tip_pregleda, request):
                 if ii >= 100:
                     return
                 try:
-                    print("pravi")
+
                     ter = Pregled.objects.create(id=id, klinika=klinika, zakazan="Prazno", lekar=lekar, sala=sala,
                                                  tip_pregleda=tip_pregleda, vreme=vreme.__str__().split(".")[0],
                                                  sifra_bolesti="Prazno",
                                                  diagnoza="Prazno", lekovi="Prazno", prihvacen="da")
-                    print("cuva")
+
                     ter.save()
-                    print("sacuvao :)")
+
                     return
                 except:
                     pass
@@ -1136,10 +1144,32 @@ def OdobriAkaunt(request):
             if Pacijent.objects.filter(email_adresa=id).exists():
                 if kako == 'True':
                     od = Pacijent.objects.filter(email_adresa=id)[0]
-                    od.aktiviran = 1
+
+                    current_site = get_current_site(request)
+                    mail_subject = 'Aktivirajte vaš Pacijent akount'
+                    message = render_to_string('acc_active_email.html', {
+                        'user': od,
+                        'domain': current_site.domain,
+                        'uid': urlsafe_base64_encode(force_bytes(od.pk)),
+                        'token': account_activation_token.make_token(od),
+                    })
+                    to_email = id
+                    email = EmailMessage(
+                        mail_subject, message, to=[to_email]
+                    )
+                    email.send()
+
+                    od.aktiviran = 0
                     od.save()
                 else:
                     Pacijent.objects.filter(email_adresa=id).delete()
+                    mail_subject = 'Odbijena je vaša registracija'
+
+                    to_email = id
+                    email = EmailMessage(
+                        mail_subject, "Vaša registracija je odbijena!", to=[to_email]
+                    )
+                    email.send()
 
                 return redirect('OdobriAkaunt')
         else:
@@ -1153,7 +1183,7 @@ def OdobriAkaunt(request):
             if uloga == 'ADMIN':
                 org = Admin.objects.filter(email_adresa=email)[0].naziv_klinike
                 niz = []
-                for k in Pacijent.objects.filter(aktiviran=0):
+                for k in Pacijent.objects.filter(aktiviran=-1):
                     niz.extend([k])
                 return render(request, 'odobriAkaunt.html', {'niz': niz})
             return HttpResponse('<h1>Error 400</h1>Bad request<br />Nemate pravo da pristupite ovoj stranici',
@@ -1161,7 +1191,22 @@ def OdobriAkaunt(request):
     except:
         return HttpResponse('<h1>Error 400</h1>Bad request<br />Pogresno ste uneli podatke', status=400)
 
-
+#deo koji pripada Jovanu Corilicu sw48/2017
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = Pacijent.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None :
+        user.aktiviran = 1
+        user.save()
+        # return redirect('home')
+        request.session['uloga']="NEULOGOVAN"
+        return HttpResponse("Vaš akount je napravljen i sada možete da ga koristite!")
+    else:
+        return HttpResponse('Aktivacioni link nije validan')
+#-----------------------------------------------
 def OdobriPregled(request):
     if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
         return redirect('index')

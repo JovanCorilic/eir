@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.urls import path
 from . import views
-
+from django.conf.urls import url
 urlpatterns = [
+    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', views.activate,
+            name='activate'),
     path('admin/', admin.site.urls),
     path('index', views.index, name='index'),
     path('', views.index),
@@ -44,4 +46,5 @@ urlpatterns = [
     path('OdobriPregled', views.OdobriPregled, name='OdobriPregled'),
     path('Pregledaj', views.Pregledaj, name='Pregledaj'),
     path('ZakaziOpet', views.ZakaziOpet, name='ZakaziOpet'),
+
 ]

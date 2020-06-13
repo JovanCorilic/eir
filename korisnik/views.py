@@ -67,10 +67,10 @@ def loginKorisnik(request):
             print(recnik.get('aktiviran'))
             if recnik.get('aktiviran') == -1:
                 return render(request, 'login.html',
-                              {'poruka': "Email koji ste uneli nije još verifikovan!"})
+                              {'poruka': "Email koji ste uneli nije još verifikovan od strane administratora!"})
             if recnik.get('aktiviran') == 0:
                 return render(request, 'login.html',
-                              {'poruka': "Email koji ste uneli nije još verifikovan od strane administratora!" })
+                              {'poruka': "Email koji ste uneli niste još verifikovali!" })
 
             request.session['ime'] = recnik.get('ime')
             request.session['prezime'] = recnik.get('prezime')

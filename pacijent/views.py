@@ -19,22 +19,6 @@ from clinic.views import autoTermin
 
 # Create your views here.
 
-
-def activate(request, uidb64, token):
-    try:
-        uid = force_text(urlsafe_base64_decode(uidb64))
-        user = Pacijent.objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-    if user is not None and account_activation_token.check_token(user, token):
-        user.aktiviran = 0
-        user.save()
-        # return redirect('home')
-        return HttpResponse('Hvala na vašoj email konfrmacije, sada čekate potvrdu administratora.')
-    else:
-        return HttpResponse('Aktivacioni link nije validan')
-
-
 def registracijaPacijent(request):
     try:
         if request.method == 'POST':
@@ -67,7 +51,7 @@ def registracijaPacijent(request):
                                                visina="Prazno", tezina="Prazno", krvna_grupa="Prazno", aktiviran=-1)
 
             pacijent.save()
-            current_site = get_current_site(request)
+            """current_site = get_current_site(request)
             mail_subject = 'Aktivirajte vaš Pacijent akount'
             message = render_to_string('acc_active_email.html', {
                 'user': pacijent,
@@ -80,7 +64,8 @@ def registracijaPacijent(request):
                 mail_subject, message, to=[to_email]
             )
             email.send()
-            return HttpResponse('Molim vas potvrdite vašu email registraciju.')
+            return HttpResponse('Molim vas potvrdite vašu email registraciju.')"""
+            return redirect('index')
         else:
             return render(request, 'pacijent/registracijaPacijent.html')
     except:
