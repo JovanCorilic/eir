@@ -10,14 +10,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='operacije',
-            name='ocenaKlinike',
-            field=models.FloatField(default=-1),
-        ),
-        migrations.AddField(
-            model_name='operacije',
-            name='ocenaLekara',
-            field=models.CharField(default='-1', max_length=500),
-        ),
+
+
     ]

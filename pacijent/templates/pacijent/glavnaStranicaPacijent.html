@@ -226,20 +226,20 @@
       {% elif lokacija == 3.5 %}
       <form method="POST" action="pretragaLekaraPacijent" >{% csrf_token %}
         <input type="text" id="unosIme" name="unosIme" value="">
-        <input type="submit" id = "pretragaIme" name="pretragaIme" value="Pretraga u koloni ime">
+        <input type="submit" id = "pretragaIme" name="pretragaIme" value="Pretraga|Filtriranje u koloni ime">
 
         <input type="text" id="unosPrezime" name="unosPrezime" value="">
-        <input type="submit" id = "pretragaPrezime" name="pretragaPrezime" value="Pretraga u koloni prezime">
+        <input type="submit" id = "pretragaPrezime" name="pretragaPrezime" value="Pretraga|Filtriranje u koloni prezime">
 
         <input type="text" id="unosOcena" name="unosOcena" value="">
-        <input type="submit" id = "pretragaOcena" name="pretragaOcena" value="Pretraga lekara po oceni">
+        <input type="submit" id = "pretragaOcena" name="pretragaOcena" value="Pretraga|Filtriranje lekara po oceni">
 
         {% if not specijalno %}
         <input type="date" id="unosDatum" name="unosDatum">
         <input type="submit" id ="pretragaDatum" name="pretragaDatum" value="Pretraži po datumu">
 
         <input type="text" id="unosTipPregleda" name="unosTipPregleda">
-        <input type="submit" id="pretragaTipPregleda" name="pretragaTipPregleda" value="Pretraga po tipu pregleda">
+        <input type="submit" id="pretragaTipPregleda" name="pretragaTipPregleda" value="Pretraga|Filtriranje po tipu pregleda">
         <br />
         <input type="submit" id="pretragaSvega" name="pretragaSvega" value="Pretraži preko svih atributa" onsubmit="return pretragaSvihLekari()">
         {% endif %}

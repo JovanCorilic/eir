@@ -10,14 +10,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='pregled',
-            name='ocenaKlinike',
-            field=models.IntegerField(default=-1),
-        ),
-        migrations.AddField(
-            model_name='pregled',
-            name='ocenaLekara',
-            field=models.IntegerField(default=-1),
-        ),
+
+
     ]
