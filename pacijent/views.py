@@ -696,8 +696,9 @@ def zakazivanjePregledaPacijent(request):
         email = request.POST['kojiLekar']
         lekar = Lekar.objects.get(email_adresa=email)
         sale = Sala.objects.filter(id_klinike_kojoj_pripada=request.session['nazivKlinike'])
+        pregledi = Pregled.objects.filter(lekar=email, vreme__gte=datetime.datetime.now())
         return render(request, 'pacijent/zakazivanjePregledaPacijent.html',
-                      {'lekar': lekar, 'sale': sale})
+                      {'lekar': lekar, 'sale': sale, 'pregledi':pregledi})
     else:
         return render(request, 'pacijent/zakazivanjePregledaPacijent.html',
                       )
@@ -708,6 +709,39 @@ def posaljiPregledPacijent(request):
         return redirect('index')
     if request.method == 'POST':
         vreme = request.POST['vreme']
+        vreme = datetime.datetime.strptime(vreme, "%Y-%m-%dT%H:%M")
+
+        pauza1 = datetime.time(hour=10, minute=15)
+        pauza2 = datetime.time(hour=11, minute=00 )
+        pauza3 = datetime.time(hour=14, minute=15 )
+        pauza4 = datetime.time(hour=15, minute=00)
+
+        lekar = Lekar.objects.get(email_adresa=request.POST['kojiLekar'])
+        sale = Sala.objects.filter(id_klinike_kojoj_pripada=request.session['nazivKlinike'])
+        pregledi = Pregled.objects.filter(lekar=request.POST['kojiLekar'], vreme__gte=datetime.datetime.now())
+
+        if vreme <= datetime.datetime.now():
+            return render(request, 'pacijent/zakazivanjePregledaPacijent.html',
+                          {'lekar': lekar, 'sale': sale, 'pregledi': pregledi,
+                           'poruka': "Taj vremenski period koji ste uneli je prošao!"})
+        if vreme.time()> datetime.time(hour=20, minute=45) or vreme.time()<datetime.time(hour=5, minute=45):
+            return render(request, 'pacijent/zakazivanjePregledaPacijent.html',
+                          {'lekar': lekar, 'sale': sale, 'pregledi': pregledi,
+                           'poruka': "Klinika ne radi tada!"})
+
+        if vreme.time()>pauza1 and vreme.time()<pauza2 or vreme.time()>pauza3 and vreme.time()<pauza4:
+            return render(request, 'pacijent/zakazivanjePregledaPacijent.html',
+                          {'lekar': lekar, 'sale': sale, 'pregledi': pregledi, 'poruka':"Taj vremenski period koji ste uneli obuhvata pauze!"})
+
+        for pregled in pregledi:
+            if pregled.prihvacen == "da":
+                temp2 = pregled.vreme
+                temp =  temp2 + datetime.timedelta(minutes=15)
+                if pregled.vreme.time()< vreme.time() and temp.time()>vreme.time():
+                    return render(request, 'pacijent/zakazivanjePregledaPacijent.html',
+                                  {'lekar': lekar, 'sale': sale, 'pregledi': pregledi,
+                                   'poruka': "Taj vremenski period koji ste uneli obuhvata već zauzet pregled!"})
+
         zbog = request.POST['radi']
         kojiLekar = request.POST['kojiLekar']
         kojaSala = request.POST['kojasala']
@@ -722,6 +756,7 @@ def posaljiPregledPacijent(request):
             max = 1
         else:
             max = max + 1
+
 
         pregled = Pregled.objects.create(klinika=request.session['nazivKlinike'], zakazan=request.session['email'],
                                          lekar=kojiLekar, sala=kojaSala, tip_pregleda=zbog, vreme=vreme,

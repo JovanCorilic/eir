@@ -13,7 +13,7 @@
             <thead>
             <tr>
                 <td colspan="2">
-                    Lekar : {{lekar.ime}} {{lekar.prezime}}
+                    Lekar : {{lekar.ime}} {{lekar.prezime}} Pozicija: {{lekar.pozicija}}
                 </td>
             </tr>
             </thead>
@@ -44,6 +44,40 @@
             </tbody>
         </table> 
     </form>
+    <br />
+    <h2 style="color: red;">{{poruka}}</h2>
+    <h2 style="color: royalblue;">Pauze su uvek od 10:30 - 11:00 i od 14:30 - 15:00, pregledi vam traju maksimalno 15 min i za ovog lekara se nalaze ispod</h3>
+    <h3 style="color: royalblue;">Svi pregledi koji nadolaze za ovog lekara</h4>
+        <table class="minimalistBlack">
+          <thead>
+          <tr>
+          <th>Vreme</th>
+          <th>Klinika</th>
+          <th>Sala</th>
+          <th>Tip pregleda</th>
+          </tr>
+          </thead>
+          <tfoot>
+          <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          </tr>
+          </tfoot>
+          <tbody>
+          {% for pregled in pregledi %}
+          {% if pregled.prihvacen == "da" and pregled.zakazan != "Prazno" %}
+            <tr>
+            <td>{{pregled.vreme}}</td>
+            <td>{{pregled.klinika}}</td>
+            <td>{{pregled.sala}}</td>
+            <td>{{pregled.tip_pregleda}}</td>
+            </tr>
+          {% endif %}
+          {% endfor %}
+          </tbody>
+          </table>
 
     <script>
         function logovanje() {
