@@ -305,8 +305,12 @@
           {{klinika.ocena}}
           {% endif %}
         </td><td>{{klinika.cena}} $</td>
+        {% if not specijalno %}
         <td><form method="POST" action="prikazLekaraKlinikePacijent" >{% csrf_token %}<input type="submit" id = "nazivKlinike" name="nazivKlinike" value="Uđi u kliniku {{klinika.naziv}}" style="width:100%"></form>
-        <form method="POST" action="prikaziBrzePreglede" >{% csrf_token %}<input type="submit" id = "nazivKlinike" name="nazivKlinike" value="Prikaži brze preglede iz {{klinika.naziv}}" style="width:100%"></form>
+        {% else %}
+        <td><form method="POST" action="prikazLekaraKlinikePacijent" >{% csrf_token %}<input type="submit" id = "nazivKlinike" name="nazivKlinike" value="Uđi u kliniku {{klinika.naziv}} (Specijalno)" style="width:100%"></form>
+        {% endif %}
+          <form method="POST" action="prikaziBrzePreglede" >{% csrf_token %}<input type="submit" id = "nazivKlinike" name="nazivKlinike" value="Prikaži brze preglede iz {{klinika.naziv}}" style="width:100%"></form>
         </td>
         </tr>
         {% endfor %}
