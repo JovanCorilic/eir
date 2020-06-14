@@ -225,10 +225,24 @@
       </form>
       {% elif lokacija == 3.5 %}
       <form method="POST" action="pretragaLekaraPacijent" >{% csrf_token %}
-        <input type="text" id="unosPretraga" name="unosPretraga" value="">
+        <input type="text" id="unosIme" name="unosIme" value="">
         <input type="submit" id = "pretragaIme" name="pretragaIme" value="Pretraga u koloni ime">
+
+        <input type="text" id="unosPrezime" name="unosPrezime" value="">
         <input type="submit" id = "pretragaPrezime" name="pretragaPrezime" value="Pretraga u koloni prezime">
+
+        <input type="text" id="unosOcena" name="unosOcena" value="">
         <input type="submit" id = "pretragaOcena" name="pretragaOcena" value="Pretraga lekara po oceni">
+
+        {% if not specijalno %}
+        <input type="date" id="unosDatum" name="unosDatum">
+        <input type="submit" id ="pretragaDatum" name="pretragaDatum" value="Pretraži po datumu">
+
+        <input type="text" id="unosTipPregleda" name="unosTipPregleda">
+        <input type="submit" id="pretragaTipPregleda" name="pretragaTipPregleda" value="Pretraga po tipu pregleda">
+        <br />
+        <input type="submit" id="pretragaSvega" name="pretragaSvega" value="Pretraži preko svih atributa" onsubmit="return pretragaSvihLekari()">
+        {% endif %}
         </form>
       </form>
       {% endif %}
@@ -248,8 +262,8 @@
         <th>Prezime</th>
         <th>Email adresa</th>
         <th>Pozicija</th>
-        <th>Zakazivanje</th>
         <th>Ocena</th>
+        <th>Zakazivanje</th>
         {% elif lokacija == 3.6 %}
         <th>Ime</th>
         <th>Prezime</th>
@@ -712,8 +726,8 @@
     <script>
       function pretragaSvih() {
         var unosPretraga = document.getElementById("unosPretraga").value;
-        var unosAdresa = document.getElementById("sifra").value;
-        var unosOpis = document.getElementById("sifra2").value;
+        
+        var unosOpis = document.getElementById("unosOpis").value;
         var unosDatum = document.getElementById("unosDatum").value;
         submitOK = "true";
 
@@ -739,5 +753,39 @@
         }
 
       }
+  </script>
+  <script>
+    function pretragaSvihLekari(){
+        var unosIme= document.getElementById("unosIme").value;
+        var unosPrezime= document.getElementById("unosPrezime").value;
+        var unosOcena= document.getElementById("unosOcena").value;
+        var unosDatum= document.getElementById("unosDatum").value;
+        var unosTipPregleda= document.getElementById("unosTipPregleda").value;
+        submitOK = "true";
+
+        if(unosIme == ""){
+          alert("Mora sve biti popunjeno!");
+          submitOK = "false";
+        }
+        if(unosPrezime == ""){
+          alert("Mora sve biti popunjeno!");
+          submitOK = "false";
+        }
+        if (unosDatum != null)
+          if(unosDatum == ""){
+            alert("Mora sve biti popunjeno!");
+            submitOK = "false";
+          }
+        if(unosTipPregleda != null)
+          if(unosTipPregleda == ""){
+            alert("Mora sve biti popunjeno!");
+            submitOK = "false";
+          }
+
+        if (submitOK == "false") {
+            return false;
+        }
+
+    }
   </script>
 </html>
