@@ -14,11 +14,7 @@ mogu krenuti po zlu (koristili smo Powershell sa administatorskim privilegijama 
 ```sh
 python -m venv venv
 ```
-i zatim to virtualno okruženje aktivirali. Ako ste na Linuksu:
-```sh
-source venv/bin/activate
-```
-ili pak na svojoj Windows mašini:
+i zatim to virtualno okruženje aktivirali:
 ```powershell
 venv\Scripts\activate.ps1
 ```
@@ -66,6 +62,12 @@ Skripta se pokreće preko:
 ```powershell
 python manage.py runscript ucitajSkriptu
 ```
+Imate i superuser-a preko kojeg možete da vidite sve podatke:
+```
+python manage.py createsuperuser
+```
+Zatim da biste mu pristupili idete na:
+*adresa servera/admin*
 
 # Autori
 - Jovan Ćorilić (SW 48/2017)
