@@ -737,10 +737,11 @@ def posaljiPregledPacijent(request):
             if pregled.prihvacen == "da":
                 temp2 = pregled.vreme
                 temp =  temp2 + datetime.timedelta(minutes=15)
-                if pregled.vreme.time()< vreme.time() and temp.time()>vreme.time():
-                    return render(request, 'pacijent/zakazivanjePregledaPacijent.html',
-                                  {'lekar': lekar, 'sale': sale, 'pregledi': pregledi,
-                                   'poruka': "Taj vremenski period koji ste uneli obuhvata već zauzet pregled!"})
+                if pregled.vreme == vreme:
+                    if pregled.vreme.time()< vreme.time() and temp.time()>vreme.time():
+                        return render(request, 'pacijent/zakazivanjePregledaPacijent.html',
+                                      {'lekar': lekar, 'sale': sale, 'pregledi': pregledi,
+                                       'poruka': "Taj vremenski period koji ste uneli obuhvata već zauzet pregled!"})
 
         zbog = request.POST['radi']
         kojiLekar = request.POST['kojiLekar']

@@ -1145,31 +1145,37 @@ def OdobriAkaunt(request):
                 if kako == 'True':
                     od = Pacijent.objects.filter(email_adresa=id)[0]
 
-                    current_site = get_current_site(request)
-                    mail_subject = 'Aktivirajte vaš Pacijent akount'
-                    message = render_to_string('acc_active_email.html', {
-                        'user': od,
-                        'domain': current_site.domain,
-                        'uid': urlsafe_base64_encode(force_bytes(od.pk)),
-                        'token': account_activation_token.make_token(od),
-                    })
-                    to_email = id
-                    email = EmailMessage(
-                        mail_subject, message, to=[to_email]
-                    )
-                    email.send()
-
                     od.aktiviran = 0
                     od.save()
+                    try:
+                        current_site = get_current_site(request)
+                        mail_subject = 'Aktivirajte vaš Pacijent akount'
+                        message = render_to_string('acc_active_email.html', {
+                            'user': od,
+                            'domain': current_site.domain,
+                            'uid': urlsafe_base64_encode(force_bytes(od.pk)),
+                            'token': account_activation_token.make_token(od),
+                        })
+                        to_email = id
+                        email = EmailMessage(
+                            mail_subject, message, to=[to_email]
+                        )
+                        email.send()
+                    except:
+                        pass
+
                 else:
                     Pacijent.objects.filter(email_adresa=id).delete()
-                    mail_subject = 'Odbijena je vaša registracija'
+                    try:
+                        mail_subject = 'Odbijena je vaša registracija'
 
-                    to_email = id
-                    email = EmailMessage(
-                        mail_subject, "Vaša registracija je odbijena!", to=[to_email]
-                    )
-                    email.send()
+                        to_email = id
+                        email = EmailMessage(
+                            mail_subject, "Vaša registracija je odbijena!", to=[to_email]
+                        )
+                        email.send()
+                    except:
+                        pass
 
                 return redirect('OdobriAkaunt')
         else:
@@ -1220,8 +1226,29 @@ def OdobriPregled(request):
                 od = Pregled.objects.filter(id=id)[0]
                 od.prihvacen = "da"
                 od.save()
+                try:
+                    mail_subject = 'Vaš zahtev za pregled je prihvaćen'
+
+                    email2 = Pregled.objects.get(id=id)
+                    to_email = email2.zakazan
+                    email = EmailMessage(
+                        mail_subject, "Vaš zahtev za pregled je prihvaćen i doktor će vas čekati u vremenu koji ste napisali!", to=[to_email]
+                    )
+                    email.send()
+                except:
+                    pass
             else:
                 Pregled.objects.filter(id=id).delete()
+                try:
+                    mail_subject = 'Odbijen je vaš zahtev za pregled'
+                    email2 = Pregled.objects.get(id=id)
+                    to_email = email2.zakazan
+                    email = EmailMessage(
+                        mail_subject, "Odbijen je vaš zahtev za pregled!", to=[to_email]
+                    )
+                    email.send()
+                except:
+                    pass
 
             return redirect('OdobriPregled')
     else:
