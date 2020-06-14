@@ -31,6 +31,9 @@ Mora i:
 ```powershell
 pip install six
 ```
+```powershell
+pip install django-extensions
+```
 Za bazu PostgresSQL mora:
 ```powershell
 pip install psycopg2
@@ -49,11 +52,6 @@ Ako ima nekih problema kod migrate možete da ovo stavite:
 python manage.py showmigrations
 ```
 Preko nje ćete videti koja je migracija prošla a koja nije.
-
-Za skriptu je potrebno instalirati:
-```powershell
-pip install django-extensions
-```
 Aplikacija se onda može pokrenuti jednim jednostavnim
 ```powershell
 python manage.py runserver
