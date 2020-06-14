@@ -239,10 +239,16 @@ def prikazKlinikaPacijent(request):
     if request.method == 'POST':
         klinike = Klinika.objects.all()
         request.session['lokacija'] = 3
+
+        request.session['klinike'] = []
+        request.session['klinike'] = list(klinike.values_list('id', flat=True))
+
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'lokacija': request.session['lokacija'], 'klinike': klinike})
     else:
         klinike = Klinika.objects.all()
+        request.session['klinike'] = []
+        request.session['klinike'] = list(klinike.values_list('id', flat=True))
         request.session['lokacija'] = 3
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'lokacija': request.session['lokacija'], 'klinike': klinike})
@@ -261,24 +267,13 @@ def prikazKlinikaPacijentSortirano(request):
             poCemu = "-ocena"
         else:
             poCemu = "opis"
-        klinike = Klinika.objects.order_by(poCemu)
+        klinike = Klinika.objects.filter(id__in=request.session['klinike']).order_by(poCemu)
+
         request.session['lokacija'] = 3
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'lokacija': request.session['lokacija'], 'klinike': klinike})
     else:
-        temp = request.POST['sortiraj']
-        if (temp == "Sortiraj po nazivu"):
-            poCemu = "naziv"
-        elif temp == "Sortiraj po adresi":
-            poCemu = "adresa"
-        elif temp == "Sortiraj po oceni":
-            poCemu = "ocena"
-        else:
-            poCemu = "opis"
-        klinike = Klinika.objects.order_by(poCemu)
-        request.session['lokacija'] = 3
-        return render(request, 'pacijent/glavnaStranicaPacijent.html',
-                      {'lokacija': request.session['lokacija'], 'klinike': klinike})
+        return redirect('glavnaStranicaPacijent')
 
 
 def pretragaKlinikaPacijent(request):
@@ -309,21 +304,24 @@ def pretragaKlinikaPacijent(request):
                               {'lokacija': request.session['lokacija'], 'klinike': klinike})
             klinike = []
             for pregled in pregledi:
-                if Klinika.objects.get(naziv=pregled.klinika) in klinike:
+                if Klinika.objects.filter(id__in=request.session['klinike']).get(naziv=pregled.klinika) in klinike:
                     continue
                 if opciono == 0:
-                    klinike.append(Klinika.objects.get(naziv=pregled.klinika, opis__icontains=opis))
+                    klinike.append(Klinika.objects.filter(id__in=request.session['klinike']).get(naziv=pregled.klinika, opis__icontains=opis))
                 elif opciono == 1:
                     klinike.append(
-                        Klinika.objects.get(naziv=pregled.klinika, opis__icontains=opis, adresa__icontains=adresa))
+                        Klinika.objects.filter(id__in=request.session['klinike']).get(naziv=pregled.klinika, opis__icontains=opis, adresa__icontains=adresa))
                 elif opciono == 2:
                     klinike.append(
-                        Klinika.objects.get(naziv=pregled.klinika, opis__icontains=opis, ocena__icontains=ocena))
+                        Klinika.objects.filter(id__in=request.session['klinike']).get(naziv=pregled.klinika, opis__icontains=opis, ocena__icontains=ocena))
                 elif opciono == 3:
                     klinike.append(
-                        Klinika.objects.get(naziv=pregled.klinika, opis__icontains=opis, ocena__icontains=ocena,
+                        Klinika.objects.filter(id__in=request.session['klinike']).get(naziv=pregled.klinika, opis__icontains=opis, ocena__icontains=ocena,
                                             adresa__icontains=adresa))
             request.session['lokacija'] = 3
+            request.session['klinike'] = []
+            for klinika in klinike:
+                request.session['klinike'].append(klinika.id)
             return render(request, 'pacijent/glavnaStranicaPacijent.html',
                           {'lokacija': request.session['lokacija'], 'klinike': klinike})
         elif 'pretragaDatum' in request.POST:
@@ -336,10 +334,13 @@ def pretragaKlinikaPacijent(request):
                               {'lokacija': request.session['lokacija'], 'klinike': klinike})
             klinike = []
             for pregled in pregledi:
-                if Klinika.objects.get(naziv=pregled.klinika) in klinike:
+                if Klinika.objects.filter(id__in=request.session['klinike']).get(naziv=pregled.klinika) in klinike:
                     continue
-                klinike.append(Klinika.objects.get(naziv=pregled.klinika))
+                klinike.append(Klinika.objects.filter(id__in=request.session['klinike']).get(naziv=pregled.klinika))
             request.session['lokacija'] = 3
+            request.session['klinike'] = []
+            for klinika in klinike:
+                request.session['klinike'].append(klinika.id)
             return render(request, 'pacijent/glavnaStranicaPacijent.html',
                           {'lokacija': request.session['lokacija'], 'klinike': klinike})
         else:
@@ -353,14 +354,15 @@ def pretragaKlinikaPacijent(request):
                 pretrazuje = "opis"
             sadrzaj = request.POST['unosPretraga']
             if (pretrazuje == "naziv"):
-                klinike = Klinika.objects.filter(naziv__icontains=sadrzaj)
+                klinike = Klinika.objects.filter(naziv__icontains=sadrzaj, id__in=request.session['klinike'])
             elif pretrazuje=="adresa":
-                klinike = Klinika.objects.filter(adresa__icontains=request.POST['unosAdresa'])
+                klinike = Klinika.objects.filter(adresa__icontains=request.POST['unosAdresa'], id__in=request.session['klinike'])
             elif pretrazuje=="ocena":
-                klinike = Klinika.objects.filter(ocena__icontains=request.POST['unosOcena'])
+                klinike = Klinika.objects.filter(ocena__icontains=request.POST['unosOcena'], id__in=request.session['klinike'])
             else:
-                klinike = Klinika.objects.filter(opis__icontains=request.POST['unosOpis'])
+                klinike = Klinika.objects.filter(opis__icontains=request.POST['unosOpis'], id__in=request.session['klinike'])
             request.session['lokacija'] = 3
+            request.session['klinike'] = list(klinike.values_list('id', flat=True))
             return render(request, 'pacijent/glavnaStranicaPacijent.html',
                           {'lokacija': request.session['lokacija'], 'klinike': klinike})
     else:
@@ -368,73 +370,6 @@ def pretragaKlinikaPacijent(request):
         request.session['lokacija'] = 3
         return render(request, 'pacijent/glavnaStranicaPacijent.html',
                       {'lokacija': request.session['lokacija'], 'klinike': klinike})
-
-
-def pretragaKlinikaDatumPacijent(request):
-    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
-        return redirect('index')
-    if request.method == 'POST':
-        datum = request.POST['unosDatum']
-        try:
-            pregledi = Pregled.objects.filter(vreme__date=datum, prihvacen="da", vreme__gte=datetime.datetime.now())
-        except:
-            klinike = Klinika.objects.all()
-            return render(request, 'pacijent/glavnaStranicaPacijent.html',
-                          {'lokacija': request.session['lokacija'], 'klinike': klinike})
-        klinike = []
-        for pregled in pregledi:
-            if Klinika.objects.get(naziv=pregled.klinika) in klinike:
-                continue
-            klinike.append(Klinika.objects.get(naziv=pregled.klinika))
-        request.session['lokacija'] = 3
-        return render(request, 'pacijent/glavnaStranicaPacijent.html',
-                      {'lokacija': request.session['lokacija'], 'klinike': klinike})
-    else:
-        return render(request, 'pacijent/glavnaStranicaPacijent.html',
-                      )
-
-def celokupnaPretragaKlinike(request):
-    if request.method == 'POST':
-        opciono = 0
-        try:
-            adresa = request.POST['unosAdresa']
-        except:
-            opciono = 1
-        opis = request.POST['unosOpis']
-        datum = request.POST['unosDatum']
-        try:
-            ocena = request.POST['unosOcena']
-        except:
-            if(opciono == 1):
-                opciono = 3
-            else:
-                opciono = 2
-
-        try:
-            pregledi = Pregled.objects.filter(vreme__date=datum, prihvacen="da", vreme__gte=datetime.datetime.now())
-        except:
-            klinike = Klinika.objects.all()
-            return render(request, 'pacijent/glavnaStranicaPacijent.html',
-                          {'lokacija': request.session['lokacija'], 'klinike': klinike})
-        klinike = []
-        for pregled in pregledi:
-            if Klinika.objects.get(naziv=pregled.klinika) in klinike:
-                continue
-            if opciono == 0:
-                klinike.append(Klinika.objects.get(naziv=pregled.klinika, opis__icontains=opis))
-            elif opciono ==1:
-                klinike.append(Klinika.objects.get(naziv=pregled.klinika, opis__icontains=opis, adresa__icontains = adresa))
-            elif opciono == 2:
-                klinike.append(
-                    Klinika.objects.get(naziv=pregled.klinika, opis__icontains=opis, ocena__icontains=ocena))
-            elif opciono == 3:
-                klinike.append(
-                    Klinika.objects.get(naziv=pregled.klinika, opis__icontains=opis, ocena__icontains=ocena, adresa__icontains = adresa))
-        request.session['lokacija'] = 3
-        return render(request, 'pacijent/glavnaStranicaPacijent.html',
-                      {'lokacija': request.session['lokacija'], 'klinike': klinike})
-    else:
-        redirect('glavnaStranicaPacijent')
 
 def prikazLekaraKlinikePacijent(request):
     if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
