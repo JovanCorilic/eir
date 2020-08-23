@@ -2,7 +2,7 @@ from calendar import monthrange
 from time import strptime
 
 from clinic.models import Admin, Klinika, Odmor
-from pacijent.models import Pacijent, Pregled
+from pacijent.models import Pacijent, Pregled, Operacije
 from django.contrib import messages
 from datetime import date
 from clinic.models import Lekar
@@ -17,8 +17,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from pacijent.tokens import account_activation_token
 from django.contrib.auth.models import User
-from django.core.mail import EmailMessage
-
+from django.core.mail import EmailMessage, send_mail
 
 pregledani = []
 
@@ -114,6 +113,7 @@ def registerLekara(request):
         jedinstveni_broj_osiguranika = request.POST['jmbgnt']
         radno_mesto = request.POST['radnomesto']
         pozicija = request.POST['pozicija']
+        smena = request.POST['smena']
 
         if Admin.objects.filter(email_adresa=email_adresa).exists() or Pacijent.objects.filter(
                 email_adresa=email_adresa).exists() or Lekar.objects.filter(email_adresa=email_adresa).exists():
@@ -132,7 +132,7 @@ def registerLekara(request):
         lekar = Lekar.objects.create(email_adresa=email_adresa, lozinka=lozinka, ime=ime, prezime=prezime,
                                      broja_telefona=broja_telefona,
                                      jedinstveni_broj_osiguranika=jedinstveni_broj_osiguranika, datum=date.today(),
-                                     radno_mesto=radno_mesto, pozicija=pozicija)
+                                     radno_mesto=radno_mesto, pozicija=pozicija, smena=smena)
         lekar.save()
         print("napravljen lekar " + ime)
         return redirect('index')
@@ -271,6 +271,7 @@ def IzmeniKorisnika(request):
         prezime = request.POST['prezime']
         broja_telefona = request.POST['broja_telefona']
         jedinstveni_broj_osiguranika = request.POST['jedinstveni_broj_osiguranika']
+        smena = request.POST['smena']
 
         if Lekar.objects.filter(email_adresa=request.session['email']).exists():
             lekar = Lekar.objects.filter(email_adresa=request.session['email'])[0]
@@ -279,6 +280,7 @@ def IzmeniKorisnika(request):
             lekar.prezime = prezime
             lekar.broja_telefona = broja_telefona
             lekar.jedinstveni_broj_osiguranika = jedinstveni_broj_osiguranika
+            lekar.smena = smena
 
             lekar.save()
 
@@ -441,13 +443,47 @@ def IzmeniKliniku(request):
     if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
         return redirect('index')
     if request.method == 'POST':
+        nazivog = request.POST['nazivog']
         naziv = request.POST['naziv']
+        adresa = request.POST['adresa']
         opis = request.POST['opis']
 
-        if Klinika.objects.filter(naziv=naziv).exists():
-            k = Klinika.objects.filter(naziv=naziv)[0]
-            k.opis = opis
+        if Klinika.objects.filter(naziv=naziv).exists() and naziv != nazivog:
+            print("Ime klinike je vec zauzeto")
+            messages.info(request, "Ime klinike je vec zauzeto")
+            return redirect('IzmeniKliniku')
 
+        elif Klinika.objects.filter(naziv=nazivog).exists():
+            k = Klinika.objects.filter(naziv=nazivog)[0]
+            if naziv != "":
+                k.naziv = naziv
+
+                for ss in Sala.objects.filter(id_klinike_kojoj_pripada=nazivog):
+                    ss.id_klinike_kojoj_pripada = naziv
+                    ss.save()
+
+                for pp in Pregled.objects.filter(klinika=nazivog):
+                    pp.klinika = naziv
+                    pp.save()
+
+                for oo in Operacije.objects.filter(klinika=nazivog):
+                    oo.klinika = naziv
+                    oo.save()
+
+                for oo in Odmor.objects.filter(klinika=nazivog):
+                    oo.klinika = naziv
+                    oo.save()
+
+                for ll in Lekar.objects.filter(radno_mesto=nazivog):
+                    ll.radno_mesto = naziv
+                    ll.save()
+
+                for aa in Admin.objects.filter(naziv_klinike=nazivog):
+                    aa.naziv_klinike = naziv
+                    aa.save()
+
+            k.adresa = adresa
+            k.opis = opis
             k.save()
 
             return redirect('index')
@@ -840,7 +876,6 @@ def autoTermin(request):
 
 
 def manualTermin(lekar, sala, vreme, klinika, tip_pregleda, request):
-
     id = 1
     if Pregled.objects.filter(id=id).exists():
         while Pregled.objects.filter(id=id).exists():
@@ -929,18 +964,36 @@ def DodajOdmor(request):
 def OdobriOdmor(request):
     if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
         return redirect('index')
-    try:
+    if True:#try:
         if request.method == 'POST':
             id = request.POST['koga']
             kako = request.POST['kako']
+            koga = request.POST['mail']
 
             if Odmor.objects.filter(id=id).exists():
                 if kako == 'True':
                     od = Odmor.objects.filter(id=id)[0]
                     od.aktiviran = 1
                     od.save()
+                    send_mail(
+                        request.session['email'] + ' je odobrio vas zahtev za godisnji odmor',
+                        "Vas zahtev za odlazak na godisnji odmor je odobren",
+                        'aplikacijaklinika@gmail.com',
+                        [koga],
+                        fail_silently=False,
+                    )
                 else:
+                    razlog = request.POST['razlog'].strip()
+                    if razlog == "":
+                        razlog = "Vas zahtev za odlazak na godisnji odmor je odbijen";
                     Odmor.objects.filter(id=id).delete()
+                    send_mail(
+                        request.session['email'] + ' je odbijo vas zahteva za godisnji odmor',
+                        razlog,
+                        'aplikacijaklinika@gmail.com',
+                        [koga],
+                        fail_silently=False,
+                    )
 
                 return redirect('OdobriOdmor')
         else:
@@ -964,8 +1017,8 @@ def OdobriOdmor(request):
                 return render(request, 'odobriOdmor.html', {'niz': lekari})
             return HttpResponse('<h1>Error 400</h1>Bad request<br />Nemate pravo da pristupite ovoj stranici',
                                 status=400)
-    except:
-        return HttpResponse('<h1>Error 400</h1>Bad request<br />Pogresno ste uneli podatke', status=400)
+    #except:
+    #    return HttpResponse('<h1>Error 400</h1>Bad request<br />Pogresno ste uneli podatke', status=400)
 
 
 def DaLiImamPregled(email):
@@ -1197,22 +1250,25 @@ def OdobriAkaunt(request):
     except:
         return HttpResponse('<h1>Error 400</h1>Bad request<br />Pogresno ste uneli podatke', status=400)
 
-#deo koji pripada Jovanu Corilicu sw48/2017
+
+# deo koji pripada Jovanu Corilicu sw48/2017
 def activate(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = Pacijent.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
-    if user is not None :
+    if user is not None:
         user.aktiviran = 1
         user.save()
         # return redirect('home')
-        request.session['uloga']="NEULOGOVAN"
+        request.session['uloga'] = "NEULOGOVAN"
         return HttpResponse("Vaš akount je napravljen i sada možete da ga koristite!")
     else:
         return HttpResponse('Aktivacioni link nije validan')
-#-----------------------------------------------
+
+
+# -----------------------------------------------
 def OdobriPregled(request):
     if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
         return redirect('index')
@@ -1232,7 +1288,9 @@ def OdobriPregled(request):
                     email2 = Pregled.objects.get(id=id)
                     to_email = email2.zakazan
                     email = EmailMessage(
-                        mail_subject, "Vaš zahtev za pregled je prihvaćen i doktor će vas čekati u vremenu koji ste napisali!", to=[to_email]
+                        mail_subject,
+                        "Vaš zahtev za pregled je prihvaćen i doktor će vas čekati u vremenu koji ste napisali!",
+                        to=[to_email]
                     )
                     email.send()
                 except:

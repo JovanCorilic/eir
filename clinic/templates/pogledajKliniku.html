@@ -10,16 +10,17 @@
 			<h1>{{klinika.naziv}}</h1>
         </div>
 		<form method="POST" action="IzmeniKliniku" >{% csrf_token %}
+			<input type="hidden" id="nazivog" name="nazivog" value="{{klinika.naziv}}">
 			<div class="unos2">
 				<table>
 					<tr>
 						<th align="right">Naziv </th>
-						<th><input type="text" name="naziv" id="naziv" disabled value="{{klinika.naziv}}"></th>
+						<th><input type="text" name="naziv" id="naziv" value="{{klinika.naziv}}"></th>
 						<th></th>
 					</tr>
 					<tr>
 						<th align="right">Adresa </th>
-						<th><input type="text" name="adresa" id="adresa" disabled value="{{klinika.adresa}}"></th>
+						<th><input type="text" name="adresa" id="adresa" value="{{klinika.adresa}}"></th>
 						<th align="left"><label id="ladresa" style="color: red;"></label></th>
 					</tr>
 					<tr>
@@ -32,7 +33,7 @@
 						<th align="left"><input type="submit" class="sub" onclick="a()" value="Sacuvaj Promene"></th>
 						<th align="left"><label style="color: red;">
 							{% if messages|length == 1 %}
-                                Email adresa je zauzeta
+                                ID klinike je vec zauzeto
                             {% endif %}
 						</label></th>
 					</tr>

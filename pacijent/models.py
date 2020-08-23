@@ -63,3 +63,12 @@ class Operacije(models.Model):
     ocenaKlinike = models.FloatField(default=-1.0)
 
     objects = UserManager()
+
+
+class TipPregleda(models.Model):
+    id = models.CharField(max_length=500, primary_key=True, default=None)
+    ime = models.CharField(max_length=500, default=None)
+    cena = models.CharField(max_length=500, default=None)
+    trajanje = models.CharField(max_length=500, default=None)
+
+    objects = UserManager()

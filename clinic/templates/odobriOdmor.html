@@ -12,13 +12,20 @@
     <table>
 		{% for o in niz %}
             <tr>
-                <th>Dr. {{o.prezime}} zeli da napravi godisnji odmor {{o.o.vreme|escape}} duzine {{o.o.duzina}} dana</th>
-                <th><form method="POST" action="OdobriOdmor" >{% csrf_token %}<input type="hidden" name="koga" value="{{o.o.id}}"><input type="hidden" name="kako" value="True"><input type="submit" style="color:green" value="Odobri"></form></th>
-                <th><form method="POST" action="OdobriOdmor" >{% csrf_token %}<input type="hidden" name="koga" value="{{o.o.id}}"><input type="hidden" name="kako" value="False"><input type="submit" style="color:red" value="Odbij"></form></th>
+                <th>Dr. {{o.prezime}} zeli da koristi godisnji odmor od {{o.o.vreme|escape}} duzine {{o.o.duzina}} dana</th>
+                <th><form method="POST" action="OdobriOdmor" >{% csrf_token %}<input type="hidden" name="mail" value="{{o.o.lekar}}"><input type="hidden" name="koga" value="{{o.o.id}}"><input type="hidden" name="kako" value="True"><input type="submit" style="color:green" value="Odobri"></form></th>
+				<th><input type="button" style="color:red" value="Odbij" onclick="UwU(forma_{{o.o.id}})"></th>
+                <th><form id="forma_{{o.o.id}}" style="display:none" method="POST" action="OdobriOdmor" >{% csrf_token %}<input type="hidden" name="koga" value="{{o.o.id}}"><input type="hidden" name="kako" value="False"><input type="hidden" name="mail" value="{{o.o.lekar}}"><input style="width:1000px; height:10px" id="razlog" name="razlog" type="text" placeholder="Unesite razlog odbijanja zahteva za godisnji odmor"><input type="submit" style="color:red" value="Posalji"></form></th>
             </tr>
         {% endfor %}
     </table>
 	</body>
+	<script>
+		function UwU(OwO){
+			console.log(OwO);
+			OwO.style.display = "inline";
+		}
+	</script>
 <style>
         input[type=text], input[type=number]:not(.avs), input[type=password], select{
           width: 100%;

@@ -27,6 +27,7 @@ class Lekar(models.Model):
     radno_mesto = models.TextField(max_length=500, default=None)
     pozicija = models.TextField(max_length=500, default=None)
     ocena = models.FloatField(default=-1.0)
+    smena = models.FloatField(default=1.0)
 
     objects = UserManager()
 
