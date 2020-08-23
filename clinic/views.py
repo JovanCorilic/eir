@@ -2,7 +2,7 @@ from calendar import monthrange
 from time import strptime
 
 from clinic.models import Admin, Klinika, Odmor
-from pacijent.models import Pacijent, Pregled, Operacije
+from pacijent.models import Pacijent, Pregled, Operacije, TipPregleda
 from django.contrib import messages
 from datetime import date
 from clinic.models import Lekar
@@ -531,8 +531,18 @@ def IzmeniLekara(request):
             k.prezime = prezime
             k.broja_telefona = broja_telefona
 
-            k.save()
-            return redirect('index')
+            nijeZakazano = True
+
+            for pregled in Pregled.objects.filter(lekar=request.POST['koga']):
+                if pregled.vreme >= datetime.datetime.now():
+                    nijeZakazano = False
+
+            if nijeZakazano:
+                k.save()
+                return redirect('index')
+            else:
+                return HttpResponse('<h1>Error 400</h1>Bad request<br />Postoje zakazani termini ovog tipa pregleda',
+                                    status=400)
         return redirect('index')
     else:
         return redirect('index')
@@ -542,8 +552,18 @@ def ObrisiLekara(request):
     if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
         return redirect('index')
     try:
-        Lekar.objects.filter(email_adresa=request.POST['koga']).delete()
-        return redirect('index')
+        nijeZakazano = True
+
+        for pregled in Pregled.objects.filter(lekar=request.POST['koga']):
+            if pregled.vreme >= datetime.datetime.now():
+                nijeZakazano = False
+
+        if nijeZakazano:
+            Lekar.objects.filter(email_adresa=request.POST['koga']).delete()
+            return redirect('index')
+        else:
+            return HttpResponse('<h1>Error 400</h1>Bad request<br />Postoje zakazani termini ovog tipa pregleda',
+                                status=400)
     except:
         return redirect('index')
 
@@ -705,12 +725,15 @@ def DodajTermin(request):
                             for korinisk in Admin.objects.all():
                                 if korinisk.email_adresa == email:
                                     klinika = korinisk.naziv_klinike
+                            print("pravim......")
                             ter = Pregled.objects.create(id=id, klinika=klinika, zakazan="Prazno", lekar=lekar,
                                                          sala=sala, tip_pregleda=tip_pregleda,
                                                          vreme=vreme.__str__().split(".")[0],
                                                          sifra_bolesti="Prazno", diagnoza="Prazno", lekovi="Prazno",
-                                                         prihvacen='da')
+                                                         prihvacen='da', ocenalekara=-1, ocenaklinike=-1, temp='da')
+                            print("napravio......")
                             ter.save()
+                            print("sacuvao......")
                             storage = messages.get_messages(request)
                             storage.used = True
                             return redirect('index')
@@ -746,7 +769,7 @@ def DodajTermin(request):
             sale = Sala.objects.filter(id_klinike_kojoj_pripada=klinika)
             return render(request, "dodajTermin.html",
                           {'klinika': klinika, 'mapa': mapa, 'lekari': lekari, 'sale': sale, 'uloga': uloga,
-                           'lekar': email, 'vreme': date.today()})
+                           'lekar': email, 'vreme': date.today(), 'tip': TipPregleda.objects.all()})
     except:
         return HttpResponse('<h1>Error 400</h1>Bad request', status=400)
 
@@ -964,7 +987,7 @@ def DodajOdmor(request):
 def OdobriOdmor(request):
     if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
         return redirect('index')
-    if True:#try:
+    if True:  # try:
         if request.method == 'POST':
             id = request.POST['koga']
             kako = request.POST['kako']
@@ -1017,7 +1040,7 @@ def OdobriOdmor(request):
                 return render(request, 'odobriOdmor.html', {'niz': lekari})
             return HttpResponse('<h1>Error 400</h1>Bad request<br />Nemate pravo da pristupite ovoj stranici',
                                 status=400)
-    #except:
+    # except:
     #    return HttpResponse('<h1>Error 400</h1>Bad request<br />Pogresno ste uneli podatke', status=400)
 
 
@@ -1400,3 +1423,97 @@ def ZakaziOpet(request):
                      tip_pregleda=request.POST['tip_pregleda'], vreme=vr.strftime('%Y-%m-%d %H:%M:%S'), request=request)
         vr = vr + datetime.timedelta(hours=1)
     return redirect('index')
+
+
+def DodajTip(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
+    if request.method == 'POST':
+        id = request.POST['id']
+        ime = request.POST['ime']
+        trajanje = request.POST['trajanje']
+        cena = request.POST['cena']
+
+        if TipPregleda.objects.filter(id=id).exists() or TipPregleda.objects.filter(ime=ime).exists():
+            messages.info(request, "_")
+            return redirect('DodajTip')
+        while True:
+            try:
+                tip = TipPregleda.objects.create(id=id, ime=ime, trajanje=trajanje, cena=cena)
+                tip.save()
+                storage = messages.get_messages(request)
+                storage.used = True
+                return redirect('index')
+            except:
+                pass
+    else:
+        return render(request, 'dodajTip.html')
+
+
+def PogledajTipove(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
+    kk = TipPregleda.objects.all()
+    return render(request, 'pogledajTipove.html', {'tipovi': kk})
+
+
+def PogledajTip(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
+    odabrani = None
+    for tip in TipPregleda.objects.all():
+        try:
+            if request.POST[tip.id] is not None:
+                odabrani = tip
+        except:
+            pass
+    if odabrani is not None:
+        return render(request, 'pogledajTip.html', {'tip': odabrani})
+
+
+def IzmeniTip(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
+    if request.method == 'POST':
+        ime = request.POST['ime']
+        cena = request.POST['cena']
+        duzina = request.POST['trajanje']
+
+        if TipPregleda.objects.filter(id=request.POST['koga']).exists():
+            k = TipPregleda.objects.filter(id=request.POST['koga'])[0]
+            if not TipPregleda.objects.filter(ime=ime).exists():
+                k.ime = ime
+            k.cena = cena
+            k.trajanje = duzina
+            nijeZakazano = True
+
+            for pregled in Pregled.objects.filter(tip_pregleda=request.POST['koga']):
+                if pregled.vreme >= datetime.datetime.now():
+                    nijeZakazano = False
+
+            if nijeZakazano:
+                k.save()
+                return redirect('index')
+            else:
+                return HttpResponse('<h1>Error 400</h1>Bad request<br />Postoje zakazani termini ovog tipa pregleda',
+                                    status=400)
+        return redirect('index')
+    else:
+        return redirect('index')
+
+def ObrisiTip(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
+    try:
+        nijeZakazano = True
+
+        for pregled in Pregled.objects.filter(tip_pregleda = request.POST['koga']):
+            if pregled.vreme >= datetime.datetime.now():
+                nijeZakazano = False
+
+        if nijeZakazano:
+            TipPregleda.objects.filter(id=request.POST['koga']).delete()
+            return redirect('index')
+        return HttpResponse('<h1>Error 400</h1>Bad request<br />Postoje zakazani termini ovog tipa pregleda', status=400)
+    except:
+        return redirect('index')

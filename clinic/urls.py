@@ -46,5 +46,9 @@ urlpatterns = [
     path('OdobriPregled', views.OdobriPregled, name='OdobriPregled'),
     path('Pregledaj', views.Pregledaj, name='Pregledaj'),
     path('ZakaziOpet', views.ZakaziOpet, name='ZakaziOpet'),
-
+    path('DodajTip', views.DodajTip, name='DodajTip'),
+    path('PogledajTip', views.PogledajTip, name='PogledajTip'),
+    path('PogledajTipove', views.PogledajTipove, name='PogledajTipove'),
+    path('IzmeniTip', views.IzmeniTip, name='IzmeniTip'),
+    path('ObrisiTip', views.ObrisiTip, name='ObrisiTip'),
 ]

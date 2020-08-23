@@ -68,7 +68,7 @@ class Operacije(models.Model):
 class TipPregleda(models.Model):
     id = models.CharField(max_length=500, primary_key=True, default=None)
     ime = models.CharField(max_length=500, default=None)
-    cena = models.CharField(max_length=500, default=None)
-    trajanje = models.CharField(max_length=500, default=None)
+    cena = models.FloatField(max_length=500, default=1500)
+    trajanje = models.FloatField(max_length=500, default=15)
 
     objects = UserManager()

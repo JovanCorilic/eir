@@ -51,11 +51,9 @@
 						<th align="right">Tip pregleda </th>
                         <th>
                             <select name="tip_pregleda" id="tip_pregleda">
-                                <option value="Operacija">Operacija</option>
-                                <option value="Uho Grlo Nos">Uho Grlo Nos</option>
-                                <option value="Zdravstveni Pregled">Zdravstveni Pregled</option>
-                                <option value="Psiholosji Pregled">Psiholosji Pregled</option>
-                                <option value="Opsti Pregled">"Opsti Pregled"</option>
+                                {% for ti in tip%}
+						  			<option value="{{ti.id}}">{{ti.id}}) {{ti.ime}} ({{ti.trajanje|stringformat:".0f" }}min)</option>
+						    {%endfor%}
                             </select>
                         </th>
 					</tr>
@@ -67,7 +65,7 @@
 					</tr>
 
                     <tr>
-                        <th colspan="2" align="right">(Pregledi traju 30min)</th>
+                        <th colspan="2" align="right"></th>
                         <th align="left"><div id="termini" align="left" style="color:green;padding:5px;display:inline"></div></th>
                     </tr>
                     <tr>
