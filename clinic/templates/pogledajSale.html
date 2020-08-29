@@ -4,16 +4,19 @@
     <meta charset="UTF-8">
     <title>Sale</title>
 </head>
-<body onload="tt()">
+<body onload="stavidat()">
 <form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
     <div class="unos">
 		<h2>Sale</h2>
-		Pretraga <input class="avs" id="pretraga" onchange="tt()"><br />
+
+		Pretraga: Broj Sale: <input class="avs" id="pretraga" onchange="ttime()">
+		Naziv Sale: <input class="avs" id="pretragap" onchange="ttprezime()">
+		Datum za slobodne termine: <input type="date" class="avs" id="dat" onchange="datumchange()"><br />
 		<table border="1" class="table" id="tabb">
 		    <tr class="tr">
-		        <th class="th">Broj</th>
-		        <th class="th">Naziv</th>
-		        <th class="th">Klinika Kojoj Pripada</th>
+		        <th onclick="sortTable(0)" class="th">Broj</th>
+		        <th onclick="sortTable(1)" class="th">Naziv</th>
+		        <th onclick="sortTable(2)" class="th">Klinika Kojoj Pripada</th>
                 <th class="th">Opis</th>
 				{% if uloga == 'ADMIN' %}
                 <th class="th"></th>
@@ -42,10 +45,37 @@
 		    {% endfor %}
 
 		</table>
+		<br />
+		<h2>Slobodni termini</h2>
+		<div id="mapadostupnihtermina">
+
+		</div>
 	</div>
-</body>
+<script>
+		function stavidat(){
+			document.getElementById('dat').valueAsDate = new Date();
+			datumchange()
+		}
+		function datumchange(){
+			{{mapa|safe}}
+
+			var dat = document.getElementById("dat").value;
+        	dat = parseInt((new Date(dat).getTime() / 1000).toFixed(0));
+			for(var i = 0 ; i < termini.length ; ++i){
+				console.log(termini[i][0] + '>=' + dat + " ili " + termini[i][0] + "<=" + (dat + 86400));
+				if((termini[i][0] >= dat - 86400 && termini[i][0] <= dat) || termini[i][0] == -1){
+					document.getElementById("mapadostupnihtermina").innerHTML = termini[i][1];
+					break;
+				}
+			}
+		}
+</script>
     <script>
-		function tt() {
+
+
+
+
+		function ttime() {
 			var table, tr, i, txtValue;
 			var uneto = document.getElementById("pretraga").value;
 
@@ -61,24 +91,13 @@
 			for (i = 0; i < tr.length; i++) {
 
 		    	var td1 = tr[i].getElementsByTagName("td")[0];
-		    	var td2 = tr[i].getElementsByTagName("td")[1];
-		    	var td3 = tr[i].getElementsByTagName("td")[2];
-		    	var td4 = tr[i].getElementsByTagName("td")[3];
 
-
-		    	if (td1 || td2 || td3 || td4) {
+		    	if (td1) {
 		      		txtValue1 = td1.textContent || td1.innerText;
-		      		txtValue2 = td2.textContent || td2.innerText;
-		      		txtValue3 = td3.textContent || td3.innerText;
-		      		txtValue4 = td4.textContent || td4.innerText;
-
 
 		      		txtValue1 = txtValue1 == undefined ? '' : txtValue1.trim();
-		      		txtValue2 = txtValue2 == undefined ? '' : txtValue2.trim();
-		      		txtValue3 = txtValue3 == undefined ? '' : txtValue3.trim();
-		      		txtValue4 = txtValue4 == undefined ? '' : txtValue4.trim();
 
-		      		var sadrzi = txtValue1.includes(uneto) || txtValue2.includes(uneto) || txtValue3.includes(uneto) || txtValue4.includes(uneto);
+		      		var sadrzi = txtValue1.includes(uneto);
 
 		      		if (sadrzi || unos) {
 		        		tr[i].style.display = "";
@@ -89,7 +108,132 @@
 		    	}
 		  	}
 		}
+
+		function ttprezime() {
+			var table, tr, i, txtValue;
+			var uneto = document.getElementById("pretragap").value;
+
+			var unos = false;
+
+			if(uneto == ""){
+				unos = true;
+			}
+
+			table = document.getElementById("tabb");
+			tr = table.getElementsByTagName("tr");
+
+			for (i = 0; i < tr.length; i++) {
+
+		    	var td2 = tr[i].getElementsByTagName("td")[1];
+
+		    	if (td2) {
+		      		txtValue2 = td2.textContent || td2.innerText;
+
+		      		txtValue2 = txtValue2 == undefined ? '' : txtValue2.trim();
+
+		      		var sadrzi = txtValue2.includes(uneto);
+
+		      		if (sadrzi || unos) {
+		        		tr[i].style.display = "";
+		      		}
+		      		else {
+		        		tr[i].style.display = "none";
+		      		}
+		    	}
+		  	}
+		}
+
+function tt3() {
+	var table, tr, i, txtValue;
+	var uneto = document.getElementById("pretraga3").value;
+
+	var unos = false;
+
+	if(uneto == ""){
+		unos = true;
+	}
+
+	table = document.getElementById("tabb");
+	tr = table.getElementsByTagName("tr");
+
+	for (i = 0; i < tr.length; i++) {
+
+    	var td7 = tr[i].getElementsByTagName("td")[6];
+
+    	if ( td7) {
+
+      		txtValue7 = td7.textContent || td7.innerText;
+
+
+      		txtValue7 = txtValue7 == undefined ? '' : txtValue7.trim();
+
+      		var sadrzi = txtValue7.includes(uneto);
+
+      		if (sadrzi || unos) {
+        		tr[i].style.display = "";
+      		}
+      		else {
+        		tr[i].style.display = "none";
+      		}
+    	}
+  	}
+}
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("tabb");
+  switching = true;
+  //Set the sorting direction to ascending:
+  dir = "asc";
+  /*Make a loop that will continue until
+  no switching has been done:*/
+  while (switching) {
+    //start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /*Loop through all table rows (except the
+    first, which contains table headers):*/
+    for (i = 1; i < (rows.length - 1); i++) {
+      //start by saying there should be no switching:
+      shouldSwitch = false;
+      /*Get the two elements you want to compare,
+      one from current row and one from the next:*/
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      /*check if the two rows should switch place,
+      based on the direction, asc or desc:*/
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch= true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      /*If a switch has been marked, make the switch
+      and mark that a switch has been done:*/
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      //Each time a switch is done, increase this count by 1:
+      switchcount ++;
+    } else {
+      /*If no switching has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again.*/
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
 	</script>
+</body>
     <style>
         .table {
           font-family: arial, sans-serif;

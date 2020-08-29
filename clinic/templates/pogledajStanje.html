@@ -3,11 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <title>Finansije</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 </head>
 <body>
-<form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
-{{map|safe}}
+    <form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
+    <form method="POST" action="Omeni" >{% csrf_token %}<input type="submit" class="sub" value="Pogledaj svoj profil" ></form>
+    <table>
+        <tr>
+            <td><form method="POST" action="pogledajSale" >{% csrf_token %}<input type="submit" value="Pregledaj Sve Sale"></form></td>
+            <td><form method="get" action="DodajSalu">{% csrf_token %}<input type="submit" value="Dodaj Salu"></form></td>
+        </tr>
+        <tr>
+            <td><form method="POST" action="PogledajTipove">{% csrf_token %}<input type="submit" value="Pogledaj Tipove Pregleda"></form></td>
+            <td><form method="get" action="DodajTip">{% csrf_token %}<input type="submit" value="Dodaj Tip Pregleda"></form></td>
+        </tr>
+        <tr>
+            <td><form method="POST" action="pogledajLekare">{% csrf_token %}<input type="submit" value="Pogledaj Lekare"></form></td>
+            <td><form method="get" action="registerLekara">{% csrf_token %}<input type="submit" value="Dodaj Lekara"></form></td>
+        </tr>
+    </table>
+    <br /><br /><br />
+    <h2>Prosecna Ocena Klinije je {{avg}}</h2>
+    {{lekar|safe}}
+    <br /><br /><br />
+    <table>
+        <tr>
+            <th>Pregledi po Danu</th>
+            <th>Pregledi po Nedelji</th>
+            <th>Pregledi po Mececu</th>
+        </tr>
+        <tr>
+            <td><canvas id="myChart" width="400" height="400"></canvas></td>
+            <td><canvas id="myChart2" width="400" height="400"></canvas></td>
+            <td><canvas id="myChart3" width="400" height="400"></canvas></td>
+        </tr>
+    </table>
+    <br /><br /><br />
+    <h2>Zarada za specificni perijod vremena</h2>
+    od <input type="date" id="oddatum" name="oddatum" onchange="zaradaZaVreme()"> do <input type="date" id="dodatum" name="dodatum" onchange="zaradaZaVreme()">
+    <h3 id="datumi"></h3>
+    <br /><br /><br />
 </body>
+<script>
+    function zaradaZaVreme(){
+        {{datum|safe}}
+        var odg = 0
+        var od = document.getElementById("oddatum").value;
+        od = parseInt((new Date(od).getTime() / 1000).toFixed(0))
+        var doo = document.getElementById("dodatum").value;
+        doo = parseInt((new Date(doo).getTime() / 1000).toFixed(0))
+
+        for (index = 0; index < datumi.length; ++index) {
+            if((datumi[index][0] >= od && datumi[index][0] <= doo) || (datumi[index][0] <= od && datumi[index][0] >= doo)){
+                odg += datumi[index][1]
+            }
+        }
+
+        document.getElementById("datumi").innerHTML = "Zarada iznosi " + String(odg) + " din";
+    }
+</script>
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Pre 5 Dana', 'Pre 4 Dana', 'Pre 3 Dana', 'Prekjuce', 'Juce', 'Danas'],
+            datasets: [{
+                label: 'Broj Pregleda',
+                data: {{dan|safe}},
+                backgroundColor: [
+                    'rgba(100, 200, 0, 0.2)',
+                    'rgba(100, 200, 0, 0.2)',
+                    'rgba(100, 200, 0, 0.2)',
+                    'rgba(100, 200, 0, 0.2)',
+                    'rgba(100, 200, 0, 0.2)',
+                    'rgba(200, 100, 100, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(55, 99, 12, 1)',
+                    'rgba(55, 99, 12, 1)',
+                    'rgba(55, 99, 12, 1)',
+                    'rgba(55, 99, 12, 1)',
+                    'rgba(55, 99, 12, 1)',
+                    'rgba(255, 200, 200, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    myChart.canvas.parentNode.style.height = '300px';
+    myChart.canvas.parentNode.style.width = '300px';
+
+
+
+    var ctx2 = document.getElementById('myChart2').getContext('2d');
+    var myChart2 = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: ['Pre 5 Nedelja', 'Pre 4 Nedelja', 'Pre 3 Nedelja', 'Pre 2 Nedelje', 'Prosle Nedelje', 'Ove Nedelje'],
+            datasets: [{
+                label: 'Broj Pregleda',
+                data: {{mesec|safe}},
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(200, 200, 15, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    myChart2.canvas.parentNode.style.height = '300px';
+    myChart2.canvas.parentNode.style.width = '300px';
+
+
+
+    var ctx3 = document.getElementById('myChart3').getContext('2d');
+    var myChart3 = new Chart(ctx3, {
+        type: 'bar',
+        data: {
+            labels: ['Pre 5 Meseci', 'Pre 4 Meseca', 'Pre 3 Meseca', 'Pre 2 Meseca', 'Proslog Meseca', 'Ovo Meseca'],
+            datasets: [{
+                label: 'Broj Pregleda',
+                data: {{godina|safe}},
+                backgroundColor: [
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    myChart3.canvas.parentNode.style.height = '300px';
+    myChart3.canvas.parentNode.style.width = '300px';
+</script>
 <style>    tooltip {position: relative;display: inline-block;border-bottom: 1px dotted black;}.tooltip
            .tooltiptext {visibility: hidden;width: 120px;background-color: black;color: #fff;text-align:
            center;border-radius: 6px;padding: 5px 0;position: absolute;z-index: 1;}.tooltip:hover .tooltiptext {
@@ -42,4 +221,38 @@
           cursor: pointer;
           font-weight: bold;
         }</style>
+
+
+
+<style>
+        input[type=text], input[type=number]:not(.avs), input[type=password], select{
+          width: 100%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          font-weight: bold;
+        }
+        .sub {
+          background-color: #4CAF50;
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          cursor: pointer;
+          font-weight: bold;
+        }
+    </style>
+
+
 </html>

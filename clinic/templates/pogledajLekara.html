@@ -16,12 +16,12 @@
 				<table>
 					<tr>
 						<th align="right">Ime </th>
-						<th><input type="text" name="ime" id="ime"  value="{{lekar.ime}}"></th>
+						<th><input type="text" name="ime" id="ime"  disabled value="{{lekar.ime}}"></th>
 						<th></th>
 					</tr>
 					<tr>
 						<th align="right">Prezime </th>
-						<th><input type="text" name="prezime" id="prezime" value="{{lekar.prezime}}"></th>
+						<th><input type="text" name="prezime" id="prezime" disabled value="{{lekar.prezime}}"></th>
 						<th></th>
 					</tr>
 					<tr>
@@ -31,7 +31,7 @@
 					</tr>
 					<tr>
 						<th align="right">Broja Telefona </th>
-                        <th><input type="text" name="broja_telefona"  id="broja_telefona" value="{{lekar.broja_telefona}}"></th>
+                        <th><input type="text" name="broja_telefona" disabled id="broja_telefona" value="{{lekar.broja_telefona}}"></th>
 						<th align="left"><label id="lbroja_telefona" style="color: red;"></label></th>
 					</tr>
 					<tr>
@@ -53,12 +53,6 @@
 						<th align="right">Pozicija </th>
 						<th><input type="text" name="pozicija" id="pozicija" disabled value="{{lekar.pozicija}}"></th>
 						<th align="left"><label id="lpozicija" style="color: red;"></label></th>
-					</tr>
-					<tr>
-						<th><input type="hidden" name="koga" value="{{ lekar.email_adresa }}"></th>
-						<th align="left"><input type="submit" class="sub" onclick="a()" value="Sacuvaj Promene"></th>
-						<th align="left"><label style="color: red;">
-						</label></th>
 					</tr>
 				</table>
 			</div>

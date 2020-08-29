@@ -50,13 +50,13 @@
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Kssbc\Documents\GitHub\eir\pacijent" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\User\Desktop\eir-master\clinic\templates" />
       <recent name="C:\Users\Kssbc\Documents\GitHub\eir\pacijent" />
       <recent name="C:\Users\User\Desktop\projekat\clinic\templates" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Kssbc\Documents\GitHub\eir\pacijent" />
     </key>
   </component>
   <component name="RunDashboard">
