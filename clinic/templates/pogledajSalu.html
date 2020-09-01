@@ -11,17 +11,17 @@
 			<h1>{{sala.broj}} {{sala.naziv}}</h1>
 			<form method="POST" action="ObrisiSalu">{% csrf_token %}<input type="hidden" name="koga" value="{{ sala.naziv }}"><input type="submit" name="{{ sala.naziv }}" class="sub" value="Obrisi" ></form>
 		</div>
-		<form method="POST" action="IzmeniSalu" >{% csrf_token %}
+		<form method="POST" action="IzmeniSalu" >{% csrf_token %}<input type="hidden" name="koga" value="{{ sala.naziv }}">
 			<div class="unos2">
 				<table>
 					<tr>
 						<th align="right">Broj </th>
-						<th><input type="text" name="broj" id="broj" disabled value="{{sala.broj}}"></th>
+						<th><input type="text" name="broj" id="broj" value="{{sala.broj}}"></th>
 						<th></th>
 					</tr>
 					<tr>
 						<th align="right">Naziv </th>
-						<th><input type="text" name="naziv" id="naziv" disabled value="{{sala.naziv}}"></th>
+						<th><input type="text" name="naziv" id="naziv" value="{{sala.naziv}}"></th>
 						<th></th>
 					</tr>
 					<tr>

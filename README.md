@@ -68,6 +68,6 @@ Zatim da biste mu pristupili idete na:
 *adresa servera/admin*
 
 # Autori
-- Jovan Ćorilić (SW 48/2017) - Zavrsio
-- Bogdan Čiplić (SW 79/2017)
+- Jovan Ćorilić (SW 48/2017)
+- Bogdan Čiplić (SW 79/2017) - Ne može da završi
 - Mladen Samardžić (SW 37/2017) - Napustio

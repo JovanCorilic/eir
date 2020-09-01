@@ -52,7 +52,7 @@
                         <th>
                             <select name="tip_pregleda" id="tip_pregleda">
                                 {% for ti in tip%}
-						  			<option value="{{ti.id}}">{{ti.id}}) {{ti.ime}} ({{ti.trajanje|stringformat:".0f" }}min)</option>
+						  			<option value="{{ti.id}}">{{ti.ime}} ({{ti.trajanje|stringformat:".0f" }}min)</option>
 						    {%endfor%}
                             </select>
                         </th>

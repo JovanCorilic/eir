@@ -362,12 +362,25 @@ def IzmeniSalu(request):
     if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
         return redirect('index')
     if request.method == 'POST':
-        naziv = request.POST['naziv']
+        naziv = request.POST['koga']
         opis = request.POST['opis']
+        broj = request.POST['broj']
+        novNaziv = request.POST['naziv']
 
+        if Pregled.objects.filter(sala=naziv,
+                                  vreme__range=[date.today(), date.today() + datetime.timedelta(days=1000)]).exists():
+            return HttpResponse('<h1>Error 400</h1>Bad request<br />Postoje zakazani termini u ovoj sali', status=400)
         if Sala.objects.filter(naziv=naziv).exists():
             sala = Sala.objects.filter(naziv=naziv)[0]
             sala.opis = opis
+            if not Sala.objects.filter(broj=broj).exists():
+                sala.broj = broj
+            if not Sala.objects.filter(naziv=novNaziv).exists():
+                sala.naziv = novNaziv
+
+                for pregd in Pregled.objects.filter(sala=naziv):  # za stare zakazane termine
+                    pregd.sala = novNaziv
+                    pregd.save()
 
             sala.save()
 
@@ -380,6 +393,9 @@ def IzmeniSalu(request):
 def ObrisiSalu(request):
     if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
         return redirect('index')
+    if Pregled.objects.filter(sala=request.POST['koga'],
+                              vreme__range=[date.today(), date.today() + datetime.timedelta(days=1000)]).exists():
+        return HttpResponse('<h1>Error 400</h1>Bad request<br />Postoje zakazani termini u ovoj sali', status=400)
     try:
         Sala.objects.filter(naziv=request.POST['koga']).delete()
         return redirect('index')
@@ -564,7 +580,7 @@ def ObrisiLekara(request):
             Lekar.objects.filter(email_adresa=request.POST['koga']).delete()
             return redirect('index')
         else:
-            return HttpResponse('<h1>Error 400</h1>Bad request<br />Postoje zakazani termini ovog tipa pregleda',
+            return HttpResponse('<h1>Error 400</h1>Bad request<br />Lekar ima aktivne preglede',
                                 status=400)
     except:
         return redirect('index')
@@ -728,16 +744,18 @@ def DodajTermin(request):
                                 if korinisk.email_adresa == email:
                                     klinika = korinisk.naziv_klinike
                             print("pravim......")
-                            #ter = Pregled.objects.create(id=id, klinika=klinika, zakazan="Prazno", lekar=lekar,
+                            # ter = Pregled.objects.create(id=id, klinika=klinika, zakazan="Prazno", lekar=lekar,
                             #                             sala=sala, tip_pregleda=tip_pregleda,
                             #                             vreme=vreme.__str__().split(".")[0],
                             #                             sifra_bolesti="Prazno", diagnoza="Prazno", lekovi="Prazno",
                             #                             prihvacen='da', ocenalekara=-1, ocenaklinike=-1, temp='da')
-                            ter = Pregled.objects.create(id=id, klinika=klinika, zakazan="Prazno", lekar=lekar, sala=sala,
-                                                   tip_pregleda=tip_pregleda, vreme=vreme.__str__().split(".")[0],
-                                                   sifra_bolesti="Prazno",
-                                                   diagnoza="Prazno", lekovi="Prazno", prihvacen="da", ocenaLekara=-1,
-                                                   ocenaKlinike=-1)
+                            ter = Pregled.objects.create(id=id, klinika=klinika, zakazan="Prazno", lekar=lekar,
+                                                         sala=sala,
+                                                         tip_pregleda=tip_pregleda, vreme=vreme.__str__().split(".")[0],
+                                                         sifra_bolesti="Prazno",
+                                                         diagnoza="Prazno", lekovi="Prazno", prihvacen="da",
+                                                         ocenaLekara=-1,
+                                                         ocenaKlinike=-1)
                             print("napravio......")
                             ter.save()
                             print("sacuvao......")
@@ -890,8 +908,12 @@ def napraviMapuTerminaSala(pregledi, sale):
             rezultat += kraj
             rezultat += "<div style=\"background-color:green;padding: 5px;display: inline\">- 24:00:00</div>"
             rezultat += "</div><br />"
-        if "[" + str(time.mktime(datetime.datetime.strptime(pregled2.vreme.strftime("%d/%m/%Y"), "%d/%m/%Y").timetuple())).split(".")[0] + ", '" + rezultat + "']," not in rezultatov:
-            rezultatov += "[" + str(time.mktime(datetime.datetime.strptime(pregled2.vreme.strftime("%d/%m/%Y"), "%d/%m/%Y").timetuple())).split(".")[0] + ", '" + rezultat + "'],"
+        if "[" + str(time.mktime(
+                datetime.datetime.strptime(pregled2.vreme.strftime("%d/%m/%Y"), "%d/%m/%Y").timetuple())).split(".")[
+            0] + ", '" + rezultat + "']," not in rezultatov:
+            rezultatov += "[" + str(time.mktime(
+                datetime.datetime.strptime(pregled2.vreme.strftime("%d/%m/%Y"), "%d/%m/%Y").timetuple())).split(".")[
+                0] + ", '" + rezultat + "'],"
 
     deffa = ""
 
@@ -993,6 +1015,48 @@ def manualTermin(lekar, sala, vreme, klinika, tip_pregleda, request):
                     pass
 
 
+def manualTerminLekar(lekar, sala, vreme, klinika, tip_pregleda, zakazan):
+    id = 1
+    if Pregled.objects.filter(id=id).exists():
+        while Pregled.objects.filter(id=id).exists():
+            id += 1
+
+    if not Pregled.objects.filter(id=id).exists():
+        if proveriTermin(vreme.__str__().split(".")[0], sala, lekar):
+            ii = 0
+            while True:
+                ii += 1
+                if ii >= 100:
+                    return
+                try:
+                    cena = 0
+
+                    if not TipPregleda.objects.filter(id=tip_pregleda).exists():
+                        if tip_pregleda == 'Opsti Pregled':
+                            tpp = TipPregleda.objects.create(id=tip_pregleda, ime='Opsti Pregled', cena=1500,
+                                                             trajanje=15)
+                            tpp.save()
+                        else:
+                            pass
+
+                    pregled = TipPregleda.objects.filter(id=tip_pregleda)[0]
+
+                    cena = pregled.cena
+                    print(cena)
+                    print("zakazan " + zakazan)
+                    ter = Pregled.objects.create(id=id, klinika=klinika, zakazan=zakazan, lekar=lekar, sala="Prazno",
+                                                 tip_pregleda=tip_pregleda, vreme=vreme.__str__().split(".")[0],
+                                                 sifra_bolesti="Prazno",
+                                                 diagnoza="Prazno", lekovi="Prazno", prihvacen="ne", ocenaLekara=-1,
+                                                 ocenaKlinike=-1)
+
+                    ter.save()
+
+                    return
+                except:
+                    pass
+
+
 def DodajOdmor(request):
     if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
         return redirect('index')
@@ -1053,6 +1117,16 @@ def DodajOdmor(request):
 
 
 def OdobriOdmor(request):
+    """ kod koji radi UwU
+    mail_subject = 'Aktivirajte vaš Pacijent akount'
+    message = "hrf"
+    to_email = "likneki55@gmail.com"
+    email = EmailMessage(
+        mail_subject, message, to=[to_email]
+    )
+    email.send()
+    """
+
     if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
         return redirect('index')
     if True:  # try:
@@ -1117,14 +1191,22 @@ def DaLiImamPregled(email):
     if pregledi.__len__() == 0:
         return None
     for preg in pregledi:
-        if preg.vreme <= datetime.datetime.now() <= preg.vreme + datetime.timedelta(minutes=30):
+        duzina = 15
+        try:
+            duzina = TipPregleda.objects.filter(id=preg.tip_pregleda)[0].trajanje
+        except:
+            duzina = 15
+            print("tip pregleda " + preg.tip_pregleda + " ne postoji")
+
+        if datetime.datetime.now() >= preg.vreme and datetime.datetime.now() <= (preg.vreme + datetime.timedelta(minutes=duzina)):#if datetime.datetime.now() <= preg.vreme and preg.vreme <= (datetime.datetime.now() + datetime.timedelta(minutes=duzina)):
             if preg.zakazan != "Prazno" and preg.id not in pregledani:
                 print("--------------------")
                 print(preg.id)
-                print("se nalazi?")
-                print(preg.id in pregledani)
-                for sas in pregledani:
-                    print(sas)
+                print('duzina ' + str(duzina))
+                print(str(datetime.datetime.now()) + "<" + str(preg.vreme))
+                print(datetime.datetime.now() <= preg.vreme)
+                print(str(preg.vreme) + "<=" + str(datetime.datetime.now() + datetime.timedelta(minutes=duzina)))
+                print(preg.vreme <= datetime.datetime.now() + datetime.timedelta(minutes=duzina))
                 print("--------------------")
                 return preg
     return None
@@ -1170,7 +1252,7 @@ def NapraviRadniKalendar(email):
 
         iterator = 0
         for pregled in pregledi:
-            if pregled.vreme.day == i:
+            if pregled.vreme.day == i and pregled.vreme.month == date.today().month and pregled.vreme.year == date.today().year:
                 iterator += 1
                 tekst = "Imate " + iterator.__str__() + " Zakazanih Pregleda"
 
@@ -1235,7 +1317,9 @@ def PogledajStanje(request):
     avgKlinije = AvgKlinike(email)
     avgLekar = AvgLekara(email)
     datumNum = datumi(email)
-    return render(request, "pogledajStanje.html", {'map': mapa, 'dan': dan, 'mesec': mesec, 'godina': godina, 'avg': avgKlinije, 'lekar': avgLekar, 'datum': datumNum})
+    return render(request, "pogledajStanje.html",
+                  {'map': mapa, 'dan': dan, 'mesec': mesec, 'godina': godina, 'avg': avgKlinije, 'lekar': avgLekar,
+                   'datum': datumNum})
 
 
 def PregledaDan(email):
@@ -1315,7 +1399,7 @@ def AvgKlinike(email):
             tren += 1
             rez += preg.ocenaKlinike
 
-    return rez/tren
+    return rez / tren
 
 
 def AvgLekara(email):
@@ -1332,9 +1416,12 @@ def AvgLekara(email):
         if tren == 0:
             tren = 1
         if "[NPL]" in lekar.ime:
-            rez += "<tr><td align='center'>" + lekar.ime[5:] + "</td><td align='center'>" + lekar.prezime + "</td><td align='center'>" + lekar.email_adresa + "</td><td align='center'>" + str(pp / tren) + "</td></tr>"
+            rez += "<tr><td align='center'>" + lekar.ime[
+                                               5:] + "</td><td align='center'>" + lekar.prezime + "</td><td align='center'>" + lekar.email_adresa + "</td><td align='center'>" + str(
+                pp / tren) + "</td></tr>"
         else:
-            rez += "<tr><td align='center'>" + lekar.ime + "</td><td align='center'>" + lekar.prezime + "</td><td align='center'>" + lekar.email_adresa + "</td><td align='center'>" + str(pp/tren) + "</td></tr>"
+            rez += "<tr><td align='center'>" + lekar.ime + "</td><td align='center'>" + lekar.prezime + "</td><td align='center'>" + lekar.email_adresa + "</td><td align='center'>" + str(
+                pp / tren) + "</td></tr>"
 
     return rez + "</table>"
 
@@ -1614,9 +1701,24 @@ def ZakaziOpet(request):
     vr = datetime.datetime.strptime(request.POST['vreme'], '%Y-%m-%d %H:%M:%S')
     i = Pregled.objects.count()
     while Pregled.objects.count() == i:
-        manualTermin(klinika=request.POST['klinika'], lekar=request.POST['lekar'], sala=request.POST['sala'],
-                     tip_pregleda=request.POST['tip_pregleda'], vreme=vr.strftime('%Y-%m-%d %H:%M:%S'), request=request)
+        manualTerminLekar(klinika=request.POST['klinika'], lekar=request.POST['lekar'], sala=request.POST['sala'],
+                     tip_pregleda=request.POST['tip_pregleda'], vreme=vr.strftime('%Y-%m-%d %H:%M:%S'), zakazan=request.POST['koga'])
         vr = vr + datetime.timedelta(hours=1)
+    ###########################################
+    kome = []
+    for ada in Admin.objects.filter(naziv_klinike=request.POST['klinika']):
+        kome.append(ada.email_adresa)
+    for ww in kome:
+        try:
+            send_mail(
+                request.session['email'] + ' zeli da zakaze pregled sa pcaijentom ' + request.POST['koga'],
+                request.session['email'] + ' zeli da zakaze pregled sa pcaijentom ' + request.POST['koga'] + ". Molimo vas da pogledate sajt klinike za vise informacija, i da odlucite da li odobravate ovaj pregled",
+                'aplikacijaklinika@gmail.com',
+                [ww],
+                fail_silently=False,
+            )
+        except:
+            print('invalid email')
     return redirect('index')
 
 

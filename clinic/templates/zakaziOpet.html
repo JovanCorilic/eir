@@ -13,12 +13,14 @@
             <table>
                 <tr>
                     <form method="POST" action="ZakaziOpet" onSubmit="return proveri();">{% csrf_token %}
+                        Vreme :
+                        <input type="text" name="vreme" id="vreme" value="{{vreme|escape}}">
                         <input type="hidden" name="koga" value="{{koga}}">
                         <input type="hidden" name="klinika" value="{{klinika}}">
                         <input type="hidden" name="lekar" value="{{lekar}}">
                         <input type="hidden" name="sala" value="{{sala}}">
                         <input type="hidden" name="tip_pregleda" value="{{tip_pregleda}}">
-                        <input type="hidden" name="vreme" value="{{vreme}}">
+                        <!--<input type="hidden" name="vreme" value="{{vreme}}">-->
                         <input type="submit" class="sub"  value="DA">
                     </form>
 				</tr>
@@ -30,6 +32,18 @@
         </div>
 </body>
 <style>
+        input[type=text], input[type=number]:not(.avs), input[type=password], select{
+          width: 200px;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          font-weight: bold;
+        }
         .sub {
           background-color: #4CAF50;
           border: none;
