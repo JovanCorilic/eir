@@ -67,6 +67,8 @@ python manage.py createsuperuser
 Zatim da biste mu pristupili idete na:
 *adresa servera/admin*
 
+P.S. Ako lekar/admin zele da pogledaju svoj profil, treba da pritisnu na dugme sa svojim imenom i prezimenom u gornjem desnom uglu
+
 # Autori
 - Jovan Ćorilić (SW 48/2017) - Završio
 - Bogdan Čiplić (SW 79/2017)
