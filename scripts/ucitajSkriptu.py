@@ -1,11 +1,11 @@
 import csv
 
 from clinic.models import Lekar, Klinika, Sala, Admin, Odmor
-from pacijent.models import Pregled, Pacijent, Operacije
+from pacijent.models import Pregled, Pacijent, TipPregleda
 from datetime import datetime
 
 def run():
-    kratko = open('skripta.csv', encoding='utf-8')
+    kratko = open('skripta.csv', encoding='unicode_escape')
     reader = csv.reader(kratko)
 
     Pacijent.objects.all().delete()
@@ -13,7 +13,7 @@ def run():
     Sala.objects.all().delete()
     Admin.objects.all().delete()
     Lekar.objects.all().delete()
-    Operacije.objects.all().delete()
+    TipPregleda.objects.all().delete()
     Pregled.objects.all().delete()
 
     for row in reader:
@@ -31,10 +31,9 @@ def run():
                                                visina=row[16], tezina=row[17], krvna_grupa=row[18], aktiviran=row[19])
 
             pacijent.save()
-        elif("Operacije" in row[0]):
-            operacija = Operacije.objects.create(id=row[1], klinika=row[2], pacijent=row[3], lekari=row[4], sala=row[5],
-                                                 tip_operacije=row[6], vreme=datetime.strptime(row[7], "%d/%m/%Y %I:%M%p"), ocenaLekara=row[8], ocenaKlinike=float(row[9]))
-            operacija.save()
+        elif ("TipPregleda" in row[0]):
+            tipPregleda = TipPregleda.objects.create(id=row[1], ime=row[2], cena=row[3], trajanje=row[4])
+            tipPregleda.save()
         elif("Klinika" in row[0]):
             klinika = Klinika.objects.create(naziv=row[1], adresa=row[2], opis=row[3], ocena=float(row[4]))
             klinika.save()

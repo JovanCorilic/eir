@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Odaberi Salu</title>
+</head>
+<body onload="stavidat()">
+<form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
+    <div class="unos">
+		<h2>Lista Sala (Pregled traje {{trajanje}}min)</h2>
+		Pretraga: Broj Sale: <input class="avs" id="pretraga" onchange="ttime()">
+		Naziv Sale: <input class="avs" id="pretragap" onchange="ttprezime()">
+		Datum za slobodne termine: <input type="date" class="avs" id="dat" onchange="datumchange()"><br />
+		<table border="1" class="table" id="tabb">
+		    <tr class="tr">
+		        <th onclick="sortTable(0)" class="th">Broj</th>
+		        <th onclick="sortTable(1)" class="th">Naziv</th>
+		        <th onclick="sortTable(2)" class="th">Klinika Kojoj Pripada</th>
+                <th class="th">Opis</th>
+                <th class="th"></th>
+		    </tr>
+		    {% for sala in sale %}
+		    <tr>
+		        <td class="td">
+		            {{ sala.broj }}
+		        </td>
+		        <td class="td">
+		            {{ sala.naziv }}
+		        </td>
+		        <td class="td">
+		            {{ sala.id_klinike_kojoj_pripada }}
+		        </td>
+		        <td class="td">
+		        	{{ sala.opis }}
+		        </td>
+		        <td class="td">
+                    <form method="POST" action="OdobriPregled" >{% csrf_token %}
+                        <input type="text" name="kada" id="kada" value="{{sala.index|escape}}">
+                        <input type="hidden" name="koga" value="{{pregled.id}}">
+                        <input type="hidden" name="gde" value="{{sala.naziv}}">
+                        <input type="hidden" name="kako" value="True">
+                        <input type="submit" style="color:green" value="Odaberi Salu">
+                    </form>
+		        	<!--<form method="POST" action="pogledajSalu" >{% csrf_token %}<input name="{{sala.naziv}}" type="submit" class="tabdugme" value="Pogledaj" ></form>-->
+		        </td>
+		    </tr>
+		    {% endfor %}
+		</table>
+		<br />
+		<h2>Slobodni termini</h2>
+		<div id="mapadostupnihtermina">
+
+		</div>
+	</div>
+<script>
+		function stavidat(){
+			document.getElementById('dat').valueAsDate = new Date();
+			datumchange()
+		}
+		function datumchange(){
+			{{mapa|safe}}
+
+			var dat = document.getElementById("dat").value;
+        	dat = parseInt((new Date(dat).getTime() / 1000).toFixed(0));
+			for(var i = 0 ; i < termini.length ; ++i){
+				console.log(termini[i][0] + '>=' + dat + " ili " + termini[i][0] + "<=" + (dat + 86400));
+				if((termini[i][0] >= dat - 86400 && termini[i][0] <= dat) || termini[i][0] == -1){
+					document.getElementById("mapadostupnihtermina").innerHTML = termini[i][1];
+					break;
+				}
+			}
+		}
+</script>
+    <script>
+
+
+
+
+		function ttime() {
+			var table, tr, i, txtValue;
+			var uneto = document.getElementById("pretraga").value;
+
+			var unos = false;
+
+			if(uneto == ""){
+				unos = true;
+			}
+
+			table = document.getElementById("tabb");
+			tr = table.getElementsByTagName("tr");
+
+			for (i = 0; i < tr.length; i++) {
+
+		    	var td1 = tr[i].getElementsByTagName("td")[0];
+
+		    	if (td1) {
+		      		txtValue1 = td1.textContent || td1.innerText;
+
+		      		txtValue1 = txtValue1 == undefined ? '' : txtValue1.trim();
+
+		      		var sadrzi = txtValue1.includes(uneto);
+
+		      		if (sadrzi || unos) {
+		        		tr[i].style.display = "";
+		      		}
+		      		else {
+		        		tr[i].style.display = "none";
+		      		}
+		    	}
+		  	}
+		}
+
+		function ttprezime() {
+			var table, tr, i, txtValue;
+			var uneto = document.getElementById("pretragap").value;
+
+			var unos = false;
+
+			if(uneto == ""){
+				unos = true;
+			}
+
+			table = document.getElementById("tabb");
+			tr = table.getElementsByTagName("tr");
+
+			for (i = 0; i < tr.length; i++) {
+
+		    	var td2 = tr[i].getElementsByTagName("td")[1];
+
+		    	if (td2) {
+		      		txtValue2 = td2.textContent || td2.innerText;
+
+		      		txtValue2 = txtValue2 == undefined ? '' : txtValue2.trim();
+
+		      		var sadrzi = txtValue2.includes(uneto);
+
+		      		if (sadrzi || unos) {
+		        		tr[i].style.display = "";
+		      		}
+		      		else {
+		        		tr[i].style.display = "none";
+		      		}
+		    	}
+		  	}
+		}
+
+function tt3() {
+	var table, tr, i, txtValue;
+	var uneto = document.getElementById("pretraga3").value;
+
+	var unos = false;
+
+	if(uneto == ""){
+		unos = true;
+	}
+
+	table = document.getElementById("tabb");
+	tr = table.getElementsByTagName("tr");
+
+	for (i = 0; i < tr.length; i++) {
+
+    	var td7 = tr[i].getElementsByTagName("td")[6];
+
+    	if ( td7) {
+
+      		txtValue7 = td7.textContent || td7.innerText;
+
+
+      		txtValue7 = txtValue7 == undefined ? '' : txtValue7.trim();
+
+      		var sadrzi = txtValue7.includes(uneto);
+
+      		if (sadrzi || unos) {
+        		tr[i].style.display = "";
+      		}
+      		else {
+        		tr[i].style.display = "none";
+      		}
+    	}
+  	}
+}
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("tabb");
+  switching = true;
+  //Set the sorting direction to ascending:
+  dir = "asc";
+  /*Make a loop that will continue until
+  no switching has been done:*/
+  while (switching) {
+    //start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /*Loop through all table rows (except the
+    first, which contains table headers):*/
+    for (i = 1; i < (rows.length - 1); i++) {
+      //start by saying there should be no switching:
+      shouldSwitch = false;
+      /*Get the two elements you want to compare,
+      one from current row and one from the next:*/
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      /*check if the two rows should switch place,
+      based on the direction, asc or desc:*/
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch= true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      /*If a switch has been marked, make the switch
+      and mark that a switch has been done:*/
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      //Each time a switch is done, increase this count by 1:
+      switchcount ++;
+    } else {
+      /*If no switching has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again.*/
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+	</script>
+</body>
+    <style>
+        .table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+
+        .td {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+        }
+
+        .th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+          background-color: #509050;
+        }
+
+        .even {
+          background-color: #4CAa50;
+        }
+
+        .tr{
+            padding:5px;
+            background-color: #60b060;
+        }
+
+        .th{
+            padding:5px;
+        }
+
+        input[type=submit]:hover {
+          background-color: #111;
+        }
+
+        input[type=submit]:hover:not(.meni) {
+          background-color: #01b601;
+        }
+    </style>
+<style>
+        input[type=text], input[type=number]:not(.avs), input[type=password], select{
+          width: 100%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          font-weight: bold;
+        }
+        .sub {
+          background-color: #4CAF50;
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          font-family: "Times New Roman", Times, serif;
+          font-size: 16px;
+          cursor: pointer;
+          font-weight: bold;
+        }
+    </style>
+</html>

@@ -9,6 +9,9 @@
 <form method="POST" action="index" >{% csrf_token %}<input type="submit" class="sub" value="Pocetna Strana"></form>
 		<div class="unos" style="margin-left:70px">
 			<h1>{{pacijent.ime}} {{pacijent.prezime}}</h1>
+			{% if cwmp == 'da' %}
+				<form method="POST" action="PPregledaj" >{% csrf_token %}<input type="hidden" name="koga" value="{{pacijent.email_adresa}}"><input type="submit" class="sub" value="Pregledaj"></form>
+			{% endif %}
 		</div>
 		<form method="POST" action="IzmeniKorisnika" onSubmit="return proveri();" >{% csrf_token %}
 			<div class="unos2">
@@ -46,6 +49,81 @@
 				</table>
 			</div>
 		</form>
+
+		{% if cwmp == 'da' %}
+<h3>Zdravstvena Knjizica</h3>
+				<table border="1">
+					<tr>
+						<th align="right">Ime </th>
+						<th>{{pacijent.ime|safe}}</th>
+					</tr>
+					<tr>
+						<th align="right">Prezime </th>
+						<th>{{pacijent.prezime|safe}}</th>
+					</tr>
+					<tr>
+						<th align="right">Email </th>
+						<th>{{pacijent.email_adresa|safe}}</th>
+					</tr>
+					<tr>
+						<th align="right">Broja Telefona </th>
+                        <th>{{pacijent.broja_telefona|safe}}</th>
+					</tr>
+					<tr>
+						<th align="right">Jedinstveni Broj Osiguranika </th>
+						<th>{{pacijent.jedinstveni_broj_osiguranika|safe}}</th>
+					</tr>
+                    <tr>
+						<th align="right">Datum Registracije </th>
+						<th>{{pacijent.datum|safe}}</th>
+					</tr>
+                    <tr>
+						<th align="right"> </th>
+						<th></th>
+					</tr>
+                    <tr>
+						<th align="right">Jedinstveni Broj Osiguranika </th>
+						<th>{{pacijent.jedinstveni_broj_osiguranika|safe}}</th>
+					</tr>
+                    <tr>
+						<th align="right">Sifra Bolesti </th>
+						<th>{{pacijent.sifra_bolesti|safe}}</th>
+					</tr>
+                    <tr>
+						<th align="right">Sifra Bolesti </th>
+						<th>{{pacijent.sifra_bolesti|safe}}</th>
+					</tr>
+                    <tr>
+						<th align="right">Lekovi </th>
+						<th>{{pacijent.lekovi|safe}}</th>
+					</tr>
+                    <tr>
+						<th align="right">Dioptrija </th>
+						<th>{{pacijent.dioptrija|safe}}</th>
+					</tr>
+                    <tr>
+						<th align="right">Alergije Na Lek </th>
+						<th>{{pacijent.alergije_na_lek|safe}}</th>
+					</tr>
+                    <tr>
+						<th align="right">Visina </th>
+						<th>{{pacijent.visina|safe}}</th>
+					</tr>
+                    <tr>
+						<th align="right">Tezina </th>
+						<th>{{pacijent.tezina|safe}}</th>
+					</tr>
+                    <tr>
+						<th align="right">Krvna Grupa </th>
+						<th>{{pacijent.krvna_grupa|safe}}</th>
+					</tr>
+                    <tr>
+						<th align="right">Diagnoza </th>
+						<th>{{pacijent.diagnoza|safe}}</th>
+					</tr>
+				</table>
+		{% endif %}
+
 		<script>
 			function proveri() {
 				var popunjeno = true;

@@ -51,4 +51,6 @@ urlpatterns = [
     path('PogledajTipove', views.PogledajTipove, name='PogledajTipove'),
     path('IzmeniTip', views.IzmeniTip, name='IzmeniTip'),
     path('ObrisiTip', views.ObrisiTip, name='ObrisiTip'),
+    path('ZdravstveniKarton', views.ZdravstveniKarton, name='ZdravstveniKarton'),
+    path('PPregledaj', views.PPregledaj, name='PPregledaj'),
 ]

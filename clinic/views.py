@@ -1,6 +1,6 @@
 from calendar import monthrange
 from time import strptime
-
+from scripts.ucitajSkriptu import run
 from clinic.models import Admin, Klinika, Odmor
 from pacijent.models import Pacijent, Pregled, Operacije, TipPregleda
 from django.contrib import messages
@@ -18,6 +18,7 @@ from django.template.loader import render_to_string
 from pacijent.tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage, send_mail
+from django.middleware import csrf
 import time
 
 pregledani = []
@@ -43,7 +44,7 @@ def index(req):
     try:
         preg = NapraviPregled(email)
         radniKalendar = NapraviRadniKalendar(email)
-        pacijenti = NadjiPacijente(email)
+        pacijenti = NadjiPacijente(email, req)
     except:
         pass
     return render(req, 'index.html',
@@ -327,9 +328,87 @@ def PogledajPacijenta(request):
         try:
             if request.POST[pacijent.email_adresa] is not None:
                 odabrani = pacijent
-                return render(request, 'pogledajPacijenta.html', {'pacijent': odabrani})
+                cwmp = cwmpf(pacijent, request)
+                if cwmp == 'da':
+                    print("DIE CIS SCUM")
+                print("WHOMSTDV DONE DID THIS")
+                return render(request, 'pogledajPacijenta.html', {'pacijent': odabrani, 'cwmp': cwmp})
         except:
             pass
+
+
+def cwmpf(pacijent, request):
+    try:
+        print("--------//----------//---------//----------//-------")
+        pacijenti = []
+        pp = Pregled.objects.filter(lekar=request.session['email'])
+        print("nas p je " + str(pacijent))
+        for p in pp:
+            if p.zakazan != 'Prazno':
+                print("br " + str(p.zakazan))
+                pacijenti.extend([p.zakazan])
+
+        print(str(pacijenti))
+
+        if str(pacijent).strip() in pacijenti:
+            return 'da'
+        return 'ne'
+    except:
+        return 'ne'
+
+
+def PPregledaj(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
+    if True:#try:
+        pacijent = Pacijent.objects.filter(email_adresa=request.POST['koga'])[0]
+
+        print("llllllllllllllllllllllllllllllllllllllllllllllllllll")
+        print(request.POST['koga'])
+        print(pacijent.email_adresa)
+
+        vreme = datetime.datetime.now()
+        sala = "[Prazno]"
+
+        tip_pregleda = "Opsti Pregled"
+        id = 0
+        while Pregled.objects.filter(id=id).exists():
+            id += 1
+        ii = 0
+        while True:
+            ii += 1
+            if ii >= 1000:
+                return HttpResponse('<h1>Error 400</h1>Bad request', status=400)
+            if True:#try:
+                email = ""
+                if 'email' in request.session:
+                    email = request.session['email']
+                klinika = ""
+                for korinisk in Lekar.objects.all():
+                    if korinisk.email_adresa == email:
+                        klinika = korinisk.radno_mesto
+                for korinisk in Admin.objects.all():
+                    if korinisk.email_adresa == email:
+                        klinika = korinisk.naziv_klinike
+
+                ter = Pregled.objects.create(id=id, klinika=klinika, zakazan=request.POST['koga'], lekar=email,
+                                                         sala=sala,
+                                                         tip_pregleda=tip_pregleda, vreme=vreme.__str__().split(".")[0],
+                                                         sifra_bolesti="Prazno",
+                                                         diagnoza="Prazno", lekovi="Prazno", prihvacen="da",
+                                                         ocenaLekara=-1,
+                                                         ocenaKlinike=-1)
+                ter.save()
+                storage = messages.get_messages(request)
+                storage.used = True
+
+                return render(request, 'pregledaj.html',
+                                    {'pregled': ter, 'pacijent': pacijent, 'email': email})
+
+    '''        except:
+                return HttpResponse('<h1>Error 400</h1>Bad request<br />Doslo je do greske', status=400)
+    except:
+        return HttpResponse('<h1>Error 400</h1>Bad request<br />Doslo je do greske', status=400)'''
 
 
 def pogledajSale(request):
@@ -652,8 +731,11 @@ def PogledajTermin(request):
     try:
         sala = Sala.objects.filter(id_klinike_kojoj_pripada=klinika, naziv=odabrani.sala)[0]
     except:
-        idd = odabrani.sala.split('-')
-        sala = Sala.objects.filter(id_klinike_kojoj_pripada=klinika, id=idd[0])[0]
+        try:
+            idd = odabrani.sala.split('-')
+            sala = Sala.objects.filter(id_klinike_kojoj_pripada=klinika, id=idd[0])[0]
+        except:
+            pass
 
     lekarid = 0
     salaid = 0
@@ -664,12 +746,15 @@ def PogledajTermin(request):
             break
         ii += 1
 
-    ii = 0
-    for le in sale:
-        if le.naziv == sala.naziv:
-            salaid = ii
-            break
-        ii += 1
+    try:
+        ii = 0
+        for le in sale:
+            if le.naziv == sala.naziv:
+                salaid = ii
+                break
+            ii += 1
+    except:
+        salaid = -1
 
     return render(request, 'pogledajTermin.html',
                   {'mapa': mapa, 'lekari': lekari, 'sale': sale, 'lekar': lekarid, 'sala': salaid,
@@ -847,6 +932,28 @@ def proveriTermin(vreme, sala, lekar, idd=-9999):
             if odmor.lekar == lekarOBJ.email_adresa:
                 if not (odmor.vreme > vreme + datetime.timedelta(minutes=30) or odmor.vreme + datetime.timedelta(
                         days=odmor.duzina) < vreme):
+                    return False
+        return True
+
+
+def proveriTermin2(vreme, sala, trajanje):
+    try:
+        for termin in Pregled.objects.all():
+            if termin.sala == sala:
+                if not (termin.vreme > vreme + datetime.timedelta(
+                        minutes=trajanje) or termin.vreme + datetime.timedelta(
+                        minutes=trajanje) < vreme):
+                    return False
+        return True
+    except:
+        print('vreme')
+        vreme = datetime.datetime.strptime(vreme, "%Y-%m-%d %H:%M:%S")
+        print('vreme?')
+        for termin in Pregled.objects.all():
+            if termin.sala == sala:
+                if not (termin.vreme > vreme + datetime.timedelta(
+                        minutes=trajanje) or termin.vreme + datetime.timedelta(
+                        minutes=trajanje) < vreme):
                     return False
         return True
 
@@ -1198,8 +1305,9 @@ def DaLiImamPregled(email):
             duzina = 15
             print("tip pregleda " + preg.tip_pregleda + " ne postoji")
 
-        if datetime.datetime.now() >= preg.vreme and datetime.datetime.now() <= (preg.vreme + datetime.timedelta(minutes=duzina)):#if datetime.datetime.now() <= preg.vreme and preg.vreme <= (datetime.datetime.now() + datetime.timedelta(minutes=duzina)):
-            if preg.zakazan != "Prazno" and preg.id not in pregledani:
+        if datetime.datetime.now() >= preg.vreme and datetime.datetime.now() <= (preg.vreme + datetime.timedelta(
+                minutes=duzina)):  # if datetime.datetime.now() <= preg.vreme and preg.vreme <= (datetime.datetime.now() + datetime.timedelta(minutes=duzina)):
+            if preg.zakazan != "Prazno" and preg.id not in pregledani and preg.sala != -1:
                 print("--------------------")
                 print(preg.id)
                 print('duzina ' + str(duzina))
@@ -1272,9 +1380,8 @@ def NapraviRadniKalendar(email):
            "background-color: #111; } input[type=submit]:hover:not(.meni) { background-color: #01b601; }</style> "
 
 
-def NadjiPacijente(email):
-    odgovor = "<h2>Vasi Pacijenti</h2> <table border=\"1\" class=\"table\" id=\"tabb2\">"
-
+def NadjiPacijente(email, request):
+    odgovor = "<h2>Vasi Pacijenti koje ste ranije pregledali</h2> <table border=\"1\" class=\"table\" id=\"tabb2\">"
     pacijenti = []
     pacijentiOBJ = []
     pp = Pregled.objects.filter(lekar=email)
@@ -1292,16 +1399,29 @@ def NadjiPacijente(email):
     if pacijentiOBJ.__len__() != 0:
         odgovor += "<tr class=\"tr\"><th class=\"th\">Ime</th><th class=\"th\">Prezime</th><th class=\"th\">Adresa " \
                    "Prebivališta</th><th class=\"th\">Država</th><th class=\"th\">Grad</th><th class=\"th\">Broja " \
-                   "Telefona</th><th class=\"th\">Jedinstveni Broj Osiguranika</th></tr> "
+                   "Telefona</th><th class=\"th\">Jedinstveni Broj Osiguranika</th><th></th></tr> "
 
         for pacijent in pacijentiOBJ:
+            print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//////////////////////////////')
             odgovor += "<tr><td class=\"td\">" + pacijent.ime + "</td><td class=\"td\">" + pacijent.prezime + "</td>" \
                                                                                                               "<td class=\"td\">" + pacijent.adresa_prebivalista + "</td><td class=\"td\">" + pacijent.drzava + \
                        "</td><td class=\"td\">" + pacijent.grad + "</td><td class=\"td\">" + pacijent.broja_telefona + \
-                       "</td><td class=\"td\">" + pacijent.jedinstveni_broj_osiguranika + "</td> "
+                       "</td><td class=\"td\">" + pacijent.jedinstveni_broj_osiguranika + "</td><td class=\"td\"><form method=\"POST\" action=\"ZdravstveniKarton\"> " + \
+                       '<input type="hidden" name="csrfmiddlewaretoken" value="' + csrf.get_token(
+                request) + "\">" + '<input type="hidden" name="kogap" value="' + pacijent.email_adresa + '">' + "<input type=\"submit\" value=\"Pogledaj Karton\"></form></td></tr>"
         return odgovor + "</table>"
 
     return "<h2>Nemate Pacijenata</h2>"
+
+
+def ZdravstveniKarton(request):
+    if 'uloga' not in request.session or request.session['uloga'] == 'NEULOGOVAN':
+        return redirect('index')
+    print("////////////////////////////////////////////////")
+    print(request.POST['kogap'])
+    pacijent = Pacijent.objects.filter(email_adresa=request.POST['kogap'])[0]
+    return render(request, "zdravstveniKarton.html",
+                  {'pacijent': pacijent})
 
 
 def PogledajStanje(request):
@@ -1584,22 +1704,46 @@ def OdobriPregled(request):
 
         if Pregled.objects.filter(id=id).exists():
             if kako == 'True':
+
+                gde = request.POST['gde']
+                kada = request.POST['kada']
+
                 od = Pregled.objects.filter(id=id)[0]
                 od.prihvacen = "da"
+                od.sala = gde
+                od.vreme = kada
                 od.save()
                 try:
                     mail_subject = 'Vaš zahtev za pregled je prihvaćen'
 
                     email2 = Pregled.objects.get(id=id)
                     to_email = email2.zakazan
-                    email = EmailMessage(
-                        mail_subject,
-                        "Vaš zahtev za pregled je prihvaćen i doktor će vas čekati u vremenu koji ste napisali!",
-                        to=[to_email]
-                    )
-                    email.send()
+                    try:
+                        email = EmailMessage(
+                            mail_subject,
+                            "Vaš zahtev za pregled je prihvaćen i doktor će vas čekati u vremenu koji ste napisali!",
+                            to=[to_email]
+                        )
+                        email.send()
+                    except:
+                        print("Pogresan email format. molimo vas da unesete pravi email")
                 except:
                     pass
+            elif kako == 'Ok':
+                uloga = ""
+                if 'uloga' in request.session:
+                    uloga = request.session['uloga']
+                kk = Pregled.objects.all()
+                sale = Sala.objects.all()
+                mapa = napraviMapuTerminaSala(kk, sale)
+                preg = od = Pregled.objects.filter(id=id)[0]
+                trajanje = TipPregleda.objects.filter(id=preg.tip_pregleda)[0].trajanje
+                cell = prviSlobodan(preg, sale, trajanje)
+                for i in range(len(sale)):
+                    print(sale[i].naziv + " " + str(cell[i]))
+                    sale[i].index = cell[i]
+                return render(request, 'odaberiSalu.html', {'pregled': preg, 'mapa': mapa, 'sale': sale,
+                                                            'trajanje': trajanje})  # , 'vremeNiz':cell})
             else:
                 Pregled.objects.filter(id=id).delete()
                 try:
@@ -1624,7 +1768,8 @@ def OdobriPregled(request):
 
         if uloga == 'ADMIN':
             niz = []
-            for k in Pregled.objects.filter(prihvacen="ne"):
+            kl = Admin.objects.filter(email_adresa=request.session['email'])[0].naziv_klinike
+            for k in Pregled.objects.filter(prihvacen="ne", klinika=kl):
                 niz.extend([k])
 
             pregledi = []
@@ -1635,6 +1780,18 @@ def OdobriPregled(request):
             return render(request, 'odobriPregled.html', {'niz': pregledi})
         return HttpResponse('<h1>Error 400</h1>Bad request<br />Nemate pravo da pristupite ovoj stranici',
                             status=400)
+
+
+def prviSlobodan(pregled, sale, trajanje):
+    odgovor = []
+    vreme = pregled.vreme
+
+    for sala in sale:
+        slvreme = vreme
+        while not proveriTermin2(slvreme, sala, trajanje):
+            slvreme += datetime.timedelta(minutes=15)
+        odgovor.append(slvreme)
+    return odgovor
 
 
 def Pregledaj(request):
@@ -1652,11 +1809,15 @@ def Pregledaj(request):
         preg.save()
 
         pac = Pacijent.objects.filter(email_adresa=koga)[0]
-        pac.sifra_bolesti = request.POST['sifra_bolesti']
-        pac.diagnoza += "\n" + datetime.datetime.now().__str__() + " :\n\t" + request.POST['diagnoza']
-        pac.lekovi = request.POST['lekovi']
+        if request.POST['sifra_bolesti'] not in pac.sifra_bolesti:
+            pac.sifra_bolesti += "<br>" + request.POST['sifra_bolesti']
+        pac.diagnoza += "<br>" + datetime.datetime.now().__str__().split('.')[0] + " :<br><br>" + request.POST[
+            'diagnoza']
+        if request.POST['lekovi'] not in pac.lekovi:
+            pac.lekovi += "<br>" + request.POST['lekovi']
         pac.dioptrija = request.POST['dioptrija']
-        pac.alergije_na_lek = request.POST['alergije_na_lek']
+        if request.POST['alergije_na_lek'] not in pac.alergije_na_lek:
+            pac.alergije_na_lek += "<br>" + request.POST['alergije_na_lek']
         if request.POST['visina'] != "Nema" and request.POST['visina'] != '':
             pac.visina = request.POST['visina']
         if request.POST['tezina'] != "Nema" and request.POST['tezina'] != '':
@@ -1702,7 +1863,8 @@ def ZakaziOpet(request):
     i = Pregled.objects.count()
     while Pregled.objects.count() == i:
         manualTerminLekar(klinika=request.POST['klinika'], lekar=request.POST['lekar'], sala=request.POST['sala'],
-                     tip_pregleda=request.POST['tip_pregleda'], vreme=vr.strftime('%Y-%m-%d %H:%M:%S'), zakazan=request.POST['koga'])
+                          tip_pregleda=request.POST['tip_pregleda'], vreme=vr.strftime('%Y-%m-%d %H:%M:%S'),
+                          zakazan=request.POST['koga'])
         vr = vr + datetime.timedelta(hours=1)
     ###########################################
     kome = []
@@ -1712,7 +1874,8 @@ def ZakaziOpet(request):
         try:
             send_mail(
                 request.session['email'] + ' zeli da zakaze pregled sa pcaijentom ' + request.POST['koga'],
-                request.session['email'] + ' zeli da zakaze pregled sa pcaijentom ' + request.POST['koga'] + ". Molimo vas da pogledate sajt klinike za vise informacija, i da odlucite da li odobravate ovaj pregled",
+                request.session['email'] + ' zeli da zakaze pregled sa pcaijentom ' + request.POST[
+                    'koga'] + ". Molimo vas da pogledate sajt klinike za vise informacija, i da odlucite da li odobravate ovaj pregled",
                 'aplikacijaklinika@gmail.com',
                 [ww],
                 fail_silently=False,

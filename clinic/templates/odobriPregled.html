@@ -12,8 +12,9 @@
     <table>
 		{% for o in niz %}
             <tr>
-                <th>{{o.pacijent.ime}} {{o.pacijent.prezime}} ({{o.pacijent.email_adresa}}) zeli da zakaze pregled {{o.pregled.vreme|escape}} sa doktorom {{o.pregled.lekar}} u sali {{o.pregled.sala}}</th>
-                <th><form method="POST" action="OdobriPregled" >{% csrf_token %}<input type="hidden" name="koga" value="{{o.pregled.id}}"><input type="hidden" name="kako" value="True"><input type="submit" style="color:green" value="Odobri"></form></th>
+                <th>Pregled {{o.pacijent.ime}} {{o.pacijent.prezime}} ({{o.pacijent.email_adresa}}) kod doktora {{o.pregled.lekar}} u {{o.pregled.vreme|escape}}</th>
+                <th><!--<form method="POST" action="OdobriPregled" >{% csrf_token %}<input type="hidden" name="koga" value="{{o.pregled.id}}"><input type="hidden" name="kako" value="True"><input type="submit" style="color:green" value="Odobri"></form>-->
+                <form method="POST" action="OdobriPregled" >{% csrf_token %}<input type="hidden" name="koga" value="{{o.pregled.id}}"><input type="hidden" name="kako" value="Ok"><input type="submit" style="color:green" value="Odobri"></form></th>
                 <th><form method="POST" action="OdobriPregled" >{% csrf_token %}<input type="hidden" name="koga" value="{{o.pregled.id}}"><input type="hidden" name="kako" value="False"><input type="submit" style="color:red" value="Odbij"></form></th>
             </tr>
         {% endfor %}
