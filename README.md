@@ -1,10 +1,5 @@
-# [Eir](https://en.wikipedia.org/wiki/Eir)
-
-<em>
-hiljadu osam <br>
-brojim misli o tebi <br>
-hiljadu devet
-</em>
+# Projekat
+Projekat predstavlja simulaciju rada bolnice. Radio se preko Django framework-a.
 
 # Pokretanje i razvoj
 
@@ -70,6 +65,6 @@ Zatim da biste mu pristupili idete na:
 P.S. Ako lekar/admin zele da pogledaju svoj profil, treba da pritisnu na dugme sa svojim imenom i prezimenom u gornjem desnom uglu
 
 # Autori
-- Jovan Ćorilić (SW 48/2017) - Završio
+- Jovan Ćorilić (SW 48/2017) 
 - Bogdan Čiplić (SW 79/2017)
 - Mladen Samardžić (SW 37/2017) - Napustio
