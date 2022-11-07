@@ -1,5 +1,5 @@
 # Projekat
-Projekat predstavlja simulaciju rada bolnice. Radio se preko Django framework-a.
+Projekat predstavlja simulaciju rada bolnice. Radio se preko Django framework-a. Način komunikacije je server-klijent.
 
 # Pokretanje i razvoj
 
